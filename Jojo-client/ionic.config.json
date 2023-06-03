@@ -1,0 +1,7 @@
+{
+  "name": "Jojo",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
