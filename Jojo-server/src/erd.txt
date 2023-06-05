@@ -42,8 +42,8 @@ attachments_id fk>0- complaintAttachments.id not null
 chatroom
 ----
 id integer pk
-person_A_id fk>0- user.id not null
-person_B_id fk>0- user.id not null
+creator_id fk>0- user.id not null
+receiver_id fk>0- user.id not null
 
 message
 ---
