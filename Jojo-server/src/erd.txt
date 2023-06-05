@@ -34,7 +34,6 @@ handled_by_id fk>0- user.id not null
 created_by_id fk>0- user.id not null
 created_at timestamp with time zone
 
-
 chatroom
 ----
 id integer pk
