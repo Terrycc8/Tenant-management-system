@@ -19,35 +19,38 @@ block varchar(4)
 floor varchar(2) 
 room varchar(2) 
 landlord_id fk>0- user.id not null
-tenant_id fk>0- user.id
+tenant_id fk>0- user.id 
 
 complaint
 -----
 id integer pk
 description varchar(60)
-type enum{}
-priority enum{}
-status enum {}
+type enum{'maintenance','notices','reimbursement','complaint'}
+priority enum{'high','medium','low'}
+status enum {'resolved','pending'}
 content text
-handled_by_id fk>0- user.id
-created_by_id fk>0- user.id
+property_id fk>0- property.id not null
+handled_by_id fk>0- user.id not null
+created_by_id fk>0- user.id not null
 created_at timestamp with time zone
 
 
 chatroom
 ----
 id integer pk
-person_A_id fk>0- user.id
-person_B_id fk>0- user.id
+person_A_id fk>0- user.id not null
+person_B_id fk>0- user.id not null
 
 message
 ---
 id integer pk
-room_id fk>0- room.id
-sender_id fk>0- user.id
+room_id fk>0- room.id not null
+sender_id fk>0- user.id not null
 content text
 
 log
 ----
 id integer pk
 user_agent text
+url not null
+method not null
