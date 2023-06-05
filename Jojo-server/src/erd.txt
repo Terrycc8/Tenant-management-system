@@ -1,0 +1,53 @@
+user
+----
+id integer pk
+username varchar(32)
+password_hash char(60)
+email varchar(128) not null
+avatar text
+last_online_time timestamp with time zone not null
+
+property
+-----
+id integer pk
+area varchar(16) not null
+district varchar(16) not null
+location varchar(16) not null
+street varchar(16) not null
+building varchar(16) not null
+block varchar(4) 
+floor varchar(2) 
+room varchar(2) 
+landlord_id fk>0- user.id not null
+tenant_id fk>0- user.id
+
+complaint
+-----
+id integer pk
+description varchar(60)
+type enum{}
+priority enum{}
+status enum {}
+content text
+handled_by_id fk>0- user.id
+created_by_id fk>0- user.id
+created_at timestamp with time zone
+
+
+chatroom
+----
+id integer pk
+person_A_id fk>0- user.id
+person_B_id fk>0- user.id
+
+message
+---
+id integer pk
+room_id fk>0- room.id
+sender_id fk>0- user.id
+content text
+
+log
+----
+id integer pk
+user_agent text
