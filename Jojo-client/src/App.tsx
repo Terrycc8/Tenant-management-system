@@ -13,7 +13,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
 
 import Tab2 from "./pages/CreateModalTab";
-import Tab3 from "./pages/ChatTab";
+import Tab3 from "./pages/Chatroom";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";

@@ -5,6 +5,10 @@ username varchar(32)
 password_hash char(60)
 email varchar(128) not null unique
 avatar text
+status varchar(32)
+status_update_time timestamp with time zone not null
+type enum('landlord','tenant')
+last_online_time timestamp with time zone not null
 type enum('landlord','tenant','admin')
 last_login_time timestamp with time zone not null
 registered_at timestamp with time zone not null
