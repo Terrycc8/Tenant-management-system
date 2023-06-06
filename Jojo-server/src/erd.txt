@@ -5,7 +5,7 @@ username varchar(32)
 password_hash char(60)
 email varchar(128) not null
 avatar text
-type enum{'landlord','tenant'}
+type enum('landlord','tenant')
 last_online_time timestamp with time zone not null
 
 property
@@ -29,8 +29,8 @@ complaint
 id integer pk
 description varchar(60)
 type enum{'maintenance','notices','reimbursement','complaint'}
-priority enum{'high','medium','low'}
-status enum {'resolved','pending'}
+priority enum('high','medium','low')
+status enum('resolved','pending')
 content text
 property_id fk>0- property.id not null
 handled_by_id fk>0- user.id not null
@@ -57,7 +57,7 @@ payment
 id integer pk
 property_id fk>0- property.id not null
 payer_id fk>0- user.id not null
-status enum {'confirmed','pending'}
+status enum('confirmed','pending')
 created_by_id fk>0- user.id not null
 created_at timestamp with time zone
 confirmed_by_id fk>0- user.id not null
