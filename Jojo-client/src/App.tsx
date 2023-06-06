@@ -1,4 +1,4 @@
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Router } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -11,7 +11,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
-import Tab1 from "./pages/HomeTab";
+
 import Tab2 from "./pages/CreateModalTab";
 import Tab3 from "./pages/Chatroom";
 
@@ -33,6 +33,8 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import Tab1 from "./pages/HomeTab";
+import { LoginPage } from "./pages/LoginPage";
 
 setupIonicReact();
 
@@ -41,18 +43,11 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
+          <Redirect exact from="/" to="/home" />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/home" component={Tab1} />
+          <Route path="/add" component={Tab2} />
+          <Route path="/chat" component={Tab3} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
