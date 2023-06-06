@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Request, Response, Next } from '@nestjs/common';
 
-@Controller('chat')
-export class ChatController {}
+@Controller()
+export class ChatController {
+
+        constructor() { }
+
+        @Get('chat')
+        async chat( @Request() req, @Response() res, @Next() next) {
+            res.render('./Chat/chat',{title:"Chat Room"});
+        }
+    }
