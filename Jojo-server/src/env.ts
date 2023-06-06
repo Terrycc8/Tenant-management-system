@@ -1,11 +1,13 @@
+import { config } from 'dotenv';
 import populateEnv from 'populate-env';
-
-const env = {
-  DB_NAME: '',
-  DB_USERNAME: '',
-  DB_PASSWORD: '',
+config();
+export const env = {
+  DB_NAME: 'jojo',
+  DB_USERNAME: 'jojo',
+  DB_PASSWORD: 'jojo',
   PORT: '5432',
-  ENV_NODE: 'development',
+  SERVER_PORT: 8100,
+  NODE_ENV: 'development',
 };
 
 populateEnv(env, { mode: 'halt' });

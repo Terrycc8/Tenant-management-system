@@ -25,6 +25,7 @@ landlord_id fk>0- user.id not null
 tenant_id fk>0- user.id
 rental_start_at timestamp with time zone not null
 rental_end_at timestamp with time zone
+created_at timestamp with time zone not null
 attachments_id fk>0- propertyAttachments.id
 
 complaint
