@@ -8,6 +8,7 @@ export const env = {
   PORT: '5432',
   SERVER_PORT: 8100,
   NODE_ENV: 'development',
+  JWT_SECRET: '',
 };
 
 populateEnv(env, { mode: 'halt' });

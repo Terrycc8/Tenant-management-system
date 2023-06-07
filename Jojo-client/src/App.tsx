@@ -51,7 +51,7 @@ const App: React.FC = () => {
             <Route path={routes.signup} component={SignUpPage} />
             <Route path={routes.home} component={Tab1} />
             <Route path="/add" component={Tab2} />
-            <Route path="/chat" component={Tab3} />
+            {/* <Route path="/chat" component={Tab3} /> */}
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="tab1" href="/tab1">

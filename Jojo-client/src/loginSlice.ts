@@ -1,19 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface LoginSlice {
-  value: number;
+  token: null | string;
 }
 
 const initialState: LoginSlice = {
-  value: 0,
+  token: null,
 };
 
 export const loginSlice = createSlice({
   name: "login",
   initialState,
-  reducers: {},
+  reducers: {
+    setCredentials: (state, { payload: { token } }) => {
+      state.token = token;
+    },
+  },
 });
 
-export const {} = loginSlice.actions;
+export const { setCredentials } = loginSlice.actions;
 
 export default loginSlice.reducer;

@@ -17,8 +17,37 @@ import {
 } from "@ionic/react";
 import { routes } from "../routes";
 import { Link } from "react-router-dom";
+import { useCallback, useRef } from "react";
+import { usePostUserSignUpMutation } from "../api/loginQuery";
+import { FetchError } from "./types";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../loginSlice";
 
 export function SignUpPage() {
+  const firstName = useRef<HTMLIonInputElement | null>(null);
+  const lastName = useRef<HTMLIonInputElement | null>(null);
+  const email = useRef<HTMLIonInputElement | null>(null);
+  const password = useRef<HTMLIonInputElement | null>(null);
+  const confirmedPassword = useRef<HTMLIonInputElement | null>(null);
+  const userType = useRef<HTMLIonSelectElement | null>(null);
+  const [signUp] = usePostUserSignUpMutation();
+  const dispatch = useDispatch();
+
+  const signUpOnSubmit = useCallback(async () => {
+    const json = await signUp({
+      firstName: firstName.current?.value?.toString(),
+      lastName: lastName.current?.value?.toString(),
+      email: email.current?.value?.toString(),
+      password: password.current?.value?.toString(),
+      confirmedPassword: confirmedPassword.current?.value?.toString(),
+      userType: userType.current?.value.toString(),
+    });
+    if ("error" in json) {
+      console.log((json.error as FetchError).data.message);
+    } else {
+      dispatch(setCredentials(json.data));
+    }
+  }, []);
   return (
     <IonPage>
       <IonContent>
@@ -34,10 +63,18 @@ export function SignUpPage() {
           <IonGrid className="ion-padding">
             <IonRow>
               <IonCol>
-                <IonInput fill="solid" placeholder="Firsname"></IonInput>
+                <IonInput
+                  fill="solid"
+                  label="First Name"
+                  ref={firstName}
+                ></IonInput>
               </IonCol>
               <IonCol>
-                <IonInput fill="solid" placeholder="Lastname"></IonInput>
+                <IonInput
+                  fill="solid"
+                  placeholder="Lastname"
+                  ref={lastName}
+                ></IonInput>
               </IonCol>
             </IonRow>
             <IonRow>
@@ -45,12 +82,17 @@ export function SignUpPage() {
                 <IonInput
                   fill="solid"
                   placeholder="youremail@gmail.com"
+                  ref={email}
                 ></IonInput>
               </IonCol>
             </IonRow>
             <IonRow>
               <IonCol>
-                <IonInput fill="solid" placeholder="Password"></IonInput>
+                <IonInput
+                  fill="solid"
+                  placeholder="Password"
+                  ref={password}
+                ></IonInput>
               </IonCol>
             </IonRow>
             <IonRow>
@@ -58,6 +100,7 @@ export function SignUpPage() {
                 <IonInput
                   fill="solid"
                   placeholder="Confirmed password"
+                  ref={confirmedPassword}
                 ></IonInput>
               </IonCol>
             </IonRow>
@@ -73,6 +116,7 @@ export function SignUpPage() {
                     aria-label="UserType"
                     interface="popover"
                     placeholder="Select Your User Type"
+                    ref={userType}
                   >
                     <IonSelectOption value="apples">LandLord</IonSelectOption>
                     <IonSelectOption value="oranges">Tenant</IonSelectOption>
@@ -87,6 +131,7 @@ export function SignUpPage() {
           size="large"
           expand="block"
           className="ion-padding"
+          onSubmit={signUpOnSubmit}
         >
           Submit
         </IonButton>
