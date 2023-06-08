@@ -1,6 +1,8 @@
 import {
   IonButton,
+  IonCheckbox,
   IonContent,
+  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
@@ -9,33 +11,54 @@ import {
   IonPage,
   IonTitle,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
 import { eyeOffOutline, eyeOutline } from "ionicons/icons";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginQuery";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../slices/authSlice";
+import { FetchError } from "./types";
+import { RootState } from "../RTKstore";
+import { setErrors } from "../slices/errorsSlice";
+import { useCheckBox } from "../useHook/useCheckBox";
 
 export function LoginPage() {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
-  const [loginFetch] = usePostUserLoginMutation({});
+  const [loginFetch] = usePostUserLoginMutation();
+  const dispatch = useDispatch();
+  const { checked, checkBoxOnClick } = useCheckBox();
+  const errors = useSelector((state: RootState) => state.errors.errors);
 
-  const eyeOffOnClick = useCallback(() => {
-    if (ionPassword.current && ionPassword.current.type == "password")
-      ionPassword.current!.type = "text";
-    else if (ionPassword.current && ionPassword.current.type == "text")
-      ionPassword.current!.type = "password";
+  const loginOnClick = useCallback(async () => {
+    let json: any;
+    try {
+      json = await loginFetch({
+        email: ionUsername.current?.value?.toString(),
+        password: ionPassword.current?.value?.toString(),
+      });
+    } catch (error) {
+      dispatch(setErrors("Fetch Failed"));
+    }
+
+    if ("error" in json) {
+      dispatch(setErrors((json.error as FetchError).data.message));
+    } else {
+      dispatch(setCredentials(json.data));
+      dispatch(setErrors(""));
+    }
   }, []);
-  const loginOnClick = useCallback(() => {
-    loginFetch({
-      username: ionUsername.current?.value?.toString(),
-      password: ionPassword.current?.value?.toString(),
-    });
-  }, []);
+
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle size="large">Sign In</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent>
-        <IonTitle size="large">Sign In</IonTitle>
         <IonList>
           <IonItem>
             <IonInput
@@ -50,15 +73,26 @@ export function LoginPage() {
             <IonInput
               label="Password"
               labelPlacement="stacked"
-              type="password"
+              type={!checked ? "password" : "text"}
               fill="solid"
               ref={ionPassword}
               placeholder="Enter text"
             ></IonInput>
-            <IonButton>
-              <IonIcon icon={eyeOffOutline} onClick={eyeOffOnClick}></IonIcon>
-            </IonButton>
           </IonItem>
+          {errors.length > 0 ? (
+            errors.map((error, idx) => {
+              return <div key={idx + 1}>{error}</div>;
+            })
+          ) : (
+            <></>
+          )}
+          <IonCheckbox
+            checked={checked}
+            color="primary"
+            onIonChange={checkBoxOnClick}
+          >
+            Show Password
+          </IonCheckbox>
           <IonButton
             expand="block"
             className="ion-margin"

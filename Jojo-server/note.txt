@@ -1,0 +1,36 @@
+# PostController
+POST /posts/123/like
+GET /posts/123/like
+GET /posts/123/tags
+GET /posts/search?tags=cat
+
+
+# PostService
+
+# PostLikeService
+# PostTagService
+# EmailNoticeService
+
+# Database
+
+post
+----
+id
+author_id
+title
+image
+
+post_like
+---------
+post_id
+user_id
+
+tag
+---
+id
+name
+
+post_tag
+--------
+post_id
+tag_id

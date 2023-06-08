@@ -32,8 +32,13 @@
     "react-redux": "^8.0.7",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
+<<<<<<< HEAD
     "socket.io": "^4.6.2",
     "socket.io-client": "^4.6.2"
+=======
+    "redux-persist": "^6.0.0",
+    "socket.io": "^4.6.2"
+>>>>>>> 3f5f20b60413ee69cda16eafb0e03f063edf67db
   },
   "devDependencies": {
     "@capacitor/cli": "5.0.4",

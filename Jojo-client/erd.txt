@@ -1,0 +1,99 @@
+user
+----
+id integer pk
+email varchar(128) not null unique
+password_hash char(60)
+avatar text null
+first_name varchar(10)
+last_name varchar(10)
+status varchar(32)
+status_update_time timestamp not null
+user_type enum('landlord','tenant','admin')
+last_login_time timestamp  not null
+registered_at timestamp  not null
+
+property
+-----
+id integer pk
+area varchar(16) not null
+district varchar(16) not null
+location varchar(16) not null
+street varchar(16) not null
+building varchar(16) not null
+block varchar(4) 
+floor varchar(2) 
+room varchar(2) 
+Rent varchar(16) not null
+landlord_id not null fk>0- user.id 
+tenant_id fk>0- user.id
+rental_start_at timestamp 
+rental_end_at timestamp 
+created_at timestamp 
+
+complaint
+-----
+id integer pk
+description varchar(60)
+type enum('maintenance','notices','reimbursement','complaint')
+priority enum('high','medium','low')
+status enum('resolved','pending','rejected')
+content text
+reason text
+property_id not null fk>0- property.id 
+handled_by_id not null fk>0- user.id 
+handled_at timestamp 
+created_by_id not null fk>0- user.id 
+created_at timestamp
+
+chatroom
+----
+id integer pk
+creator_id not null fk>0- user.id 
+receiver_id not null fk>0- user.id 
+created_at timestamp 
+
+message
+---
+id integer pk
+room_id not null fk>0- chatroom.id 
+sender_id not null fk>0- user.id 
+content text
+created_at timestamp 
+
+payment
+---
+id integer pk
+property_id not null fk>0- property.id 
+billing_period_from timestamp  not null
+billing_period_to timestamp not null
+payer_id not null fk>0- user.id 
+status enum('confirmed','pending') not null
+created_by_id not null fk>0- user.id 
+created_at timestamp  not null
+confirmed_by_id not null fk>0- user.id 
+confirmed_at timestamp  not null
+
+complaintAttachments
+---
+id integer pk
+attachments text not null
+complaint_id not null fk>0- complaint.id 
+
+paymentAttachments
+---
+id integer pk
+attachments text not null
+payment_id not null fk>0- payment.id 
+
+propertyAttachments
+---
+id integer pk
+attachments text not null
+property_id not null fk>0- property.id 
+
+log
+----
+id integer pk
+user_agent text
+url text not null
+method varchar(16) not null

@@ -1,14 +1,57 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Post,
+  UnauthorizedException,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { Request } from '@nestjs/common';
-import { LoginInputDto } from 'src/dto/post-login.dto';
+import { Headers } from '@nestjs/common';
+import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
+import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
+import { JwtService } from 'src/jwt/jwt.service';
+
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post('login')
-  login(@Body() loginInput: LoginInputDto) {
-    console.log(loginInput);
-    return this.userService.login(loginInput);
+  async loginWithPassword(
+    @Body(new ValidationPipe()) loginInput: LoginInputWithPasswordDto,
+    @Headers() headers,
+  ) {
+    let { isCorrectPassword, jwtPayload } =
+      await this.userService.loginWithPassword(loginInput);
+
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException('Incorrect password');
+    }
+    let token = this.jwtService.encode(jwtPayload);
+
+    return { token };
+  }
+  @Post('signup')
+  async signUp(
+    @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
+  ) {
+    let payload = await this.userService.signUp(signUpInput);
+    let token = this.jwtService.encode(payload);
+
+    return { token };
+  }
+
+  @Get('profile')
+  getProfile(
+    @Headers('Authorization') authorization: string,
+    @Headers() headers,
+  ) {
+    // let token = this.jwtService.decode();
+    // let token = authorization.match(/Bearer (.*)+$/)?.[1];
+    return { authorization, headers };
   }
 }
