@@ -12,9 +12,20 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square, triangle } from "ionicons/icons";
+import {
+  addCircleOutline,
+  cashOutline,
+  chatboxEllipses,
+  chatboxEllipsesOutline,
+  chatboxEllipsesSharp,
+  ellipse,
+  homeOutline,
+  mailUnreadOutline,
+  square,
+  triangle,
+} from "ionicons/icons";
 
-import Tab2 from "./pages/CreateModalTab";
+import Tab2, { EventsPage } from "./pages/EventsPage";
 import Tab3 from "./pages/Chatroom";
 
 /* Core CSS required for Ionic components to work properly */
@@ -35,7 +46,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Tab1 from "./pages/HomeTab";
+import Tab1 from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { routes } from "./routes";
 import { SignUpPage } from "./pages/SignUpPage";
@@ -47,16 +58,18 @@ import {
   RedirectUponLogin,
   RedirectUponSignUp,
 } from "./components/LoginRedirectGuard";
-import Home from "./pages/HomeTab";
+import Home from "./pages/HomePage";
 import { useCallback, useRef, useState } from "react";
-import { setIsShow } from "./slices/modalSlice";
+import { onPresent } from "./slices/createModalSlice";
+import HomePage from "./pages/HomePage";
+import PaymentPage from "./pages/PaymentPage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const inShowOnClick = useCallback(() => {
-    dispatch(setIsShow());
+    dispatch(onPresent());
   }, []);
   return (
     <IonApp>
@@ -67,29 +80,48 @@ const App: React.FC = () => {
             <Route path={routes.login} component={LoginPage}></Route>
             {/* <RedirectUponLogin fromUrl={routes.login} toUrl={routes.home} /> */}
             <RedirectUponSignUp fromUrl={routes.signup} toUrl={routes.home} />
-            <Route path={routes.home} component={Home} />
-            <Route path="/add" component={Tab2} />
-            {/* <Route path="*" component={ErrorPage} /> */}
+            <Route path={routes.home} component={HomePage} />
+            <Route path={routes.events} component={EventsPage} />
+            <Route path={routes.payments} component={PaymentPage} />
+            <Route component={ErrorPage} />
             {/* <Route path="/chat" component={Tab3} /> */}
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="home" href="/home">
-              <IonIcon aria-hidden="true" icon={triangle} />
+              <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
               <IonLabel>Home</IonLabel>
             </IonTabButton>
             <IonTabButton tab="events" href="/events">
-              <IonIcon aria-hidden="true" icon={ellipse} />
+              <IonIcon aria-hidden="true" icon={mailUnreadOutline} />
               <IonLabel>Events</IonLabel>
             </IonTabButton>
             <IonTabButton>
-              <IonButton onClick={inShowOnClick}>+</IonButton>
+              <IonIcon
+                aria-hidden="true"
+                icon={addCircleOutline}
+                onClick={inShowOnClick}
+                size="large"
+              />
             </IonTabButton>
             <IonTabButton tab="payment" href="/payment">
-              <IonIcon aria-hidden="true" icon={square} />
+              <IonIcon aria-hidden="true" icon={cashOutline} />
               <IonLabel>Payment</IonLabel>
             </IonTabButton>
             <IonTabButton tab="chat" href="/chat">
-              <IonIcon aria-hidden="true" icon={square} />
+              {true ? (
+                <IonIcon
+                  aria-hidden="true"
+                  icon={chatboxEllipsesSharp}
+                  size="large"
+                />
+              ) : (
+                <IonIcon
+                  aria-hidden="true"
+                  icon={chatboxEllipsesOutline}
+                  size="large"
+                />
+              )}
+
               <IonLabel>Chat</IonLabel>
             </IonTabButton>
           </IonTabBar>

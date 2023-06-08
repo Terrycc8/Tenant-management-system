@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { combineReducers } from "@reduxjs/toolkit";
-import modalReducer from "./slices/modalSlice";
+import createModalReducer from "./slices/createModalSlice";
+import paymentModalReducer from "./slices/paymentModalSlice";
+import propertyModalReducer from "./slices/propertyModalSlice";
+import eventsModalReducer from "./slices/eventsModalSlice";
 import authReducer from "./slices/authSlice";
 import errorsReducer from "./slices/errorsSlice";
 import storage from "redux-persist/lib/storage";
@@ -21,7 +24,10 @@ const persistConfig = {
   blacklist: ["apiProductSlice"],
 };
 export const rootReducers = combineReducers({
-  modal: modalReducer,
+  createModal: createModalReducer,
+  paymentModal: paymentModalReducer,
+  eventsModal: eventsModalReducer,
+  propertyModalReducer: propertyModalReducer,
   auth: authReducer,
   errors: errorsReducer,
   [loginApi.reducerPath]: loginApi.reducer,

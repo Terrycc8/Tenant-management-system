@@ -1,3 +1,0 @@
-function CreateComplaintPage() {
-  return <>c</>;
-}

@@ -2,6 +2,8 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonItem,
+  IonList,
   IonModal,
   IonPage,
   IonTitle,
@@ -12,15 +14,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { useCallback, useRef } from "react";
 import { RootState } from "../RTKstore";
+import { onDismiss } from "../slices/createModalSlice";
+import { CustomModal } from "../components/customModal";
 
-function Home() {
+function HomePage() {
   const dispatch = useDispatch();
   const logOutOnClick = useCallback(() => {
     dispatch(logout());
   }, []);
-  const isShow = useSelector((state: RootState) => {
-    return state.modal.isShow;
-  });
+
   return (
     <IonPage>
       <IonHeader>
@@ -35,18 +37,11 @@ function Home() {
           </IonToolbar>
         </IonHeader>
         <IonButton onClick={logOutOnClick}>Logout</IonButton>
-        <IonModal
-          isOpen={isShow}
-          trigger="open-modal"
-          initialBreakpoint={1}
-          breakpoints={[0, 1]}
-        >
-          <div className="block">Block of Content</div>
-        </IonModal>
+        <CustomModal />
         <ExploreContainer name="Tab 1 page" />
       </IonContent>
     </IonPage>
   );
 }
 
-export default Home;
+export default HomePage;

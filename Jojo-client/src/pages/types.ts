@@ -14,3 +14,7 @@ export type SignUpInput = {
   password: string;
   user_type: string;
 };
+
+export interface ModalSlice {
+  isShow: boolean;
+}
