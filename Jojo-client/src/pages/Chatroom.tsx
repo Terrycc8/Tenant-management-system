@@ -18,6 +18,9 @@ import {
 } from '@ionic/react'
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { useAppSelector } from "../../redux/hooks"
+import { selectIsLoading, selectRooms } from "../../redux/room/roomSlice"
+
 
 const socket = io("/");
 interface Message {
@@ -53,4 +56,3 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 };
 }
 
-return (

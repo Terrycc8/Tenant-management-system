@@ -13,7 +13,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
 
 import Tab2 from "./pages/CreateModalTab";
-import Tab3 from "./pages/Chatroom";
+import Tab3 from "./pages/ChatroomList";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -38,6 +38,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { routes } from "./routes";
 import { SignUpPage } from "./pages/SignUpPage";
 
+
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -54,17 +55,17 @@ const App: React.FC = () => {
             <Route path="/chat" component={Tab3} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/tab1">
-              <IonIcon aria-hidden="true" icon={triangle} />
-              <IonLabel>Tab 1</IonLabel>
+            <IonTabButton tab="tab1" href="/home">
+              <IonIcon icon={"homeOutline"} aria-hidden="true"/>
+              <IonLabel>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/tab2">
-              <IonIcon aria-hidden="true" icon={ellipse} />
-              <IonLabel>Tab 2</IonLabel>
+            <IonTabButton tab="tab2" href="/Action">
+              <IonIcon icon={"addCircleSharp"} aria-hidden="true"></IonIcon>
+              <IonLabel>+</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
-              <IonIcon aria-hidden="true" icon={square} />
-              <IonLabel>Tab 3</IonLabel>
+            <IonTabButton tab="tab3" href="/chatroom">
+              <IonIcon icon={"chatBubblesOutline"} aria-hidden="true" />
+              <IonLabel>Chat</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
