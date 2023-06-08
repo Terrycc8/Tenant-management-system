@@ -1,8 +1,10 @@
 import { Redirect, Route, Router } from "react-router-dom";
 import {
   IonApp,
+  IonButton,
   IonIcon,
   IonLabel,
+  IonModal,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -38,33 +40,57 @@ import { LoginPage } from "./pages/LoginPage";
 import { routes } from "./routes";
 import { SignUpPage } from "./pages/SignUpPage";
 
+import { ErrorPage } from "./pages/ErrorPage";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./RTKstore";
+import {
+  RedirectUponLogin,
+  RedirectUponSignUp,
+} from "./components/LoginRedirectGuard";
+import Home from "./pages/HomeTab";
+import { useCallback, useRef, useState } from "react";
+import { setIsShow } from "./slices/modalSlice";
+
 setupIonicReact();
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const inShowOnClick = useCallback(() => {
+    dispatch(setIsShow());
+  }, []);
   return (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Redirect exact from="/" to="/home" />
-            <Route path={routes.login} component={LoginPage} />
-            <Route path={routes.signup} component={SignUpPage} />
-            <Route path={routes.home} component={Tab1} />
+            <Redirect exact from="/" to={routes.home} />
+            <Route path={routes.login} component={LoginPage}></Route>
+            {/* <RedirectUponLogin fromUrl={routes.login} toUrl={routes.home} /> */}
+            <RedirectUponSignUp fromUrl={routes.signup} toUrl={routes.home} />
+            <Route path={routes.home} component={Home} />
             <Route path="/add" component={Tab2} />
+            {/* <Route path="*" component={ErrorPage} /> */}
             {/* <Route path="/chat" component={Tab3} /> */}
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/tab1">
+            <IonTabButton tab="home" href="/home">
               <IonIcon aria-hidden="true" icon={triangle} />
-              <IonLabel>Tab 1</IonLabel>
+              <IonLabel>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/tab2">
+            <IonTabButton tab="events" href="/events">
               <IonIcon aria-hidden="true" icon={ellipse} />
-              <IonLabel>Tab 2</IonLabel>
+              <IonLabel>Events</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
+            <IonTabButton>
+              <IonButton onClick={inShowOnClick}>+</IonButton>
+            </IonTabButton>
+            <IonTabButton tab="payment" href="/payment">
               <IonIcon aria-hidden="true" icon={square} />
-              <IonLabel>Tab 3</IonLabel>
+              <IonLabel>Payment</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="chat" href="/chat">
+              <IonIcon aria-hidden="true" icon={square} />
+              <IonLabel>Chat</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

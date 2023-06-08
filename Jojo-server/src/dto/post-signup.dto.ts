@@ -5,6 +5,7 @@ import {
   IsStrongPassword,
   Length,
 } from 'class-validator';
+import { UserType } from 'src/types';
 
 export class SignUpInputWithPasswordDto {
   @IsString()
@@ -14,10 +15,11 @@ export class SignUpInputWithPasswordDto {
   @Length(1, 10)
   last_name: string;
   @IsEmail()
+  @Length(3, 32)
   email: string;
   @IsStrongPassword()
+  @Length(8, 60)
   password: string;
   @IsString()
-  @IsEnum({})
-  user_type: string;
+  user_type: UserType;
 }

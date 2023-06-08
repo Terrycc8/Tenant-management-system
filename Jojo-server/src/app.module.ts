@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { ComplaintModule } from './complaint/complaint.module';
 import { KnexModule } from 'nest-knexjs';
 import { env } from './env';
+import { JwtService } from './jwt/jwt.service';
 const config = require('../knexfile');
 
 @Module({

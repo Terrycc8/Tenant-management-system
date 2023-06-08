@@ -1,3 +1,8 @@
+export type JWTPayload = {
+  id: number;
+  role: 'admin' | 'landlord' | 'tenant';
+};
+
 export type FetchError = {
   status: number;
   data: { message: string };
@@ -14,3 +19,5 @@ export type SignUpInput = {
   password: string;
   user_type: string;
 };
+
+export type UserType = 'landlord' | 'tenant';

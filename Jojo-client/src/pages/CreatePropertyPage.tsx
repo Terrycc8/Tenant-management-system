@@ -1,0 +1,3 @@
+function CreatePropertyPage() {
+  return <>p</>;
+}

@@ -4,40 +4,55 @@ import { InjectModel } from 'nest-knexjs';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { comparePassword, hashPassword } from 'src/hash';
+import { JWTPayload } from 'src/types';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel() private readonly knex: Knex) {}
 
-  async loginWithPassword(loginInput: LoginInputWithPasswordDto) {
-    // let user = await this.knex('user')
-    //   .select({ id: 'id', password_hash: 'password_hash' })
-    //   .where({ email: loginInput.email });
-    // if (!user) {
-    //   throw new BadRequestException('Invalid email, this user does not exit');
-    // }
-    // if(comparePassword(loginInput.password,user.password_hash)){}
-    return { token: '123' };
+  async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
+    let { id, hash, role } = await this.knex('user')
+      .select({ id: 'id', hash: 'password_hash', role: 'user_type' })
+      .where({ email: email })
+      .first();
+
+    if (!id) {
+      throw new BadRequestException('Invalid email, this user does not exit');
+    }
+    let isCorrectPassword = await comparePassword({
+      password,
+      hash,
+    });
+
+    return { isCorrectPassword, jwtPayload: { id, role } };
   }
-  async signUp(sigUpInput: SignUpInputWithPasswordDto) {
-    let id = await this.knex('user')
+  async signUp(sigUpInput: SignUpInputWithPasswordDto): Promise<JWTPayload> {
+    let user = await this.knex('user')
       .select('id')
-      .where({ email: sigUpInput.email });
-    if (id) {
+      .where({ email: sigUpInput.email })
+      .first();
+
+    if (user) {
       throw new BadRequestException(
         'Invalid email, this email has been registered',
       );
     }
-    await this.knex('user').insert({
-      ...sigUpInput,
-      password_hash: hashPassword(sigUpInput.password),
-      registered_at: Date.now(),
-      last_login_time: Date.now(),
-      status: 'Online',
-      status_update_time: Date.now(),
-      avatar: null,
-    });
 
-    return { token: '123' };
+    let userID: number = await this.knex('user')
+      .insert({
+        first_name: sigUpInput.first_name,
+        last_name: sigUpInput.last_name,
+        email: sigUpInput.email,
+        user_type: sigUpInput.user_type,
+        password_hash: await hashPassword(sigUpInput.password),
+        registered_at: new Date(),
+        last_login_time: new Date(),
+        status: 'Online',
+        status_update_time: new Date(),
+        avatar: '',
+      })
+      .returning('id');
+
+    return { id: userID[0].id, role: sigUpInput.user_type };
   }
 }

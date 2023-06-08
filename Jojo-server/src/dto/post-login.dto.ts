@@ -2,9 +2,9 @@ import { IsEmail, IsString, Length } from 'class-validator';
 
 export class LoginInputWithPasswordDto {
   @IsEmail()
-  @Length(1, 32)
+  @Length(3, 32)
   email: string;
   @IsString()
-  @Length(8, 20)
+  @Length(8, 60)
   password: string;
 }
