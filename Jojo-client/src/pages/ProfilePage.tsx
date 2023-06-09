@@ -18,7 +18,7 @@ const Status = () => {
 				</IonHeader>
 
 				<IonItem lines="none" className={ `${ styles.statusAvatar } ion-margin-top` }>
-                <img src="https://pbs.twimg.com/profile_images/1383061489469292548/5dhsPd4j_400x400.jpg" alt="avatar" />
+                <img src={"../icon/bill.jpeg"} alt="avatar" />
 					<div className={ styles.imageUpload }>
 						<IonIcon icon={ add } color="white" />
 					</div>
