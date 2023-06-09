@@ -25,13 +25,10 @@ import {
   triangle,
 } from "ionicons/icons";
 
-<<<<<<< HEAD
 import Tab2 from "./pages/CreateModalTab";
 import Tab3 from "./pages/ChatroomList";
-=======
 import Tab2, { EventsPage } from "./pages/EventsPage";
 import Tab3 from "./pages/Chatroom";
->>>>>>> 3f5f20b60413ee69cda16eafb0e03f063edf67db
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -56,8 +53,6 @@ import { LoginPage } from "./pages/LoginPage";
 import { routes } from "./routes";
 import { SignUpPage } from "./pages/SignUpPage";
 
-<<<<<<< HEAD
-=======
 import { ErrorPage } from "./pages/ErrorPage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./RTKstore";
@@ -70,7 +65,6 @@ import { useCallback, useRef, useState } from "react";
 import { onPresent } from "./slices/createModalSlice";
 import HomePage from "./pages/HomePage";
 import PaymentPage from "./pages/PaymentPage";
->>>>>>> 3f5f20b60413ee69cda16eafb0e03f063edf67db
 
 setupIonicReact();
 
@@ -95,7 +89,6 @@ const App: React.FC = () => {
             {/* <Route path="/chat" component={Tab3} /> */}
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-<<<<<<< HEAD
             <IonTabButton tab="tab1" href="/home">
               <IonIcon icon={"homeOutline"} aria-hidden="true"/>
               <IonLabel>Home</IonLabel>
@@ -106,7 +99,6 @@ const App: React.FC = () => {
             </IonTabButton>
             <IonTabButton tab="tab3" href="/chatroom">
               <IonIcon icon={"chatBubblesOutline"} aria-hidden="true" />
-=======
             <IonTabButton tab="home" href="/home">
               <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
               <IonLabel>Home</IonLabel>
@@ -142,7 +134,6 @@ const App: React.FC = () => {
                 />
               )}
 
->>>>>>> 3f5f20b60413ee69cda16eafb0e03f063edf67db
               <IonLabel>Chat</IonLabel>
             </IonTabButton>
           </IonTabBar>
