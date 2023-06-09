@@ -11,12 +11,9 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { useCallback, useRef } from "react";
-import { RootState } from "../RTKstore";
-import { onDismiss } from "../slices/createModalSlice";
-import { CustomModal } from "../components/CustomModal";
+import { useCallback } from "react";
 import { routes } from "../routes";
 
 function HomePage() {
@@ -33,7 +30,7 @@ function HomePage() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <CustomModal />
+        
         <ExploreContainer name="Tab 1 page" />
       </IonContent>
       <IonFooter>

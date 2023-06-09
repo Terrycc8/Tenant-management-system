@@ -9,25 +9,18 @@ import {
   IonInput,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { onPropertyDismiss } from "../slices/propertyModalSlice";
-import { onEventsDismiss } from "../slices/eventsModalSlice";
-import { onPaymentsDismiss } from "../slices/paymentModalSlice";
+
 
 export function PaymentsModal() {
-  const dispatch = useDispatch();
-  const isPaymentsShow = useSelector(
-    (state: RootState) => state.paymentsModal.isShow
-  );
-  const dismissPayments = useCallback(() => {
-    dispatch(onPaymentsDismiss());
-  }, []);
+  const paymentsModal = useRef<HTMLIonModalElement>(null);
+  const dismissPayments = useCallback(()=>{paymentsModal.current?.dismiss()},[])
   return (
     <IonModal
-      isOpen={isPaymentsShow}
-      trigger="open-modal"
+      ref={paymentsModal}
+      trigger="open-payments-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
       onWillDismiss={dismissPayments}

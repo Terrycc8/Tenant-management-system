@@ -16,12 +16,11 @@ import {
 import { eyeOffOutline, eyeOutline } from "ionicons/icons";
 import { useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
-import { usePostUserLoginMutation } from "../api/loginQuery";
+import { usePostUserLoginMutation } from "../api/loginMutation";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { FetchError } from "./types";
-import { RootState } from "../RTKstore";
-import { setErrors } from "../slices/errorsSlice";
+
 import { useCheckBox } from "../useHook/useCheckBox";
 
 export function LoginPage() {
@@ -30,7 +29,7 @@ export function LoginPage() {
   const [loginFetch] = usePostUserLoginMutation();
   const dispatch = useDispatch();
   const { checked, checkBoxOnClick } = useCheckBox();
-  const errors = useSelector((state: RootState) => state.errors.errors);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const loginOnClick = useCallback(async () => {
     let json: any;
@@ -40,14 +39,16 @@ export function LoginPage() {
         password: ionPassword.current?.value?.toString(),
       });
     } catch (error) {
-      dispatch(setErrors("Fetch Failed"));
+      setErrors((state) => (state = ["Fetch Failed"]));
     }
 
     if ("error" in json) {
-      dispatch(setErrors((json.error as FetchError).data.message));
+      setErrors(
+        (state) => (state = Array((json.error as FetchError).data.message))
+      );
     } else {
       dispatch(setCredentials(json.data));
-      dispatch(setErrors(""));
+      setErrors((state) => (state = []));
     }
   }, []);
 
@@ -80,9 +81,7 @@ export function LoginPage() {
             ></IonInput>
           </IonItem>
           {errors.length > 0 ? (
-            errors.map((error, idx) => {
-              return <div key={idx + 1}>{error}</div>;
-            })
+            errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
           ) : (
             <></>
           )}

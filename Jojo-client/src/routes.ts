@@ -6,10 +6,12 @@ export const routes = {
   chat: prefix + "/chat",
   events: prefix + "/events",
   payments: prefix + "/payments",
+
 };
 
 export const apiRoutes = {
   login: "/user/login",
   signup: "/user/signup",
   home: "/home",
+  property: "/property",
 };

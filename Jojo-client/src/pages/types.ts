@@ -14,10 +14,51 @@ export type SignUpInput = {
   password: string;
   user_type: string;
 };
-
+export type PropertyInput = {
+  title: string;
+  rent: number;
+  area: string;
+  district: string;
+  location: string;
+  street: string;
+  building: string;
+  block: string;
+  floor: string;
+  room: string;
+  rental_start_at: Date;
+  rental_end_at: Date;
+};
 export interface ModalSlice {
   isShow: boolean;
 }
 export interface LocationSlice {
   location: null | string;
 }
+
+export const district: string[][] = [
+  ["central_west", "Central west"],
+  ["eastern", "Eastern"],
+  ["southern", "Southern"],
+  ["wan_chai", "Wan Chai"],
+  ["kowloon_city", "Kowloon City"],
+  ["kwun_tong", "Kwun Tong"],
+  ["sham_shui_po", "Sham Shui Po"],
+  ["wong_tai_sin", "Wong Tai Sin"],
+  ["yau_tsim_mong", "Yau Tsim Mong"],
+  ["island", "Island"],
+  ["kwai_tsing", "Kwai Tsing"],
+  ["north", "North"],
+  ["sai_kung", "Sai Kung"],
+  ["sha_tin", "Sha Tin"],
+  ["tai_po", "Tai Po"],
+  ["tsuen_wan", "Tsuen Wan"],
+  ["tuen_mun", "Tuen Mun"],
+  ["yuen_long", "Yuen Long"],
+];
+
+export const area: string[][] = [
+  ["hong_kong", "Hong Kong"],
+  ["kowloon", "Kowloon"],
+  ["new_territories", "New Territories"],
+  ["island", "Island"],
+];

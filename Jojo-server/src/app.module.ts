@@ -7,6 +7,7 @@ import { ComplaintModule } from './complaint/complaint.module';
 import { KnexModule } from 'nest-knexjs';
 import { env } from './env';
 import { JwtService } from './jwt/jwt.service';
+import { PropertyModule } from './property/property.module';
 const config = require('../knexfile');
 
 @Module({
@@ -20,6 +21,7 @@ const config = require('../knexfile');
         config: config[env.NODE_ENV],
       }),
     }),
+    PropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,24 +19,21 @@ import {
   personCircle,
 } from "ionicons/icons";
 import { Redirect, Route } from "react-router";
-import { RedirectX } from "./components/RedirectX";
-import { UserOnlyRoute } from "./components/UserOnlyRoute";
-import EventsPage from "./pages/EventsPage";
-import HomePage from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import PaymentPage from "./pages/PaymentPage";
-import { SignUpPage } from "./pages/SignUpPage";
-import { routes } from "./routes";
+import { RedirectX } from "../components/RedirectX";
+import { UserOnlyRoute } from "../components/UserOnlyRoute";
+import EventsPage from "./EventsPage";
+import HomePage from "./HomePage";
+import { LoginPage } from "./LoginPage";
+import PaymentPage from "./PaymentPage";
+import { SignUpPage } from "./SignUpPage";
+import { routes } from "../routes";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { onPresent } from "./slices/createModalSlice";
-import { ErrorPage } from "./pages/ErrorPage";
+import { ErrorPage } from "./ErrorPage";
+
+import { CreateModal } from "../components/CreateModal";
 
 export function Tab() {
-  const dispatch = useDispatch();
-  const isShowOnClick = useCallback(() => {
-    dispatch(onPresent());
-  }, []);
   return (
     <>
       <IonHeader>
@@ -53,6 +50,7 @@ export function Tab() {
           </IonButton>
         </IonButtons>
       </IonHeader>
+
       <IonTabs>
         <IonRouterOutlet>
           <Route path={routes.payments} component={PaymentPage}></Route>
@@ -61,7 +59,6 @@ export function Tab() {
           {/* <Route path={routes.chat} component={Tab3} /> */}
           <Route component={ErrorPage} />
         </IonRouterOutlet>
-
         <IonTabBar slot="bottom">
           <IonTabButton tab="home" href={routes.home}>
             <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
@@ -73,11 +70,13 @@ export function Tab() {
           </IonTabButton>
           <IonTabButton>
             <IonIcon
+              id="open-modal"
               aria-hidden="true"
               icon={addCircleOutline}
-              onClick={isShowOnClick}
+              // onClick={isShowOnClick}
               size="large"
             />
+            <CreateModal />
           </IonTabButton>
           <IonTabButton tab="payment" href={routes.payments}>
             <IonIcon aria-hidden="true" icon={cashOutline} />

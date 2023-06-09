@@ -10,63 +10,52 @@ import {
   IonItem,
 } from "@ionic/react";
 import { closeOutline, shapesOutline } from "ionicons/icons";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { onDismiss } from "../slices/createModalSlice";
-import { onEventsPresent } from "../slices/eventsModalSlice";
-import { onPaymentsPresent } from "../slices/paymentModalSlice";
-import { onPropertyPresent } from "../slices/propertyModalSlice";
+
+import { EventsModal } from "./EventsModal";
+import { PaymentsModal } from "./PaymentsModal";
+import { PropertyModal } from "./PropertyModal";
 
 export function CreateModal() {
-  const dispatch = useDispatch();
-  const dismissOnClick = useCallback(() => {
-    dispatch(onDismiss());
-  }, []);
-
-  const isShow = useSelector((state: RootState) => {
-    return state.createModal.isShow;
-  });
-
-  const showProperty = useCallback(() => {
-    dispatch(onPropertyPresent());
-  }, []);
-  const showEvents = useCallback(() => {
-    dispatch(onEventsPresent());
-  }, []);
-  const showPayments = useCallback(() => {
-    dispatch(onPaymentsPresent());
+  const createModal = useRef<HTMLIonModalElement>(null);
+  const dismiss = useCallback(() => {
+    createModal.current?.dismiss();
   }, []);
   return (
     <IonModal
-      isOpen={isShow}
+      ref={createModal}
       trigger="open-modal"
       initialBreakpoint={0.38}
       breakpoints={[0, 0.38]}
-      onWillDismiss={dismissOnClick}
+      onWillDismiss={dismiss}
     >
       <IonContent>
         <IonToolbar>
           <IonLabel slot="start">Create</IonLabel>
           <IonButtons slot="end">
-            <IonButton onClick={dismissOnClick}>
+            <IonButton onClick={dismiss}>
               <IonIcon icon={closeOutline}></IonIcon>
             </IonButton>
           </IonButtons>
         </IonToolbar>
         <IonList>
-          <IonItem button={true} detail={false} onClick={dismissOnClick}>
+          <IonItem button={true} detail={false} id="open-property-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
-            <IonLabel onClick={showProperty}>Create new property</IonLabel>
+            <IonLabel>Create new property</IonLabel>
+            <PropertyModal />
           </IonItem>
 
-          <IonItem button={true} detail={false} onClick={dismissOnClick}>
+          <IonItem button={true} detail={false} id="open-events-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
-            <IonLabel onClick={showEvents}>Create new events</IonLabel>
+            <IonLabel>Create new event</IonLabel>
+            <EventsModal />
           </IonItem>
-          <IonItem button={true} detail={false} onClick={dismissOnClick}>
+          <IonItem button={true} detail={false} id="open-payments-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
-            <IonLabel onClick={showPayments}>Create new payment</IonLabel>
+            <IonLabel>Create new payment</IonLabel>
+            <PaymentsModal />
           </IonItem>
         </IonList>
       </IonContent>

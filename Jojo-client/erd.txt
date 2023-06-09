@@ -15,20 +15,23 @@ registered_at timestamp  not null
 property
 -----
 id integer pk
-area varchar(16) not null
-district varchar(16) not null
+title varchar(16)
+area not null enum('hong_kong','kowloon','new_territories','island')
+district not null enum('central_west','eastern','southern','wan_chai','kowloon_city','kwun_tong','sham_shui_po','wong_tai_sin','yau_tsim_mong','island','kwai_tsing','north','sai_kung','sha_tin','tai_po','tsuen_wan','tuen_mun','yuen_long') 
 location varchar(16) not null
 street varchar(16) not null
 building varchar(16) not null
-block varchar(4) 
+block varchar(4)
 floor varchar(2) 
-room varchar(2) 
-Rent varchar(16) not null
+room varchar(2)
+rent number not null
 landlord_id not null fk>0- user.id 
 tenant_id fk>0- user.id
 rental_start_at timestamp 
 rental_end_at timestamp 
 created_at timestamp 
+edited_at timestamp
+deleted_at timestamp
 
 complaint
 -----

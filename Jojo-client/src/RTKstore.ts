@@ -1,12 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { combineReducers } from "@reduxjs/toolkit";
-import createModalReducer from "./slices/createModalSlice";
-import paymentModalReducer from "./slices/paymentModalSlice";
-import propertyModalReducer from "./slices/propertyModalSlice";
-import eventsModalReducer from "./slices/eventsModalSlice";
 import authReducer from "./slices/authSlice";
-import errorsReducer from "./slices/errorsSlice";
+
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -17,20 +13,17 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { loginApi } from "./api/loginQuery";
+import { loginApi } from "./api/loginMutation";
+import { propertyApi } from "./api/propertyMutation";
 const persistConfig = {
   key: "root",
   storage: storage,
   blacklist: ["apiProductSlice"],
 };
 export const rootReducers = combineReducers({
-  createModal: createModalReducer,
-  paymentsModal: paymentModalReducer,
-  eventsModal: eventsModalReducer,
-  propertyModal: propertyModalReducer,
   auth: authReducer,
-  errors: errorsReducer,
   [loginApi.reducerPath]: loginApi.reducer,
+  [propertyApi.reducerPath]: propertyApi.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 const store = configureStore({
@@ -40,7 +33,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(loginApi.middleware),
+    }).concat(loginApi.middleware, propertyApi.middleware),
 });
 setupListeners(store.dispatch);
 export default store;

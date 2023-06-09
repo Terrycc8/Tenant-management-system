@@ -10,25 +10,19 @@ import {
   IonList,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { onPropertyDismiss } from "../slices/propertyModalSlice";
-import { onEventsDismiss } from "../slices/eventsModalSlice";
+
 
 export function EventsModal() {
-  const dispatch = useDispatch();
-  const dismissEvents = useCallback(() => {
-    dispatch(onEventsDismiss());
-  }, []);
+  const eventsModal = useRef<HTMLIonModalElement>(null);
+  const dismissEvents = useCallback(()=>{eventsModal.current?.dismiss()},[])
 
-  const isEventsShow = useSelector(
-    (state: RootState) => state.eventsModal.isShow
-  );
   return (
     <IonModal
-      isOpen={isEventsShow}
-      trigger="open-modal"
+      ref={eventsModal}
+      trigger="open-events-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
       onWillDismiss={dismissEvents}

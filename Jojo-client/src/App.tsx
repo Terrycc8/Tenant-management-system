@@ -60,13 +60,12 @@ import { RootState } from "./RTKstore";
 
 import Home from "./pages/HomePage";
 import { Profiler, useCallback, useRef, useState } from "react";
-import { onPresent } from "./slices/createModalSlice";
 import HomePage from "./pages/HomePage";
 import PaymentPage from "./pages/PaymentPage";
 import { UserOnlyRoute } from "./components/UserOnlyRoute";
 import { RedirectX } from "./components/RedirectX";
-import { CustomModal } from "./components/CustomModal";
-import { Tab } from "./Tab";
+
+import { Tab } from "./pages/Tab";
 
 setupIonicReact();
 

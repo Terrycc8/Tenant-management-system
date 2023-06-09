@@ -13,7 +13,7 @@ export const loginApi = createApi({
       query: (loginInput: LoginInput) => ({
         url: apiRoutes.login,
         method: "POST",
-        body: loginInput,
+        body: JSON.stringify(loginInput),
       }),
 
       invalidatesTags: ["login"],
@@ -22,7 +22,7 @@ export const loginApi = createApi({
       query: (signUpInput: SignUpInput) => ({
         url: apiRoutes.signup,
         method: "POST",
-        body: signUpInput,
+        body: JSON.stringify(signUpInput),
       }),
       invalidatesTags: ["login"],
     }),
