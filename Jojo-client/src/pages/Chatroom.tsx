@@ -18,6 +18,9 @@ import {
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { useAppSelector } from "../../redux/hooks"
+import { selectIsLoading, selectRooms } from "../../redux/room/roomSlice"
+
 
 const socket = io("/");
 interface Message {
@@ -53,4 +56,7 @@ export default function App() {
   };
 }
 
+<<<<<<< HEAD
 return (
+=======
+>>>>>>> 4e6743539406df91b406b7b2f9d0b39e79788e1a

@@ -29,8 +29,7 @@ import {
   triangle,
 } from "ionicons/icons";
 
-import Tab2, { EventsPage } from "./pages/EventsPage";
-import Tab3 from "./pages/Chatroom";
+
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";

@@ -32,11 +32,50 @@ import { CreateModal } from "./CreateModal";
 
 export function CustomModal() {
   return (
+<<<<<<< HEAD
     <>
       <CreateModal />
       <PropertyModal />
       <EventsModal />
       <PaymentsModal />
     </>
+=======
+    <IonModal
+      isOpen={isShow}
+      trigger="open-modal"
+      initialBreakpoint={0.38}
+      breakpoints={[0, 0.38]}
+      onWillDismiss={dismissOnClick}
+      ref={modal}
+    >
+      <IonContent>
+        <IonToolbar>
+          <IonLabel slot="start">Create</IonLabel>
+          <IonButtons slot="end">
+            <IonButton onClick={dismiss}>
+              <IonIcon icon={closeOutline}></IonIcon>
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+        <IonList>
+          <IonItem button={true} detail={false} onClick={dismiss}>
+            <IonIcon icon={shapesOutline}></IonIcon>
+            <IonLabel>Create new property</IonLabel>
+          </IonItem>
+
+          <IonItem button={true} detail={false} onClick={dismiss}>
+            Create new complaint
+          </IonItem>
+          <IonItem button={true} detail={false} onClick={dismiss}>
+            Create new payment
+          </IonItem>
+          <IonItem button={true} detail={false} onClick={dismiss}>
+            Create Chat
+          </IonItem>
+
+        </IonList>
+      </IonContent>
+    </IonModal>
+>>>>>>> 4e6743539406df91b406b7b2f9d0b39e79788e1a
   );
 }
