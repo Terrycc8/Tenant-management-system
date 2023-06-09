@@ -18,3 +18,6 @@ export type SignUpInput = {
 export interface ModalSlice {
   isShow: boolean;
 }
+export interface LocationSlice {
+  location: null | string;
+}

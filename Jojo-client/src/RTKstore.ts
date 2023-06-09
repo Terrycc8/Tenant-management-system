@@ -25,9 +25,9 @@ const persistConfig = {
 };
 export const rootReducers = combineReducers({
   createModal: createModalReducer,
-  paymentModal: paymentModalReducer,
+  paymentsModal: paymentModalReducer,
   eventsModal: eventsModalReducer,
-  propertyModalReducer: propertyModalReducer,
+  propertyModal: propertyModalReducer,
   auth: authReducer,
   errors: errorsReducer,
   [loginApi.reducerPath]: loginApi.reducer,

@@ -7,33 +7,36 @@ import {
   IonIcon,
   IonContent,
   IonInput,
+  IonList,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { onPropertyDismiss } from "../slices/propertyModalSlice";
+import { onEventsDismiss } from "../slices/eventsModalSlice";
 
-export function PropertyModal() {
+export function EventsModal() {
   const dispatch = useDispatch();
-  const isPropertyShow = useSelector(
-    (state: RootState) => state.propertyModal.isShow
-  );
-  const dismissProperty = useCallback(() => {
-    dispatch(onPropertyDismiss());
+  const dismissEvents = useCallback(() => {
+    dispatch(onEventsDismiss());
   }, []);
+
+  const isEventsShow = useSelector(
+    (state: RootState) => state.eventsModal.isShow
+  );
   return (
     <IonModal
-      isOpen={isPropertyShow}
+      isOpen={isEventsShow}
       trigger="open-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
-      onWillDismiss={dismissProperty}
+      onWillDismiss={dismissEvents}
     >
       <IonToolbar>
-        <IonLabel slot="start">Property</IonLabel>
+        <IonLabel slot="start">Events</IonLabel>
         <IonButtons slot="end">
-          <IonButton onClick={dismissProperty}>
+          <IonButton onClick={dismissEvents}>
             <IonIcon icon={closeOutline}></IonIcon>
           </IonButton>
         </IonButtons>

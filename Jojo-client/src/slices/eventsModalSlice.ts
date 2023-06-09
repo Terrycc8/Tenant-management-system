@@ -9,15 +9,15 @@ export const eventsModalSlice = createSlice({
   name: "eventsModal",
   initialState,
   reducers: {
-    onPresent: (state) => {
+    onEventsPresent: (state) => {
       state.isShow = true;
     },
-    onDismiss: (state) => {
+    onEventsDismiss: (state) => {
       state.isShow = false;
     },
   },
 });
 
-export const { onPresent, onDismiss } = eventsModalSlice.actions;
+export const { onEventsPresent, onEventsDismiss } = eventsModalSlice.actions;
 
 export default eventsModalSlice.reducer;

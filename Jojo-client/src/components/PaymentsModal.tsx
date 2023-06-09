@@ -13,27 +13,29 @@ import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { onPropertyDismiss } from "../slices/propertyModalSlice";
+import { onEventsDismiss } from "../slices/eventsModalSlice";
+import { onPaymentsDismiss } from "../slices/paymentModalSlice";
 
-export function PropertyModal() {
+export function PaymentsModal() {
   const dispatch = useDispatch();
-  const isPropertyShow = useSelector(
-    (state: RootState) => state.propertyModal.isShow
+  const isPaymentsShow = useSelector(
+    (state: RootState) => state.paymentsModal.isShow
   );
-  const dismissProperty = useCallback(() => {
-    dispatch(onPropertyDismiss());
+  const dismissPayments = useCallback(() => {
+    dispatch(onPaymentsDismiss());
   }, []);
   return (
     <IonModal
-      isOpen={isPropertyShow}
+      isOpen={isPaymentsShow}
       trigger="open-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
-      onWillDismiss={dismissProperty}
+      onWillDismiss={dismissPayments}
     >
       <IonToolbar>
-        <IonLabel slot="start">Property</IonLabel>
+        <IonLabel slot="start">Payments</IonLabel>
         <IonButtons slot="end">
-          <IonButton onClick={dismissProperty}>
+          <IonButton onClick={dismissPayments}>
             <IonIcon icon={closeOutline}></IonIcon>
           </IonButton>
         </IonButtons>

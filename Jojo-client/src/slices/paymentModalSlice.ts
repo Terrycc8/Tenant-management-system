@@ -6,18 +6,19 @@ const initialState: ModalSlice = {
 };
 
 export const paymentModalSlice = createSlice({
-  name: "paymentModal",
+  name: "paymentsModal",
   initialState,
   reducers: {
-    onPresent: (state) => {
+    onPaymentsPresent: (state) => {
       state.isShow = true;
     },
-    onDismiss: (state) => {
+    onPaymentsDismiss: (state) => {
       state.isShow = false;
     },
   },
 });
 
-export const { onPresent, onDismiss } = paymentModalSlice.actions;
+export const { onPaymentsPresent, onPaymentsDismiss } =
+  paymentModalSlice.actions;
 
 export default paymentModalSlice.reducer;

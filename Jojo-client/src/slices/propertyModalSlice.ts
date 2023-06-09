@@ -9,15 +9,16 @@ export const propertyModalSlice = createSlice({
   name: "propertyModal",
   initialState,
   reducers: {
-    onPresent: (state) => {
+    onPropertyPresent: (state) => {
       state.isShow = true;
     },
-    onDismiss: (state) => {
+    onPropertyDismiss: (state) => {
       state.isShow = false;
     },
   },
 });
 
-export const { onPresent, onDismiss } = propertyModalSlice.actions;
+export const { onPropertyPresent, onPropertyDismiss } =
+  propertyModalSlice.actions;
 
 export default propertyModalSlice.reducer;

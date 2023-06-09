@@ -1,10 +1,11 @@
+export const prefix = "/tab";
 export const routes = {
   login: "/login",
   signup: "/signup",
-  home: "/home",
-  chat: "/chat",
-  events: "/events",
-  payments: "/payments",
+  home: prefix + "/home",
+  chat: prefix + "/chat",
+  events: prefix + "/events",
+  payments: prefix + "/payments",
 };
 
 export const apiRoutes = {

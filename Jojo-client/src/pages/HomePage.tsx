@@ -1,6 +1,7 @@
 import {
   IonButton,
   IonContent,
+  IonFooter,
   IonHeader,
   IonItem,
   IonList,
@@ -15,7 +16,8 @@ import { logout } from "../slices/authSlice";
 import { useCallback, useRef } from "react";
 import { RootState } from "../RTKstore";
 import { onDismiss } from "../slices/createModalSlice";
-import { CustomModal } from "../components/customModal";
+import { CustomModal } from "../components/CustomModal";
+import { routes } from "../routes";
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -25,21 +27,24 @@ function HomePage() {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader collapse="condense">
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle size="large">Tab 1</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonButton onClick={logOutOnClick}>Logout</IonButton>
         <CustomModal />
         <ExploreContainer name="Tab 1 page" />
       </IonContent>
+      <IonFooter>
+        <IonButton
+          onClick={logOutOnClick}
+          routerLink={routes.login}
+          className="ion-margin"
+        >
+          Logout
+        </IonButton>
+      </IonFooter>
     </IonPage>
   );
 }
