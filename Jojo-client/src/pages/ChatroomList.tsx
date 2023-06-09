@@ -24,7 +24,7 @@ import { ChatStore, ContactStore } from '../store';
 import { getContacts, getChats } from '../store/Selectors';
 import ChatItem from '../components/ChatItem';
 import { useRef } from 'react';
-import ContactModal from '../components/ContactModal';
+
 
 const Chats = () => {
 
