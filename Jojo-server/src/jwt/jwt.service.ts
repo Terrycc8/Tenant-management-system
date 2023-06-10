@@ -28,7 +28,7 @@ export class JwtService {
     if (!token) {
       throw new UnauthorizedException('empty jwt token');
     }
-    console.log(1)
+
     let payload = decode(token, env.JWT_SECRET);
     if (!payload) {
       throw new ForbiddenException('invalid jwt token');
