@@ -14,7 +14,9 @@ import {
   REGISTER,
 } from "redux-persist";
 import { loginApi } from "./api/loginMutation";
-import { propertyApi } from "./api/propertyMutation";
+
+import { propertyApi } from "./api/propertyAPI";
+import { eventApi } from "./api/eventAPI";
 const persistConfig = {
   key: "root",
   storage: storage,
@@ -24,6 +26,7 @@ export const rootReducers = combineReducers({
   auth: authReducer,
   [loginApi.reducerPath]: loginApi.reducer,
   [propertyApi.reducerPath]: propertyApi.reducer,
+  [eventApi.reducerPath]: eventApi.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 const store = configureStore({
@@ -33,7 +36,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(loginApi.middleware, propertyApi.middleware),
+    }).concat(loginApi.middleware, propertyApi.middleware, eventApi.middleware),
 });
 setupListeners(store.dispatch);
 export default store;

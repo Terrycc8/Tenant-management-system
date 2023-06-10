@@ -26,35 +26,35 @@ export async function up(knex: Knex): Promise<void> {
       table.string('title', 16).notNullable()
       table.enum('area', ['hong_kong', 'kowloon', 'new_territories', 'island']).notNullable()
       table.enum('district', ['central_west', 'eastern', 'southern', 'wan_chai', 'kowloon_city', 'kwun_tong', 'sham_shui_po', 'wong_tai_sin', 'yau_tsim_mong', 'island', 'kwai_tsing', 'north', 'sai_kung', 'sha_tin', 'tai_po', 'tsuen_wan', 'tuen_mun', 'yuen_long']).notNullable()
-      table.string('location', 16).notNullable()
-      table.string('street', 16).notNullable()
-      table.string('building', 16).notNullable()
+      table.string('location', 32).notNullable()
+      table.string('street', 32).notNullable()
+      table.string('building', 32).notNullable()
       table.string('block', 4).notNullable()
-      table.string('floor', 2).notNullable()
-      table.string('room', 2).notNullable()
+      table.string('floor', 4).notNullable()
+      table.string('room', 4).notNullable()
       table.integer('rent').notNullable()
       table.integer('landlord_id').unsigned().notNullable().references('user.id')
-      table.integer('tenant_id').unsigned().notNullable().references('user.id')
+      table.integer('tenant_id').unsigned().nullable().references('user.id')
       table.timestamp('rental_start_at').notNullable()
       table.timestamp('rental_end_at').notNullable()
       table.timestamp('created_at').notNullable()
-      table.timestamp('edited_at').notNullable()
-      table.timestamp('deleted_at').notNullable()
+      table.timestamp('edited_at').nullable()
+      table.timestamp('deleted_at').nullable()
     })
   }
 
-  if (!(await knex.schema.hasTable('complaint'))) {
-    await knex.schema.createTable('complaint', table => {
+  if (!(await knex.schema.hasTable('event'))) {
+    await knex.schema.createTable('event', table => {
       table.increments('id')
-      table.string('description', 60).notNullable()
+      table.string('title', 32).notNullable()
       table.enum('type', ['maintenance', 'notices', 'reimbursement', 'complaint']).notNullable()
       table.enum('priority', ['high', 'medium', 'low']).notNullable()
       table.enum('status', ['resolved', 'pending', 'rejected']).notNullable()
-      table.text('content').notNullable()
-      table.text('reason').notNullable()
+      table.string('description', 256).notNullable()
+      table.string('reason', 256).nullable()
       table.integer('property_id').unsigned().notNullable().references('property.id')
       table.integer('handled_by_id').unsigned().notNullable().references('user.id')
-      table.timestamp('handled_at').notNullable()
+      table.timestamp('handled_at').nullable()
       table.integer('created_by_id').unsigned().notNullable().references('user.id')
       table.timestamp('created_at').notNullable()
     })
@@ -89,16 +89,16 @@ export async function up(knex: Knex): Promise<void> {
       table.enum('status', ['confirmed', 'pending']).notNullable()
       table.integer('created_by_id').unsigned().notNullable().references('user.id')
       table.timestamp('created_at').notNullable()
-      table.integer('confirmed_by_id').unsigned().notNullable().references('user.id')
-      table.timestamp('confirmed_at').notNullable()
+      table.integer('confirmed_by_id').unsigned().nullable().references('user.id')
+      table.timestamp('confirmed_at').nullable()
     })
   }
 
-  if (!(await knex.schema.hasTable('complaintAttachments'))) {
-    await knex.schema.createTable('complaintAttachments', table => {
+  if (!(await knex.schema.hasTable('eventAttachments'))) {
+    await knex.schema.createTable('eventAttachments', table => {
       table.increments('id')
       table.text('attachments').notNullable()
-      table.integer('complaint_id').unsigned().notNullable().references('complaint.id')
+      table.integer('event_id').unsigned().notNullable().references('event.id')
       table.timestamps(false, true)
     })
   }
@@ -137,11 +137,11 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('log')
   await knex.schema.dropTableIfExists('propertyAttachments')
   await knex.schema.dropTableIfExists('paymentAttachments')
-  await knex.schema.dropTableIfExists('complaintAttachments')
+  await knex.schema.dropTableIfExists('eventAttachments')
   await knex.schema.dropTableIfExists('payment')
   await knex.schema.dropTableIfExists('message')
   await knex.schema.dropTableIfExists('chatroom')
-  await knex.schema.dropTableIfExists('complaint')
+  await knex.schema.dropTableIfExists('event')
   await knex.schema.dropTableIfExists('property')
   await knex.schema.dropTableIfExists('user')
 }

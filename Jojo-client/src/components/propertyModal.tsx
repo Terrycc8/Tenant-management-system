@@ -14,12 +14,13 @@ import {
   IonDatetime,
   IonItem,
   IonGrid,
+  useIonAlert,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { FormEvent, useCallback, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { AddressSelector } from "./AddressSelector";
+
 import { FetchError, PropertyInput, area, district } from "../pages/types";
 import {
   CustomIonColInput,
@@ -33,20 +34,22 @@ import { Root } from "react-dom/client";
 
 import RentEndDate from "./RentDate";
 import RentDate from "./RentDate";
-import { usePostPropertyMutation } from "../api/propertyMutation";
+import { usePostPropertyMutation } from "../api/propertyAPI";
+import { CustomSelector } from "./CustomSelector";
 
 export function PropertyModal() {
+  const [presentAlert] = useIonAlert();
   const propertyModal = useRef<HTMLIonModalElement>(null);
   const dismissProperty = useCallback(() => {
     propertyModal.current?.dismiss();
   }, []);
-  const [errors, setErrors] = useState<string[]>([]);
+
   const token = useSelector((state: RootState) => state.auth.token);
   const [newProperty] = usePostPropertyMutation();
   const OnSubmit = useCallback(async (event: FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
-    setErrors((state) => (state = []));
+
     const json = await newProperty({
       propertyInput: formToJson(form, [
         "title",
@@ -65,12 +68,27 @@ export function PropertyModal() {
       token,
     });
     if ("error" in json) {
-      setErrors(
-        (state) => (state = Array((json.error as FetchError).data.message))
-      );
+      presentAlert({
+        header: (json.error as FetchError).data.message,
+        buttons: [
+          {
+            text: "OK",
+            role: "confirm",
+            handler: dismissProperty,
+          },
+        ],
+      });
     } else {
-      //show success toast
-      setErrors((state) => (state = []));
+      presentAlert({
+        header: "Successful",
+        buttons: [
+          {
+            text: "OK",
+            role: "confirm",
+            handler: dismissProperty,
+          },
+        ],
+      });
     }
   }, []);
 
@@ -101,12 +119,14 @@ export function PropertyModal() {
                     label="Property Title"
                     labelPlacement="floating"
                     name="title"
+                    maxlength={16}
                   ></IonInput>,
                   <IonInput
                     label="Monthly Rent"
                     labelPlacement="floating"
                     name="rent"
                     type="number"
+                    maxlength={8}
                   ></IonInput>,
                 ]}
               />
@@ -122,16 +142,19 @@ export function PropertyModal() {
                     label="Room"
                     labelPlacement="floating"
                     name="room"
+                    maxlength={4}
                   />,
                   <IonInput
                     label="Floor"
                     labelPlacement="floating"
                     name="floor"
+                    maxlength={4}
                   />,
                   <IonInput
                     label="Block"
                     labelPlacement="floating"
                     name="block"
+                    maxlength={4}
                   />,
                 ]}
               />
@@ -141,6 +164,7 @@ export function PropertyModal() {
                     label="Building/ Estate"
                     labelPlacement="floating"
                     name="building"
+                    maxlength={32}
                   />
                 }
               />
@@ -150,6 +174,7 @@ export function PropertyModal() {
                     label="Street"
                     labelPlacement="floating"
                     name="street"
+                    maxlength={32}
                   />
                 }
               />
@@ -159,17 +184,18 @@ export function PropertyModal() {
                     label="Location"
                     labelPlacement="floating"
                     name="location"
+                    maxlength={32}
                   />
                 }
               />
               <CustomIonColInput2
                 elem={[
-                  <AddressSelector
+                  <CustomSelector
                     title="District"
                     value={district}
                     name="district"
                   />,
-                  <AddressSelector title="Area" value={area} name="area" />,
+                  <CustomSelector title="Area" value={area} name="area" />,
                 ]}
               />
               <CustomIonColInput
@@ -180,7 +206,7 @@ export function PropertyModal() {
                   ></IonInput>
                 }
               />
-              {errors.length > 0 ? <>{errors}</> : <></>}
+
               <IonButton type="submit" expand="block">
                 SUBMIT
               </IonButton>

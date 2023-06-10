@@ -13,7 +13,7 @@ import { UserType } from 'src/types';
 
 export class PropertyInputDto {
   @IsString()
-  @Length(1)
+  @Length(1, 16)
   title: string;
   @IsNumber()
   rent: number;
@@ -40,26 +40,26 @@ export class PropertyInputDto {
     | 'tuen_mun'
     | 'yuen_long';
   @IsString()
-  @Length(1)
+  @Length(1, 32)
   location: string;
 
   @IsString()
-  @Length(1)
+  @Length(1, 32)
   street: string;
-  @Length(1)
+  @Length(1, 32)
   @IsString()
   building: string;
   @IsString()
-  @Length(1)
+  @Length(1, 4)
   block: string;
   @IsString()
-  @Length(1)
+  @Length(1, 4)
   floor: string;
   @IsString()
-  @Length(1)
+  @Length(1, 4)
   room: string;
   @IsDateString()
-  rental_start_at: String;
+  rental_start_at: Date;
   @IsDateString()
-  rental_end_at: String;
+  rental_end_at: Date;
 }

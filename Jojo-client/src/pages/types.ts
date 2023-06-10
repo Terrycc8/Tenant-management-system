@@ -28,12 +28,26 @@ export type PropertyInput = {
   rental_start_at: Date;
   rental_end_at: Date;
 };
+export type EventInput = {
+  title: string;
+  type: string;
+  priority: string;
+  description: string;
+};
 export interface ModalSlice {
   isShow: boolean;
 }
 export interface LocationSlice {
   location: null | string;
 }
+
+export type PropertyListOutput = {
+  id: string;
+  title: string;
+  rent: number;
+  rental_start_at: Date;
+  rental_end_at: Date;
+};
 
 export const district: string[][] = [
   ["central_west", "Central west"],
@@ -61,4 +75,22 @@ export const area: string[][] = [
   ["kowloon", "Kowloon"],
   ["new_territories", "New Territories"],
   ["island", "Island"],
+];
+
+export const event_type: string[][] = [
+  ["maintenance", "Maintenance"],
+  ["notices", "Notices"],
+  ["reimbursement", "Reimbursement"],
+  ["complaint", "Complaint"],
+];
+
+export const event_priority: string[][] = [
+  ["high", "High"],
+  ["medium", "Medium"],
+  ["low", "Low"],
+];
+export const event_status: string[][] = [
+  ["resolved", "Resolved"],
+  ["pending", "Pending"],
+  ["rejected", "Rejected"],
 ];

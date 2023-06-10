@@ -21,7 +21,7 @@ import {
 import { Redirect, Route } from "react-router";
 import { RedirectX } from "../components/RedirectX";
 import { UserOnlyRoute } from "../components/UserOnlyRoute";
-import EventsPage from "./EventsPage";
+
 import HomePage from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import PaymentPage from "./PaymentPage";
@@ -32,6 +32,9 @@ import { useDispatch } from "react-redux";
 import { ErrorPage } from "./ErrorPage";
 
 import { CreateModal } from "../components/CreateModal";
+import { PropertyPage } from "./PropertyPage";
+import { PropertyDetailPage } from "./PropertyDetailPage";
+import { EventsPage } from "./EventsPage";
 
 export function Tab() {
   return (
@@ -53,6 +56,11 @@ export function Tab() {
 
       <IonTabs>
         <IonRouterOutlet>
+          <Route exact path={routes.property} component={PropertyPage}></Route>
+          <Route
+            path={routes.propertyDetail}
+            component={PropertyDetailPage}
+          ></Route>
           <Route path={routes.payments} component={PaymentPage}></Route>
           <Route path={routes.events} component={EventsPage}></Route>
           <Route path={routes.home} component={HomePage}></Route>

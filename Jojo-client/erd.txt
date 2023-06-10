@@ -18,81 +18,81 @@ id integer pk
 title varchar(16)
 area not null enum('hong_kong','kowloon','new_territories','island')
 district not null enum('central_west','eastern','southern','wan_chai','kowloon_city','kwun_tong','sham_shui_po','wong_tai_sin','yau_tsim_mong','island','kwai_tsing','north','sai_kung','sha_tin','tai_po','tsuen_wan','tuen_mun','yuen_long') 
-location varchar(16) not null
-street varchar(16) not null
-building varchar(16) not null
+location varchar(32) not null
+street varchar(32) not null
+building varchar(32) not null
 block varchar(4)
-floor varchar(2)
-room varchar(2)
+floor varchar(4)
+room varchar(4)
 rent integer not null
 landlord_id not null fk>0- user.id 
-tenant_id fk>0- user.id
+tenant_id null fk>0- user.id
 rental_start_at timestamp 
 rental_end_at timestamp 
-created_at timestamp 
-edited_at timestamp
-deleted_at timestamp
+created_at not null timestamp 
+edited_at null timestamp
+deleted_at null timestamp
 
-complaint
+event
 -----
 id integer pk
-description varchar(60)
+title varchar(32)
 type enum('maintenance','notices','reimbursement','complaint')
 priority enum('high','medium','low')
 status enum('resolved','pending','rejected')
-content text
-reason text
-property_id not null fk>0- property.id 
-handled_by_id not null fk>0- user.id 
-handled_at timestamp 
-created_by_id not null fk>0- user.id 
+description varchar(256)
+reason null varchar(256)
+property_id  fk>0- property.id 
+handled_by_id fk>0- user.id 
+handled_at null timestamp 
+created_by_id fk>0- user.id 
 created_at timestamp
 
 chatroom
 ----
 id integer pk
-creator_id not null fk>0- user.id 
-receiver_id not null fk>0- user.id 
+creator_id  fk>0- user.id 
+receiver_id  fk>0- user.id 
 created_at timestamp 
 
 message
 ---
 id integer pk
-room_id not null fk>0- chatroom.id 
-sender_id not null fk>0- user.id 
+room_id  fk>0- chatroom.id 
+sender_id  fk>0- user.id 
 content text
 created_at timestamp 
 
 payment
 ---
 id integer pk
-property_id not null fk>0- property.id 
+property_id  fk>0- property.id 
 billing_period_from timestamp  not null
 billing_period_to timestamp not null
-payer_id not null fk>0- user.id 
+payer_id  fk>0- user.id 
 status enum('confirmed','pending') not null
-created_by_id not null fk>0- user.id 
+created_by_id  fk>0- user.id 
 created_at timestamp  not null
-confirmed_by_id not null fk>0- user.id 
-confirmed_at timestamp  not null
+confirmed_by_id null fk>0- user.id 
+confirmed_at null timestamp
 
-complaintAttachments
+eventAttachments
 ---
 id integer pk
 attachments text not null
-complaint_id not null fk>0- complaint.id 
+event_id fk>0- event.id 
 
 paymentAttachments
 ---
 id integer pk
 attachments text not null
-payment_id not null fk>0- payment.id 
+payment_id fk>0- payment.id 
 
 propertyAttachments
 ---
 id integer pk
 attachments text not null
-property_id not null fk>0- property.id 
+property_id fk>0- property.id 
 
 log
 ----

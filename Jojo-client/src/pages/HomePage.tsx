@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { useCallback } from "react";
 import { routes } from "../routes";
+import { CustomIonColInput2 } from "../components/CustomIonColInput";
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -30,8 +31,20 @@ function HomePage() {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        
-        <ExploreContainer name="Tab 1 page" />
+        <CustomIonColInput2
+          elem={[
+            <IonButton className="ion-margin" routerLink={routes.property}>
+              Total Property
+            </IonButton>,
+            <IonButton className="ion-margin">Total Tenant</IonButton>,
+          ]}
+        />
+        <CustomIonColInput2
+          elem={[
+            <IonButton className="ion-margin">Payment Received</IonButton>,
+            <IonButton className="ion-margin">To-be Received</IonButton>,
+          ]}
+        />
       </IonContent>
       <IonFooter>
         <IonButton

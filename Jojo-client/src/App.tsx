@@ -29,8 +29,6 @@ import {
   triangle,
 } from "ionicons/icons";
 
-
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -76,9 +74,9 @@ const App: React.FC = () => {
         {/* <Redirect exact from="/" to={routes.home} /> */}
         <RedirectX path={routes.login} component={<LoginPage />} />
         <RedirectX path={routes.signup} component={<SignUpPage />} />
-        <Route path={prefix}>
-          <UserOnlyRoute path={prefix} component={<Tab />} />
-        </Route>
+
+        <UserOnlyRoute path={prefix} component={<Tab />} />
+
         <Route component={ErrorPage} />
       </IonReactRouter>
     </IonApp>
