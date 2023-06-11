@@ -20,4 +20,14 @@ export type SignUpInput = {
   user_type: string;
 };
 
+export type PropertyListOutput = {
+  id: string;
+  title: string;
+  rent: number;
+  rental_start_at: Date;
+  rental_end_at: Date;
+};
+
 export type UserType = 'landlord' | 'tenant';
+
+export const userRole = { landlord: 'landlord', tenant: 'tenant' };

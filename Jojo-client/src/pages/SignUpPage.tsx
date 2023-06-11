@@ -19,27 +19,29 @@ import {
 import { routes } from "../routes";
 import { Link } from "react-router-dom";
 import { FormEvent, useCallback, useRef, useState } from "react";
-import { usePostUserSignUpMutation } from "../api/loginQuery";
-import { FetchError } from "./types";
+import { usePostUserSignUpMutation } from "../api/loginMutation";
+import { FetchError, SignUpInput } from "./types";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { formToJson } from "../helper";
 import { RootState } from "../RTKstore";
-import { setErrors } from "../slices/errorsSlice";
+
 import { useCheckBox } from "../useHook/useCheckBox";
 
 export function SignUpPage() {
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
-  const [password, setPassword] = useState("");
+  const [password] = useState("");
   const { checked, checkBoxOnClick } = useCheckBox();
-  const errors = useSelector((state: RootState) => state.errors.errors);
 
+  const [errors, setErrors] = useState<string[]>([]);
   const signUpOnSubmit = useCallback(async (event: FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     if (form["confirm_password"].value !== form["password"].value) {
-      dispatch(setErrors(["Those passwords didn’t match. Try again."]));
+      setErrors(
+        (state) => (state = ["Those passwords didn’t match. Try again."])
+      );
       return;
     }
     const json = await signUp(
@@ -49,13 +51,15 @@ export function SignUpPage() {
         "email",
         "password",
         "user_type",
-      ])
+      ]) as SignUpInput
     );
     if ("error" in json) {
-      dispatch(setErrors((json.error as FetchError).data.message));
+      setErrors(
+        (state) => (state = Array((json.error as FetchError).data.message))
+      );
     } else {
       dispatch(setCredentials(json.data));
-      dispatch(setErrors(""));
+      setErrors((state) => (state = []));
     }
   }, []);
 
@@ -130,7 +134,9 @@ export function SignUpPage() {
                 Show Password
               </IonCheckbox>
               {errors.length > 0 ? (
-                errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+                errors.map((error: string, idx: number) => (
+                  <div key={idx + 1}>{error}</div>
+                ))
               ) : (
                 <></>
               )}

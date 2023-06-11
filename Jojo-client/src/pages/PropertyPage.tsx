@@ -15,18 +15,17 @@ import {
   IonPage,
   IonTitle,
 } from "@ionic/react";
-
+import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
-import { useGetEventQuery } from "../api/eventAPI";
 
-export function EventsPage() {
+export function PropertyPage() {
   const token = useSelector((state: RootState) => state.auth.token);
-  const { data, isFetching, isLoading, isError } = useGetEventQuery(token);
+  const { data, isFetching, isLoading, isError } = useGetPropertyQuery(token);
 
   return (
     <IonPage>
       <IonHeader>
-        <IonTitle>Event list</IonTitle>
+        <IonTitle>Property list</IonTitle>
       </IonHeader>
       <IonContent>
         {isError ? (
@@ -36,26 +35,26 @@ export function EventsPage() {
         ) : isFetching ? (
           <>Fetching</>
         ) : data && data.length == 0 ? (
-          <>no event</>
+          <>no property yet</>
         ) : data && data.length > 0 ? (
           data.map(
-            (event: {
+            (property: {
               id: number;
               title: string;
-              type: string;
-              priority: string;
+              rent: number;
+              rental_start_at: string;
             }) => (
               <IonCard
-                key={event.id}
-                routerLink={routes.events + "/" + event.id}
+                key={property.id}
+                routerLink={routes.property + "/" + property.id}
               >
                 <img src="" alt="" />
                 <IonCardHeader>
-                  <IonCardTitle>{event.title}</IonCardTitle>
-                  <IonCardSubtitle>{event.type}</IonCardSubtitle>
+                  <IonCardTitle>{property.title}</IonCardTitle>
+                  <IonCardSubtitle>{property.rent}</IonCardSubtitle>
                 </IonCardHeader>
 
-                <IonCardContent>{event.priority}</IonCardContent>
+                <IonCardContent>{}</IonCardContent>
               </IonCard>
             )
           )

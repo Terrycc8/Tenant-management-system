@@ -3,18 +3,26 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { IncomingMessage } from 'http';
 import { encode, decode } from 'jwt-simple';
 import { Bearer } from 'permit';
 import { env } from 'src/env';
 import { JWTPayload } from 'src/types';
-const permit = new Bearer({ query: 'access_token' });
+const permit = new Bearer({
+  query: 'access_token',
+})
 @Injectable({})
 export class JwtService {
-  decode(headers) {
+  decode(headers): JWTPayload {
+
+    let req = { headers, url: headers.url }
     let token: string;
     try {
-      token = permit.check(headers);
+
+      token = permit.check(req as any);
+
     } catch (error) {
+
       throw new UnauthorizedException('missing jwt token');
     }
     if (!token) {
