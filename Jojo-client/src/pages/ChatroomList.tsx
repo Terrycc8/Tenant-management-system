@@ -32,7 +32,7 @@ import { formatError } from '../useHook/use-toast'
 import { getContacts, getChats } from '../store/Selectors';
 import { useRef } from 'react';
 import {RedirectUponLogin} from '../components/LoginRedirectGuard';
-import ContactModal from '../components/ContactModal';
+// import ContactModal from '../components/ContactModal';
 
 type Props = { token: string | null }
 
@@ -74,26 +74,26 @@ class ChatroomList extends React.Component<Props> {
 	  }
 	}
 	
-	useEffect(() => {
+	// useEffect(() => {
 
-		setResults(latestChats);
-	}, [ latestChats ]);
+	// 	setResults(latestChats);
+	// }, [ latestChats ]);
 
-	const search = (e: CustomEvent) => {
+	// const search = (e: CustomEvent) => {
 
-		const searchTerm = e.target.value;
+	// 	const searchTerm = e.target.value;
 
-		if (searchTerm !== "") {
+	// 	if (searchTerm !== "") {
 
-			const searchTermLower = searchTerm.toLowerCase();
+	// 		const searchTermLower = searchTerm.toLowerCase();
 
-			const newResults = latestChats.filter(chat => contacts.filter((c: Contact) => c.id === chat.contact_id)[0].name.toLowerCase().includes(searchTermLower));
-			setResults(newResults);
-		} else {
+	// 		const newResults = latestChats.filter(chat => contacts.filter((c: Contact) => c.id === chat.contact_id)[0].name.toLowerCase().includes(searchTermLower));
+	// 		setResults(newResults);
+	// 	} else {
 
-			setResults(latestChats);
-		}
-	}
+	// 		setResults(latestChats);
+	// 	}
+	// }
   
 	showContactModal = () => {
 	  this.setState({ showContactModal: true })
@@ -108,12 +108,11 @@ class ChatroomList extends React.Component<Props> {
 		this.setState({ isCreatingRoom: true })
 		let token = this.props.token
 		if (!token) return
-		// await sleep(5000)
 		let json = await createNewRoom({
 		  token,
 		  title: this.state.newRoomTitle,
 		})
-		this.hideCreateRoomModal()
+		this.hideContactModal()
 		let newRoom: GetRoomListOutput['rooms'][number] = {
 		  id: json.id,
 		  title: this.state.newRoomTitle,
