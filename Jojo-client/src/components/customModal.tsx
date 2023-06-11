@@ -60,10 +60,6 @@ export function CustomModal() {
           <IonItem button={true} detail={false} onClick={dismiss}>
             Create new payment
           </IonItem>
-          <IonItem button={true} detail={false} onClick={dismiss}>
-            Create Chat
-          </IonItem>
-
         </IonList>
       </IonContent>
     </IonModal>
