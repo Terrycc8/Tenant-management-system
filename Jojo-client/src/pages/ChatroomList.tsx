@@ -25,16 +25,16 @@ import {
   IonCardSubtitle,
   IonCardContent,
 } from "@ionic/react";
-import { createNewRoom, getRoomList, GetRoomListOutput } from '../sdk'
+import { createNewRoom, getRoomList, GetRoomListOutput } from "../sdk";
 import ExploreContainer from "../components/ExploreContainer";
 import { routes } from "../routes";
 import ContactListComponent from "../components/ContactList";
 import { contactList } from "../contactData";
-import { useEffect, useState } from 'react';
 import { checkmarkDone, createOutline } from 'ionicons/icons';
 // import './Chats.css';
-import { formatError } from '../useHook/use-toast'
-import { useRef } from 'react';
+import { useEffect, useState } from "react";
+import { formatError } from "../useHook/use-toast";
+import { useRef } from "react";
 // import {RedirectUponLogin} from '../components/LoginRedirectGuard';
 import { useSelector } from "react-redux";
 import { useGetChatQuery } from "../api/chatroomAPI";
@@ -42,10 +42,10 @@ import { RootState } from "../RTKstore";
 // import { useParams } from "react-router";
 // import ContactModal from '../components/ContactModal';
 
-type Props = { token: string | null }
-
+type Props = { token: string | null };
 
 export function ChatroomList() {
+
 	const token = useSelector((state: RootState) => state.auth.token);
 	const {
 	  data,
@@ -103,5 +103,4 @@ export function ChatroomList() {
 	  </IonPage>
 	);
   }
-
 

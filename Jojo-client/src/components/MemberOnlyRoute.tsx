@@ -10,15 +10,29 @@ import {
 
 import { routes } from "../routes";
 import { useCallback, useEffect } from "react";
+import { SignUpPage } from "../pages/SignUpPage";
 let props_history: RouteComponentProps[] = [];
 
 Object.assign(window, { props_history });
-export function MemberOnlyRoute(props: { path: string }) {
-  const { path } = props;
-
+export function MemberOnlyRoute(props: {
+  path: string;
+  component: JSX.Element;
+}) {
+  const { path, component } = props;
+  const token = useSelector((state: RootState) => {
+    return state.auth.token;
+  });
   const location = useLocation();
   useEffect(() => {
     localStorage.setItem("location", location.pathname);
   }, [location.pathname]);
-  return <Route path={path}></Route>;
+  return (
+    <Route path={path}>
+      {!token ? (
+        <SignUpPage />
+      ) : (
+        <Redirect from={routes.signup} to={location} />
+      )}
+    </Route>
+  );
 }

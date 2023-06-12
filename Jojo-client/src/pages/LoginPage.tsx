@@ -52,7 +52,7 @@ export function LoginPage() {
       console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
-      window.location.href = "123";
+      // window.location.href = "123";
     }
   }, []);
 

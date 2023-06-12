@@ -1,10 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { Redirect, Route, useLocation } from "react-router";
-import { SignUpPage } from "../pages/SignUpPage";
+import { Redirect, Route } from "react-router";
 
-import { routes } from "../routes";
-import { ReactComponentElement } from "react";
 export function RedirectForMember(props: {
   path: string;
   component: JSX.Element;
