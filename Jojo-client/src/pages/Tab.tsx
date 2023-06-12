@@ -39,12 +39,6 @@ import { ChatroomList } from "./ChatroomList";
 import { RootState } from "../RTKstore";
 
 export function Tab() {
-  // const token = useSelector((state: RootState) => state.auth.token);
-  // const location = useLocation();
-  // useEffect(() => {
-  //   localStorage.setItem("location", location.pathname);
-  //   console.log(location.pathname);
-  // }, [location.pathname]);
   return (
     <IonTabs>
       <IonRouterOutlet>
