@@ -11,7 +11,6 @@ import {
     IonToolbar,
     IonHeader,
   } from "@ionic/react";
-import { ContactStore } from "../store";
 import { getContacts } from "../store/Selectors";
 
 import "./ContactModal.scss";
