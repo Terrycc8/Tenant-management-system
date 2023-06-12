@@ -12,7 +12,15 @@ import {
   IonLabel,
   IonSearchbar,
   IonModal,
+  IonButtons,
+  IonFab,
+  IonFabButton,
+  IonFabList,
+  IonLoading,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
+import { createNewRoom, getRoomList, GetRoomListOutput } from '../sdk'
 import ExploreContainer from "../components/ExploreContainer";
 import { routes } from "../routes";
 import ContactListComponent from "../components/ContactList";
@@ -20,62 +28,139 @@ import { contactList } from "../contactData";
 import { useEffect, useState } from 'react';
 import { checkmarkDone, createOutline } from 'ionicons/icons';
 import './Chats.css';
-import { ChatStore, ContactStore } from '../store';
-import { getContacts, getChats } from '../store/Selectors';
-import ChatItem from '../components/ChatItem';
+import { formatError } from '../useHook/use-toast'
 import { useRef } from 'react';
+import {RedirectUponLogin} from '../components/LoginRedirectGuard';
+// import ContactModal from '../components/ContactModal';
+
+type Props = { token: string | null }
 
 
-const Chats = () => {
+class ChatroomList extends React.Component<Props> {
+	state = {
+	  rooms: [] as GetRoomListOutput['rooms'],
+	  error: '',
+	  showContactModal: false,
+	  newRoomTitle: '',
+	  isCreatingRoom: false,
+	}
+  
+	async componentDidMount() {
+	  if (this.props.token) {
+		this.loadRoomList(this.props.token)
+	  }
+	}
+  
+	componentDidUpdate(
+	  prevProps: Readonly<Props>,
+	  prevState: Readonly<{}>,
+	  snapshot?: any,
+	): void {
+	  if (this.props.token && !prevProps.token) {
+		this.loadRoomList(this.props.token)
+	  }
+	}
+  
+	async loadRoomList(token: string) {
+	  try {
+		let json = await getRoomList({ token })
+		this.setState({
+		  rooms: json.rooms,
+		  error: '',
+		})
+	  } catch (error) {
+		this.setState({ error: formatError(error) })
+	  }
+	}
+	
+	// useEffect(() => {
 
-	const pageRef = useRef();
-	const contacts = ContactStore.useState(getContacts);
-	const latestChats = ChatStore.useState(getChats);
+	// 	setResults(latestChats);
+	// }, [ latestChats ]);
 
-	const [ results, setResults ] = useState(latestChats);
-	const [ showContactModal, setShowContactModal ] = useState(false);
+	// const search = (e: CustomEvent) => {
 
-	useEffect(() => {
+	// 	const searchTerm = e.target.value;
 
-		setResults(latestChats);
-	}, [ latestChats ]);
+	// 	if (searchTerm !== "") {
 
-	const search = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 		const searchTermLower = searchTerm.toLowerCase();
 
-		const searchTerm = e.currentTarget.value;
+	// 		const newResults = latestChats.filter(chat => contacts.filter((c: Contact) => c.id === chat.contact_id)[0].name.toLowerCase().includes(searchTermLower));
+	// 		setResults(newResults);
+	// 	} else {
 
-		if (searchTerm !== "") {
-
-			const searchTermLower = searchTerm.toLowerCase();
-
-      const newResults = latestChats.filter(chat => { 
-        const contact = contacts.find(c => c.id === chat.contact_id);
-        if (contact) {
-          return contact.name.toLowerCase().includes(searchTermLower);
-        }
-        return false;
-      });
-      setResults(newResults);
-    } else {
-      setResults(latestChats);
-    }
-  }
+	// 		setResults(latestChats);
+	// 	}
+	// }
+  
+	showContactModal = () => {
+	  this.setState({ showContactModal: true })
+	}
+  
+	hideContactModal = () => {
+	  this.setState({ showContactModal: false })
+	}
+  
+	createRoom = async () => {
+	  try {
+		this.setState({ isCreatingRoom: true })
+		let token = this.props.token
+		if (!token) return
+		let json = await createNewRoom({
+		  token,
+		  title: this.state.newRoomTitle,
+		})
+		this.hideContactModal()
+		let newRoom: GetRoomListOutput['rooms'][number] = {
+		  id: json.id,
+		  title: this.state.newRoomTitle,
+		  created_by: json.created_by,
+		  user_id: json.user_id,
+		}
+		this.setState({
+		  rooms: [newRoom, ...this.state.rooms],
+		  error: '',
+		})
+	  } catch (error) {
+		this.setState({ error: formatError(error) })
+	  } finally {
+		this.setState({ isCreatingRoom: false })
+	  }
+	}
+  
+	render() {
+	//   const token = this.props.token
+	//   if (!token) {
+	// 	return (
+	// 	  <IonPage>
+	// 		<IonHeader>
+	// 		  <IonToolbar>
+	// 			<IonTitle>Chats</IonTitle>
+	// 		  </IonToolbar>
+	// 		</IonHeader>
+	// 		<IonContent className="ion-padding">
+	// 		  <RedirectUponLogin />
+	// 		</IonContent>
+	// 	  </IonPage>
+	// 	)
+	//   }
 
 	return (
-		<IonPage ref={ pageRef }>
+		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-        <IonLabel slot="start" size="large">Chats</IonLabel>	
-					<IonButton slot="end">
-						<IonButton fill="clear" onClick={ () => setShowContactModal(true) }>
-							<IonIcon icon={ createOutline } />
+        			<IonTitle slot="start" size="large">Chats</IonTitle>	
+						{/* <IonButton slot="end"> */}
+							<IonButton slot="end" fill="clear" onClick={ () => setShowContactModal(true) }>
+								<IonIcon icon={ createOutline } />
+							{/* </IonButton> */}
 						</IonButton>
-					</IonButton>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent fullscreen>
 				<IonHeader collapse="condense">
-					<IonSearchbar onIonChange={ e => search(e) } />
+					<IonSearchbar onIonChange={ (e) => search(e) } />
 				</IonHeader>
 
 
