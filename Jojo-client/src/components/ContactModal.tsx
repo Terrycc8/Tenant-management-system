@@ -16,10 +16,11 @@ import "./ContactModal.scss";
 import { FormEvent, useCallback, useRef,useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-
+import { useGetUsersQuery } from "../api/loginMutation";
 
 
 export function ContactModal() {
+    
     const [presentAlert] = useIonAlert();
     const contactModal = useRef<HTMLIonModalElement>(null);
     const dismissProperty = useCallback(() => {
@@ -27,28 +28,12 @@ export function ContactModal() {
     }, []);
   
     const token = useSelector((state: RootState) => state.auth.token);
+    const { data } = useGetUsersQuery(token); 
+
+    
+
     // const [newProperty] = usePostPropertyMutation();
-    const OnSubmit = useCallback(async (event: FormEvent) => {
-      event.preventDefault();
-      const form = event.target as HTMLFormElement;
   
-      const json = await newProperty({
-        propertyInput: formToJson(form, [
-          "title",
-          "rent",
-          "area",
-          "district",
-          "location",
-          "street",
-          "building",
-          "block",
-          "floor",
-          "room",
-          "rental_start_at",
-          "rental_end_at",
-        ]) as PropertyInput,
-        token,
-      });
     //   if ("error" in json) {
     //     presentAlert({
     //       header: (json.error as FetchError).data.message,
@@ -70,9 +55,7 @@ export function ContactModal() {
     //           handler: dismissProperty,
     //         },
     //       ],
-        });
-      }
-    }, []);
+
   
     return (
       <IonModal
