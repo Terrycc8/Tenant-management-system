@@ -21,11 +21,11 @@ export const loginApi = createApi({
       invalidatesTags: ["login"],
     }),
     getUsers: builder.query({
-      query: (loginInput: LoginInput) => ({
+      query: () => ({
         url: apiRoutes.user,
         headers: genHeader(),
         method: "GET",
-        body: JSON.stringify(loginInput),
+        // body: JSON.stringify(loginInput),
       }),
 
       providesTags: (result, error, arg) =>
