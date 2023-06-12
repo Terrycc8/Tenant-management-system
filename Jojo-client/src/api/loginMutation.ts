@@ -53,4 +53,4 @@ export const loginApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { usePostUserLoginMutation, usePostUserSignUpMutation } = loginApi;
+export const { usePostUserLoginMutation, useGetUserQuery, usePostUserSignUpMutation } = loginApi;
