@@ -13,23 +13,26 @@ import {
 import ExploreContainer from "../components/ExploreContainer";
 import { useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { useCallback } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { routes } from "../routes";
 import { CustomIonColInput2 } from "../components/CustomIonColInput";
+import { RouteComponentProps } from "react-router";
 
-function HomePage() {
+let props_history: RouteComponentProps[] = [];
+
+Object.assign(window, { props_history });
+
+function HomePage(props: RouteComponentProps) {
   const dispatch = useDispatch();
   const logOutOnClick = useCallback(() => {
     dispatch(logout());
   }, []);
-
+  useEffect(() => {
+    props_history.push(props);
+  }, [props]);
+  console.log("render Home", props);
   return (
     <IonPage>
-      <IonHeader collapse="condense">
-        <IonToolbar>
-          <IonTitle size="large">Tab 1</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent fullscreen>
         <CustomIonColInput2
           elem={[
@@ -45,6 +48,42 @@ function HomePage() {
             <IonButton className="ion-margin">To-be Received</IonButton>,
           ]}
         />
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
+        <IonItem>1</IonItem>
       </IonContent>
       <IonFooter>
         <IonButton
@@ -59,4 +98,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default memo(HomePage);

@@ -25,9 +25,8 @@ export function EventsPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonTitle>Event list</IonTitle>
-      </IonHeader>
+      <IonTitle>Event list</IonTitle>
+
       <IonContent>
         {isError ? (
           <>error</>
