@@ -31,6 +31,7 @@ import './Chats.css';
 import { formatError } from '../useHook/use-toast'
 import { useRef } from 'react';
 import {RedirectUponLogin} from '../components/LoginRedirectGuard';
+
 // import ContactModal from '../components/ContactModal';
 
 type Props = { token: string | null }
