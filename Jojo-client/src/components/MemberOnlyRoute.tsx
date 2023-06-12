@@ -6,12 +6,9 @@ import { Redirect, Route, useLocation } from "react-router";
 import { routes } from "../routes";
 import { useCallback, useEffect } from "react";
 
-export function MemberOnlyRoute(props: {
-  path: string;
-  component: JSX.Element;
-}) {
-  const { path, component } = props;
-  console.log("render MemberOnlyRoute", component.type.name);
+export function MemberOnlyRoute(props: { path: string; element: JSX.Element }) {
+  const { path, element } = props;
+  console.log("render MemberOnlyRoute", element.type.name);
   const token = useSelector((state: RootState) => {
     return state.auth.token;
   });
@@ -22,7 +19,7 @@ export function MemberOnlyRoute(props: {
   }, [location.pathname]);
   return (
     <Route path={path}>
-      {!token ? <Redirect from={path} to={routes.login}></Redirect> : component}
+      {!token ? <Redirect from={path} to={routes.login}></Redirect> : element}
     </Route>
   );
 }

@@ -44,7 +44,8 @@ export class UserController {
 
     return { token };
   }
-
+  @Post('signup')
+  async getUsers() {}
   @Get('profile')
   getProfile(
     @Headers('Authorization') authorization: string,

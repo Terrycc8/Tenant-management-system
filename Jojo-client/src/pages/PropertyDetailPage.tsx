@@ -14,6 +14,7 @@ import {
   IonItem,
   IonPage,
   IonTitle,
+  IonToolbar,
 } from "@ionic/react";
 import { useGetPropertyDetailQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
@@ -31,10 +32,14 @@ export function PropertyDetailPage() {
   return (
     <IonPage>
       <IonHeader>
-        <IonTitle>Property detail</IonTitle>
+        <IonToolbar>
+          <IonButton routerLink={routes.property} slot="start">
+            back
+          </IonButton>
+          <IonTitle>Property detail</IonTitle>
+        </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonButton routerLink={routes.property}>back</IonButton>
         {isError ? (
           <>error</>
         ) : isLoading ? (

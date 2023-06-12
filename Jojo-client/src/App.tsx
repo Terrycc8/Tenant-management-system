@@ -68,17 +68,20 @@ import { RedirectForMember } from "./components/RedirectForMember";
 setupIonicReact();
 
 const App: React.FC = () => {
-  console.log("render App");
   return (
     <IonApp>
       <IonReactRouter>
-        {/* <Redirect exact from="/" to={routes.home} /> */}
-        <RedirectForMember path={routes.login} component={<LoginPage />} />
-        <RedirectForMember path={routes.signup} component={<SignUpPage />} />
+        <IonRouterOutlet>
+          <Redirect exact from="/" to={routes.home} />
+          <RedirectForMember path={routes.login} element={<LoginPage />} />
+          <RedirectForMember path={routes.signup} element={<SignUpPage />} />
 
-        <MemberOnlyRoute path={prefix} component={<Tab />} />
+          <MemberOnlyRoute path={prefix} element={<Tab />} />
 
-        <Route component={ErrorPage} />
+          <Route>
+            <ErrorPage />
+          </Route>
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );

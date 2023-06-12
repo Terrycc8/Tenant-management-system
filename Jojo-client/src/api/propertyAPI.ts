@@ -4,6 +4,7 @@ import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
 import { PropertyInput } from "../pages/types";
+import { genHeader } from "./genHeader";
 // Define a service using a base URL and expected endpoints
 export const propertyApi = createApi({
   reducerPath: "propertyApi",
@@ -13,12 +14,7 @@ export const propertyApi = createApi({
     getProperty: builder.query({
       query: (token: string | null) => ({
         url: "",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-          url: apiRoutes.property,
-        },
+        headers: genHeader(token),
       }),
 
       providesTags: (result, error, arg) =>
@@ -35,12 +31,7 @@ export const propertyApi = createApi({
     getPropertyDetail: builder.query({
       query: (input: { token: string | null; id: string }) => ({
         url: `/${input.id}`,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + input.token,
-          url: apiRoutes.property + `/${input.id}`,
-        },
+        headers: genHeader(input.token),
       }),
       providesTags: (result, error, arg) =>
         result
@@ -54,12 +45,7 @@ export const propertyApi = createApi({
       }) => ({
         url: "",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + input.token,
-          url: apiRoutes.property,
-        },
+        headers: genHeader(input.token),
         body: JSON.stringify(input.propertyInput),
       }),
       invalidatesTags: ["property"],

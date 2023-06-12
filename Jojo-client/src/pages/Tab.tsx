@@ -36,153 +36,74 @@ import { PropertyPage } from "./PropertyPage";
 import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
 
-export function Tab2() {
-  console.log("render Tab");
-  return (
-    <IonTabs>
-      <IonRouterOutlet>
-        <Route exact path={routes.property} component={PropertyPage}></Route>
-        <Route
-          path={routes.propertyDetail}
-          component={PropertyDetailPage}
-        ></Route>
-        <Route path={routes.payments} component={PaymentPage}></Route>
-        <Route path={routes.events} component={EventsPage}></Route>
-        <Route path={routes.home} component={HomePage}></Route>
-        {/* <Route path={routes.home}>
-          <HomePage />
-        </Route> */}
-        {/* <Route path={routes.chat} component={Tab3} /> */}
-        {/* <Route component={ErrorPage} /> */}
-      </IonRouterOutlet>
-      <IonTabBar slot="bottom">
-        <IonTabButton tab="home" href={routes.home}>
-          <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
-          <IonLabel>Home</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="events" href={routes.events}>
-          <IonIcon aria-hidden="true" icon={mailUnreadOutline} />
-          <IonLabel>Events</IonLabel>
-        </IonTabButton>
-        <IonTabButton>
-          <IonIcon
-            id="open-modal"
-            aria-hidden="true"
-            icon={addCircleOutline}
-            // onClick={isShowOnClick}
-            size="large"
-          />
-          <CreateModal />
-        </IonTabButton>
-        <IonTabButton tab="payment" href={routes.payments}>
-          <IonIcon aria-hidden="true" icon={cashOutline} />
-          <IonLabel>Payment</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="chat" href={routes.chat}>
-          {true ? (
-            <IonIcon
-              aria-hidden="true"
-              icon={chatboxEllipsesSharp}
-              size="large"
-            />
-          ) : (
-            <IonIcon
-              aria-hidden="true"
-              icon={chatboxEllipsesOutline}
-              size="large"
-            />
-          )}
-
-          <IonLabel>Chat</IonLabel>
-        </IonTabButton>
-      </IonTabBar>
-    </IonTabs>
-  );
-}
-
 export function Tab() {
-  console.log("render Tab");
   return (
     <>
-      <IonHeader collapse="fade">
-        <IonToolbar>
-          <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" icon={personCircle}></IonIcon>
-            </IonButton>
+      <IonTabs>
+        <IonRouterOutlet>
+          <Route exact path={routes.property}>
+            <PropertyPage />
+          </Route>
+          <Route path={routes.propertyDetail}>
+            <PropertyDetailPage />
+          </Route>
+          <Route path={routes.payments}>
+            <PaymentPage />
+          </Route>
+          <Route path={routes.events}>
+            <EventsPage />
+          </Route>
+          <Route path={routes.home}>
+            <HomePage />
+          </Route>
+          {/* <Route path={routes.chat} component={Tab3} /> */}
 
-            <IonButton>
+          <Route>
+            <ErrorPage />
+          </Route>
+        </IonRouterOutlet>
+        <IonTabBar slot="bottom">
+          <IonTabButton tab="home" href={routes.home}>
+            <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
+            <IonLabel>Home</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="events" href={routes.events}>
+            <IonIcon aria-hidden="true" icon={mailUnreadOutline} />
+            <IonLabel>Events</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="create">
+            <IonIcon
+              id="open-modal"
+              aria-hidden="true"
+              icon={addCircleOutline}
+              // onClick={isShowOnClick}
+              size="large"
+            />
+            <CreateModal />
+          </IonTabButton>
+          <IonTabButton tab="payment" href={routes.payments}>
+            <IonIcon aria-hidden="true" icon={cashOutline} />
+            <IonLabel>Payment</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="chat" href={routes.chat}>
+            {true ? (
               <IonIcon
-                slot="icon-only"
-                icon={personCircle}
-                size="large"
-              ></IonIcon>
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route
-              exact
-              path={routes.property}
-              component={PropertyPage}
-            ></Route>
-            <Route
-              path={routes.propertyDetail}
-              component={PropertyDetailPage}
-            ></Route>
-            <Route path={routes.payments} component={PaymentPage}></Route>
-            <Route path={routes.events} component={EventsPage}></Route>
-            <Route path={routes.home} component={HomePage}></Route>
-            {/* <Route path={routes.chat} component={Tab3} /> */}
-            {/* <Route component={ErrorPage} /> */}
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href={routes.home}>
-              <IonIcon aria-hidden="true" icon={homeOutline} size="large" />
-              <IonLabel>Home</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="events" href={routes.events}>
-              <IonIcon aria-hidden="true" icon={mailUnreadOutline} />
-              <IonLabel>Events</IonLabel>
-            </IonTabButton>
-            <IonTabButton>
-              <IonIcon
-                id="open-modal"
                 aria-hidden="true"
-                icon={addCircleOutline}
-                // onClick={isShowOnClick}
+                icon={chatboxEllipsesSharp}
                 size="large"
               />
-              <CreateModal />
-            </IonTabButton>
-            <IonTabButton tab="payment" href={routes.payments}>
-              <IonIcon aria-hidden="true" icon={cashOutline} />
-              <IonLabel>Payment</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="chat" href={routes.chat}>
-              {true ? (
-                <IonIcon
-                  aria-hidden="true"
-                  icon={chatboxEllipsesSharp}
-                  size="large"
-                />
-              ) : (
-                <IonIcon
-                  aria-hidden="true"
-                  icon={chatboxEllipsesOutline}
-                  size="large"
-                />
-              )}
+            ) : (
+              <IonIcon
+                aria-hidden="true"
+                icon={chatboxEllipsesOutline}
+                size="large"
+              />
+            )}
 
-              <IonLabel>Chat</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonContent>
+            <IonLabel>Chat</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+      </IonTabs>
     </>
   );
 }
