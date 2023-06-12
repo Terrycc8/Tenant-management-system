@@ -20,23 +20,31 @@ import {
   chatboxEllipsesOutline,
   personCircle,
 } from "ionicons/icons";
-import { Redirect, Route } from "react-router";
+import { Redirect, Route, useLocation } from "react-router";
 
 import HomePage from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import PaymentPage from "./PaymentPage";
 import { SignUpPage } from "./SignUpPage";
 import { routes } from "../routes";
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { memo, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ErrorPage } from "./ErrorPage";
 
 import { CreateModal } from "../components/CreateModal";
 import { PropertyPage } from "./PropertyPage";
 import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
+import { ChatroomList } from "./ChatroomList";
+import { RootState } from "../RTKstore";
 
 export function Tab() {
+  const token = useSelector((state: RootState) => state.auth.token);
+  const location = useLocation();
+  useEffect(() => {
+    localStorage.setItem("location", location.pathname);
+    console.log(location.pathname);
+  }, [location.pathname]);
   return (
     <>
       <IonTabs>
@@ -56,8 +64,10 @@ export function Tab() {
           <Route path={routes.home}>
             <HomePage />
           </Route>
-          {/* <Route path={routes.chat} component={Tab3} /> */}
 
+          <Route path={routes.chat}>
+            <ChatroomList token={token} />
+          </Route>
           <Route>
             <ErrorPage />
           </Route>

@@ -19,8 +19,8 @@ export const routes = {
 };
 export const apiUserPrefix = "/user";
 export const apiRoutes = {
-  login: apiUserPrefix + "login",
-  signup: apiUserPrefix + "signup",
+  login: apiUserPrefix + "/login",
+  signup: apiUserPrefix + "/signup",
   property: "/property",
   event: "/event",
   user: "/",

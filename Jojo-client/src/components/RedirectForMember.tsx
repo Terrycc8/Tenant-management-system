@@ -4,18 +4,18 @@ import { Redirect, Route, useLocation } from "react-router";
 import { SignUpPage } from "../pages/SignUpPage";
 
 import { routes } from "../routes";
+import { ReactComponentElement } from "react";
 export function RedirectForMember(props: {
   path: string;
-
-  element: JSX.Element;
+  component: JSX.Element;
 }) {
-  const { path, element } = props;
-  console.log("render RedirectForMember", element.type.name);
+  const { path, component } = props;
+  console.log("render RedirectForMember");
   const token = useSelector((state: RootState) => state.auth.token);
-  const location = localStorage.getItem("location") || routes.home;
+
   return (
     <Route path={path}>
-      {!token ? element : <Redirect from={path} to={location} />}
+      {!token ? component : <Redirect from={path} to={location} />}
     </Route>
   );
 }

@@ -68,16 +68,32 @@ import { RedirectForMember } from "./components/RedirectForMember";
 setupIonicReact();
 
 const App: React.FC = () => {
+  const token = useSelector((state: RootState) => {
+    return state.auth.token;
+  });
+  const location = localStorage.getItem("location") || routes.home;
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Redirect exact from="/" to={routes.home} />
-          <RedirectForMember path={routes.login} element={<LoginPage />} />
-          <RedirectForMember path={routes.signup} element={<SignUpPage />} />
+          {/* <Redirect exact from="/" to={routes.home} /> */}
+          {/* <RedirectForMember path={routes.login} component={<LoginPage />} /> */}
+          <Route path={routes.login}>
+            {!token ? (
+              <LoginPage />
+            ) : (
+              <Redirect from={routes.login} to={location} />
+            )}
+          </Route>
+          <Route path={routes.signup}>
+            {!token ? (
+              <SignUpPage />
+            ) : (
+              <Redirect from={routes.signup} to={location} />
+            )}
+          </Route>
 
-          <MemberOnlyRoute path={prefix} element={<Tab />} />
-
+          <Route path={prefix}>{!token ? <LoginPage /> : <Tab />}</Route>
           <Route>
             <ErrorPage />
           </Route>
