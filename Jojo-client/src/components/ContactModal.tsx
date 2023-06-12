@@ -11,8 +11,6 @@ import {
     IonToolbar,
     IonHeader,
   } from "@ionic/react";
-import { getContacts } from "../store/Selectors";
-
 import "./ContactModal.scss";
 
 export function ContactModal () {
@@ -39,7 +37,7 @@ export function ContactModal () {
                                 <img src={ contact.avatar } alt="contact avatar" />
                                 <IonLabel>
                                     <h1>{ contact.name }</h1>
-                                    <p>Available</p>
+                                    <p>{ status }</p>
                                 </IonLabel>
                             </IonItem>
                         );

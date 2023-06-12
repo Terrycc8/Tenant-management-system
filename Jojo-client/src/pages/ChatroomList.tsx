@@ -29,7 +29,6 @@ import { useEffect, useState } from 'react';
 import { checkmarkDone, createOutline } from 'ionicons/icons';
 import './Chats.css';
 import { formatError } from '../useHook/use-toast'
-import { getContacts, getChats } from '../store/Selectors';
 import { useRef } from 'react';
 import {RedirectUponLogin} from '../components/LoginRedirectGuard';
 // import ContactModal from '../components/ContactModal';
