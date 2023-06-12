@@ -14,7 +14,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import { loginApi } from "./api/loginMutation";
-
+import { chatroomApi } from "./api/chatroomAPI";
 import { propertyApi } from "./api/propertyAPI";
 import { eventApi } from "./api/eventAPI";
 const persistConfig = {
@@ -27,6 +27,7 @@ export const rootReducers = combineReducers({
   [loginApi.reducerPath]: loginApi.reducer,
   [propertyApi.reducerPath]: propertyApi.reducer,
   [eventApi.reducerPath]: eventApi.reducer,
+  [chatroomApi.reducerPath]: chatroomApi.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 const store = configureStore({

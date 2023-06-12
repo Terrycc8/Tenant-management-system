@@ -39,6 +39,7 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useGetChatQuery } from "../api/chatroomAPI";
 import { RootState } from "../RTKstore";
+import { CommonHeaderMemo } from "../components/CommonHeader";
 // import { useParams } from "react-router";
 // import ContactModal from '../components/ContactModal';
 
@@ -62,7 +63,7 @@ export function ChatroomList() {
 		  <IonToolbar>
 			<IonTitle slot="start" size="large">Chatroom list</IonTitle>
 			{/* <IonButton slot="end" fill="clear" onClick={ () => setShowContactModal(true) }> */}
-			<IonIcon slot="end" icon={ createOutline } />		 
+			{/* <IonIcon slot="end" icon={ createOutline } />		  */}
 		 </IonToolbar>
 		</IonHeader>
 		<IonContent>
