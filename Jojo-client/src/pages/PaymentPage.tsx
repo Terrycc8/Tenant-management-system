@@ -6,11 +6,12 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import ExploreContainer from "../components/ExploreContainer";
-
+import { CommonHeaderMemo } from "../components/CommonHeader";
 
 export function PaymentPage() {
   return (
     <IonPage>
+      <CommonHeaderMemo />
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>

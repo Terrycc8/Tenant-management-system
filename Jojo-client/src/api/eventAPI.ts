@@ -4,6 +4,7 @@ import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
 import { EventInput } from "../pages/types";
+import { genHeader } from "./genHeader";
 // Define a service using a base URL and expected endpoints
 export const eventApi = createApi({
   reducerPath: "eventApi",
@@ -13,12 +14,7 @@ export const eventApi = createApi({
     getEvent: builder.query({
       query: (token: string | null) => ({
         url: "",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-          url: apiRoutes.event,
-        },
+        headers: genHeader(token),
       }),
 
       providesTags: (result, error, arg) =>

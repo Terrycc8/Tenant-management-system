@@ -8,6 +8,7 @@ import {
   IonIcon,
   IonList,
   IonItem,
+  IonHeader,
 } from "@ionic/react";
 import { closeOutline, shapesOutline } from "ionicons/icons";
 import { useCallback, useRef } from "react";
@@ -31,7 +32,7 @@ export function CreateModal() {
       breakpoints={[0, 0.38]}
       onWillDismiss={dismiss}
     >
-      <IonContent>
+      <IonHeader>
         <IonToolbar>
           <IonLabel slot="start">Create</IonLabel>
           <IonButtons slot="end">
@@ -40,6 +41,8 @@ export function CreateModal() {
             </IonButton>
           </IonButtons>
         </IonToolbar>
+      </IonHeader>
+      <IonContent>
         <IonList>
           <IonItem button={true} detail={false} id="open-property-modal">
             <IonIcon icon={shapesOutline}></IonIcon>

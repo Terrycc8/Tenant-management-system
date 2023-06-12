@@ -4,21 +4,18 @@ import { Redirect, Route, useLocation } from "react-router";
 import { SignUpPage } from "../pages/SignUpPage";
 
 import { routes } from "../routes";
-
-export function RedirectX(props: {
+export function RedirectForMember(props: {
   path: string;
 
-  component: JSX.Element;
+  element: JSX.Element;
 }) {
-  const { path, component } = props;
+  const { path, element } = props;
+  console.log("render RedirectForMember", element.type.name);
   const token = useSelector((state: RootState) => state.auth.token);
-  let location = localStorage.getItem("location");
-  if (location == null) {
-    location = routes.home;
-  }
+  const location = localStorage.getItem("location") || routes.home;
   return (
     <Route path={path}>
-      {!token ? component : <Redirect from={path} to={location} />}
+      {!token ? element : <Redirect from={path} to={location} />}
     </Route>
   );
 }

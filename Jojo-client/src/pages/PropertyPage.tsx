@@ -14,29 +14,40 @@ import {
   IonItem,
   IonPage,
   IonTitle,
+  IonToolbar,
 } from "@ionic/react";
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 
 export function PropertyPage() {
   const token = useSelector((state: RootState) => state.auth.token);
-  const { data, isFetching, isLoading, isError } = useGetPropertyQuery(token);
-
+  const {
+    data,
+    isFetching,
+    isLoading,
+    error: fetchError,
+    isError,
+  } = useGetPropertyQuery(token);
+  const error = fetchError || data?.error;
   return (
     <IonPage>
       <IonHeader>
-        <IonTitle>Property list</IonTitle>
+        <IonToolbar>
+          <IonTitle>Property list</IonTitle>
+        </IonToolbar>
       </IonHeader>
       <IonContent>
         {isError ? (
-          <>error</>
+          <>error: {String(error)}</>
         ) : isLoading ? (
           <>loading</>
         ) : isFetching ? (
           <>Fetching</>
-        ) : data && data.length == 0 ? (
+        ) : !data ? (
+          <>no data??</>
+        ) : data.length == 0 ? (
           <>no property yet</>
-        ) : data && data.length > 0 ? (
+        ) : data.length > 0 ? (
           data.map(
             (property: {
               id: number;
@@ -59,7 +70,7 @@ export function PropertyPage() {
             )
           )
         ) : (
-          <></>
+          <>invalid data: {JSON.stringify(data)}</>
         )}
       </IonContent>
     </IonPage>

@@ -18,6 +18,7 @@ import {
 
 import { routes } from "../routes";
 import { useGetEventQuery } from "../api/eventAPI";
+import { CommonHeaderMemo } from "../components/CommonHeader";
 
 export function EventsPage() {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -25,9 +26,9 @@ export function EventsPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonTitle>Event list</IonTitle>
-      </IonHeader>
+      <CommonHeaderMemo />
+      <IonTitle>Event list</IonTitle>
+
       <IonContent>
         {isError ? (
           <>error</>

@@ -60,10 +60,10 @@ import Home from "./pages/HomePage";
 import { Profiler, useCallback, useRef, useState } from "react";
 import HomePage from "./pages/HomePage";
 import PaymentPage from "./pages/PaymentPage";
-import { UserOnlyRoute } from "./components/UserOnlyRoute";
-import { RedirectX } from "./components/RedirectX";
+import { MemberOnlyRoute } from "./components/MemberOnlyRoute";
 
 import { Tab } from "./pages/Tab";
+import { RedirectForMember } from "./components/RedirectForMember";
 
 setupIonicReact();
 
@@ -71,13 +71,17 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        {/* <Redirect exact from="/" to={routes.home} /> */}
-        <RedirectX path={routes.login} component={<LoginPage />} />
-        <RedirectX path={routes.signup} component={<SignUpPage />} />
+        <IonRouterOutlet>
+          <Redirect exact from="/" to={routes.home} />
+          <RedirectForMember path={routes.login} element={<LoginPage />} />
+          <RedirectForMember path={routes.signup} element={<SignUpPage />} />
 
-        <UserOnlyRoute path={prefix} component={<Tab />} />
+          <MemberOnlyRoute path={prefix} element={<Tab />} />
 
-        <Route component={ErrorPage} />
+          <Route>
+            <ErrorPage />
+          </Route>
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );

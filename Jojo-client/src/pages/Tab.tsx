@@ -8,6 +8,8 @@ import {
   IonButton,
   IonButtons,
   IonHeader,
+  IonContent,
+  IonToolbar,
 } from "@ionic/react";
 import {
   homeOutline,
@@ -19,15 +21,13 @@ import {
   personCircle,
 } from "ionicons/icons";
 import { Redirect, Route } from "react-router";
-import { RedirectX } from "../components/RedirectX";
-import { UserOnlyRoute } from "../components/UserOnlyRoute";
 
 import HomePage from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import PaymentPage from "./PaymentPage";
 import { SignUpPage } from "./SignUpPage";
 import { routes } from "../routes";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ErrorPage } from "./ErrorPage";
 
@@ -39,33 +39,28 @@ import { EventsPage } from "./EventsPage";
 export function Tab() {
   return (
     <>
-      <IonHeader>
-        <IonButtons slot="end">
-          <IonButton>
-            <IonIcon slot="icon-only" icon={personCircle}></IonIcon>
-          </IonButton>
-          <IonButton>
-            <IonIcon
-              slot="icon-only"
-              icon={personCircle}
-              size="large"
-            ></IonIcon>
-          </IonButton>
-        </IonButtons>
-      </IonHeader>
-
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path={routes.property} component={PropertyPage}></Route>
-          <Route
-            path={routes.propertyDetail}
-            component={PropertyDetailPage}
-          ></Route>
-          <Route path={routes.payments} component={PaymentPage}></Route>
-          <Route path={routes.events} component={EventsPage}></Route>
-          <Route path={routes.home} component={HomePage}></Route>
+          <Route exact path={routes.property}>
+            <PropertyPage />
+          </Route>
+          <Route path={routes.propertyDetail}>
+            <PropertyDetailPage />
+          </Route>
+          <Route path={routes.payments}>
+            <PaymentPage />
+          </Route>
+          <Route path={routes.events}>
+            <EventsPage />
+          </Route>
+          <Route path={routes.home}>
+            <HomePage />
+          </Route>
           {/* <Route path={routes.chat} component={Tab3} /> */}
-          <Route component={ErrorPage} />
+
+          <Route>
+            <ErrorPage />
+          </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="home" href={routes.home}>
@@ -76,7 +71,7 @@ export function Tab() {
             <IonIcon aria-hidden="true" icon={mailUnreadOutline} />
             <IonLabel>Events</IonLabel>
           </IonTabButton>
-          <IonTabButton>
+          <IonTabButton tab="create">
             <IonIcon
               id="open-modal"
               aria-hidden="true"

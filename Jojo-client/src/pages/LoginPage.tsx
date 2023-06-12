@@ -22,8 +22,10 @@ import { setCredentials } from "../slices/authSlice";
 import { FetchError } from "./types";
 
 import { useCheckBox } from "../useHook/useCheckBox";
+import { RootState } from "../RTKstore";
 
 export function LoginPage() {
+  const token = useSelector((state: RootState) => state.auth.token);
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -47,8 +49,10 @@ export function LoginPage() {
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
+      console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
+      window.location.href = "123";
     }
   }, []);
 
