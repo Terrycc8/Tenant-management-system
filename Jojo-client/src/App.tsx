@@ -77,14 +77,14 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           {/* <Redirect exact from="/" to={routes.home} /> */}
-          {/* <RedirectForMember path={routes.login} component={<LoginPage />} /> */}
-          <Route path={routes.login}>
+          <RedirectForMember path={routes.login} component={<LoginPage />} />
+          {/* <Route path={routes.login}>
             {!token ? (
               <LoginPage />
             ) : (
               <Redirect from={routes.login} to={location} />
             )}
-          </Route>
+          </Route> */}
           <Route path={routes.signup}>
             {!token ? (
               <SignUpPage />
