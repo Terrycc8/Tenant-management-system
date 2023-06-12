@@ -56,7 +56,4 @@ export default function App() {
   };
 }
 
-<<<<<<< HEAD
 return (
-=======
->>>>>>> 4e6743539406df91b406b7b2f9d0b39e79788e1a

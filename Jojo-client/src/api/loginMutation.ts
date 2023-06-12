@@ -23,8 +23,9 @@ export const loginApi = createApi({
     getUsers: builder.query({
       query: () => ({
         url: apiRoutes.user,
-        headers: genHeader(),
+        headers: genHeader(token),
         method: "GET",
+        // body: JSON.stringify(loginInput),
       }),
 
       providesTags: (result, error, arg) =>
@@ -52,4 +53,8 @@ export const loginApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { usePostUserLoginMutation, usePostUserSignUpMutation } = loginApi;
+export const {
+  usePostUserLoginMutation,
+  useGetUsersQuery,
+  usePostUserSignUpMutation,
+} = loginApi;

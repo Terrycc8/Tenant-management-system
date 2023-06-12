@@ -97,7 +97,7 @@ export function SignUpPage() {
                 <IonCol>
                   <IonInput
                     fill="solid"
-                    placeholder="youremail@gmail.com"
+                    placeholder="please enter your email address"
                     name="email"
                   ></IonInput>
                 </IonCol>

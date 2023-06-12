@@ -24,4 +24,5 @@ export const apiRoutes = {
   property: "/property",
   event: "/event",
   user: "/",
+  chatroom: "/chatroom",
 };
