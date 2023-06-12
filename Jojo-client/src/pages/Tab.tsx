@@ -37,15 +37,14 @@ import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
 import { ChatroomList } from "./ChatroomList";
 import { RootState } from "../RTKstore";
-import { RedirectForMember } from "../components/RedirectForMember";
 
 export function Tab() {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const location = useLocation();
-  useEffect(() => {
-    localStorage.setItem("location", location.pathname);
-    console.log(location.pathname);
-  }, [location.pathname]);
+  // const token = useSelector((state: RootState) => state.auth.token);
+  // const location = useLocation();
+  // useEffect(() => {
+  //   localStorage.setItem("location", location.pathname);
+  //   console.log(location.pathname);
+  // }, [location.pathname]);
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -64,9 +63,6 @@ export function Tab() {
         <Route path={routes.home}>
           <HomePage />
         </Route>
-        <RedirectForMember>
-          <HomePage />
-        </RedirectForMember>
         <Route path={routes.chat}>
           <ChatroomList />
         </Route>

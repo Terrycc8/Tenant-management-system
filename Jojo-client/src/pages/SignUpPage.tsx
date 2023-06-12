@@ -15,10 +15,11 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
+  useIonRouter,
 } from "@ionic/react";
 import { routes } from "../routes";
-import { Link } from "react-router-dom";
-import { FormEvent, useCallback, useRef, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { usePostUserSignUpMutation } from "../api/loginMutation";
 import { FetchError, SignUpInput } from "./types";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +30,7 @@ import { RootState } from "../RTKstore";
 import { useCheckBox } from "../useHook/useCheckBox";
 
 export function SignUpPage() {
+  const token = useSelector((state: RootState) => state.auth.token);
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
   const [password] = useState("");
@@ -53,6 +55,13 @@ export function SignUpPage() {
         "user_type",
       ]) as SignUpInput
     );
+    // const json = await signUp({
+    //   first_name: "alice",
+    //   last_name: "wong",
+    //   email: Date.now() + "@gmail.com",
+    //   password: "Aa!11234",
+    //   user_type: "landlord",
+    // });
     if ("error" in json) {
       setErrors(
         (state) => (state = Array((json.error as FetchError).data.message))
@@ -63,9 +72,19 @@ export function SignUpPage() {
     }
   }, []);
 
+  const router = useIonRouter();
+
+  useEffect(() => {
+    if (token) {
+      router.push(routes.home, "forward", "replace");
+    }
+  }, [token]);
+
   return (
     <IonPage>
       <IonContent>
+        {/* {token ? <Redirect to={routes.home} /> : null} */}
+
         <form onSubmit={signUpOnSubmit}>
           <IonItem lines="none">
             <IonLabel>
@@ -179,6 +198,7 @@ export function SignUpPage() {
       <IonFooter>
         <IonItem
           routerLink={routes.login}
+          routerDirection="back"
           lines="none"
           className="ion-text-center"
         >

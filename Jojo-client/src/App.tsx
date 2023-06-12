@@ -63,37 +63,21 @@ import PaymentPage from "./pages/PaymentPage";
 import { MemberOnlyRoute } from "./components/MemberOnlyRoute";
 
 import { Tab } from "./pages/Tab";
-import { RedirectForMember } from "./components/RedirectForMember";
+import { GuestOnlyRoute } from "./components/GuestOnlyRoute";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const token = useSelector((state: RootState) => {
-    return state.auth.token;
-  });
-  const location = localStorage.getItem("location") || routes.home;
+  console.log("render App");
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          {/* <Redirect exact from="/" to={routes.home} /> */}
-          <RedirectForMember path={routes.login} component={<LoginPage />} />
-          {/* <Route path={routes.login}>
-            {!token ? (
-              <LoginPage />
-            ) : (
-              <Redirect from={routes.login} to={location} />
-            )}
-          </Route> */}
-          <Route path={routes.signup}>
-            {!token ? (
-              <SignUpPage />
-            ) : (
-              <Redirect from={routes.signup} to={location} />
-            )}
-          </Route>
+          <Redirect exact from="/" to={routes.home} />
+          <GuestOnlyRoute path={routes.login} component={LoginPage} />
+          <GuestOnlyRoute path={routes.signup} component={SignUpPage} />
 
-          <Route path={prefix}>{!token ? <LoginPage /> : <Tab />}</Route>
+          <MemberOnlyRoute path={prefix} component={Tab} />
           <Route>
             <ErrorPage />
           </Route>

@@ -1,38 +1,22 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { LoginPage } from "../pages/LoginPage";
-import {
-  Redirect,
-  Route,
-  RouteComponentProps,
-  useLocation,
-} from "react-router";
+import { Route } from "react-router";
 
-import { routes } from "../routes";
-import { useCallback, useEffect } from "react";
-import { SignUpPage } from "../pages/SignUpPage";
-let props_history: RouteComponentProps[] = [];
+import { ComponentType, useMemo } from "react";
 
-Object.assign(window, { props_history });
 export function MemberOnlyRoute(props: {
   path: string;
-  component: JSX.Element;
+  component: ComponentType;
 }) {
-  const { path, component } = props;
+  console.log("render MemberOnlyRoute");
+  const { path } = props;
   const token = useSelector((state: RootState) => {
     return state.auth.token;
   });
-  const location = useLocation();
-  useEffect(() => {
-    localStorage.setItem("location", location.pathname);
-  }, [location.pathname]);
-  return (
-    <Route path={path}>
-      {!token ? (
-        <SignUpPage />
-      ) : (
-        <Redirect from={routes.signup} to={location} />
-      )}
-    </Route>
+  const Child = props.component;
+  return useMemo(
+    () => <Route path={path}>{!token ? <LoginPage /> : <Child />}</Route>,
+    [path, token, Child]
   );
 }

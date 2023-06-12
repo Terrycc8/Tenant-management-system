@@ -3,29 +3,23 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
-  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
   IonTitle,
-  IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { eyeOffOutline, eyeOutline } from "ionicons/icons";
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginMutation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { FetchError } from "./types";
-
 import { useCheckBox } from "../useHook/useCheckBox";
-import { RootState } from "../RTKstore";
 
-export function LoginPage() {
-  const token = useSelector((state: RootState) => state.auth.token);
+export function LoginPage(props: {}) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();

@@ -28,6 +28,8 @@ export function HomePage() {
     dispatch(logout());
   }, []);
 
+  console.log("render home");
+
   return (
     <IonPage>
       <IonContent fullscreen>
