@@ -18,6 +18,7 @@ import { RootState } from "../RTKstore";
 import { EventsModal } from "./EventsModal";
 import { PaymentsModal } from "./PaymentsModal";
 import { PropertyModal } from "./PropertyModal";
+import { CommonModalHeader } from "./CommonModalHeader";
 
 export function CreateModal() {
   const createModal = useRef<HTMLIonModalElement>(null);
@@ -32,28 +33,21 @@ export function CreateModal() {
       breakpoints={[0, 0.38]}
       onWillDismiss={dismiss}
     >
-      <IonHeader>
-        <IonToolbar>
-          <IonLabel slot="start">Create</IonLabel>
-          <IonButtons slot="end">
-            <IonButton onClick={dismiss}>
-              <IonIcon icon={closeOutline}></IonIcon>
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <CommonModalHeader
+        handlerOnDismiss={dismiss}
+        name="Create"
+      ></CommonModalHeader>
       <IonContent>
         <IonList>
           <IonItem button={true} detail={false} id="open-property-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
             <IonLabel>Create new property</IonLabel>
-            <PropertyModal />
+            <PropertyModal createModalHandler={dismiss} />
           </IonItem>
-
           <IonItem button={true} detail={false} id="open-events-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
             <IonLabel>Create new event</IonLabel>
-            <EventsModal />
+            <EventsModal createModalHandler={dismiss} />
           </IonItem>
           <IonItem button={true} detail={false} id="open-payments-modal">
             <IonIcon icon={shapesOutline}></IonIcon>

@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { routes } from "../routes";
 
-export interface authSlice {
+export interface AuthState {
   token: null | string;
 }
 
-const initialState: authSlice = {
+const initialState: AuthState = {
   token: null,
 };
 

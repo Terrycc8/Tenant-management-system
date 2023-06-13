@@ -5,14 +5,13 @@ import { routes } from "../routes";
 import { ComponentType, memo, useMemo } from "react";
 
 export let GuestOnlyRoute = memo(
-  (props: { path: string; component: ComponentType }) => {
+  (props: { path: string; children: JSX.Element }) => {
     const { path } = props;
     const token = useSelector((state: RootState) => state.auth.token);
-    console.log("render GuestOnlyRoute", props);
-    const Child = props.component;
+    const Child = props.children;
     return (
       <Route path={path}>
-        {!token ? <Child /> : <Redirect to={routes.home} />}
+        {!token ? Child : <Redirect to={routes.home} />}
       </Route>
     );
   }

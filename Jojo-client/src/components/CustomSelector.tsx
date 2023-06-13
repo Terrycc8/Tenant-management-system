@@ -1,4 +1,4 @@
-import { IonCol, IonSelect, IonSelectOption } from "@ionic/react";
+import { IonCol, IonLabel, IonSelect, IonSelectOption } from "@ionic/react";
 import { PropertyListOutput } from "../pages/types";
 
 export function CustomSelector(props: {
@@ -25,7 +25,7 @@ export function CustomSelector(props: {
   );
 }
 
-export function CustomSelector2(props: {
+export function CustomSelectorOnFetch(props: {
   value: PropertyListOutput[];
   title: string;
   name: string;
@@ -39,16 +39,18 @@ export function CustomSelector2(props: {
         fill="outline"
         name={name}
       >
-        {value && value.length == 0 ? (
-          <>no property</>
-        ) : value && value.length > 0 ? (
+        {!value || value.length == 0 ? (
+          <IonSelectOption disabled={true}>
+            <IonLabel>No associated property.</IonLabel>
+          </IonSelectOption>
+        ) : value.length > 0 ? (
           value.map((item) => (
             <IonSelectOption value={item.id} key={item.id}>
               {item.title}
             </IonSelectOption>
           ))
         ) : (
-          <></>
+          <>Invalid Data: {JSON.stringify(value)}</>
         )}
       </IonSelect>
     </IonCol>

@@ -18,6 +18,7 @@ import {
 } from "@ionic/react";
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
+import CommonHeader from "../components/CommonHeader";
 
 export function PropertyPage() {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -29,13 +30,10 @@ export function PropertyPage() {
     isError,
   } = useGetPropertyQuery(token);
   const error = fetchError || data?.error;
+
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Property list</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <CommonHeader title="Property List" />
       <IonContent>
         {isError ? (
           <>error: {String(error)}</>
@@ -70,7 +68,7 @@ export function PropertyPage() {
             )
           )
         ) : (
-          <>invalid data: {JSON.stringify(data)}</>
+          <>Invalid Data: {JSON.stringify(data)}</>
         )}
       </IonContent>
     </IonPage>

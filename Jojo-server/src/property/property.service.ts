@@ -40,28 +40,30 @@ export class PropertyService {
     return result;
   }
   async propertyList(payload: JWTPayload) {
-    let result;
+    let query = this.knex('property').select(
+      'id',
+      'title',
+      'rent',
+      'rental_start_at',
+      'rental_end_at',
+    );
     if (payload.role == userRole.landlord) {
-      result = await this.knex('property')
-        .select('id', 'title', 'rent', 'rental_start_at', 'rental_end_at')
-        .where({ landlord_id: payload.id });
+      query = query.where({ landlord_id: payload.id });
+    } else if (payload.role == userRole.tenant) {
+      query = query.where({ tenant_id: payload.id });
+    } else {
+      throw new BadRequestException('Unknown user type');
     }
-    if (payload.role == userRole.tenant) {
-      result = await this.knex('property')
-        .select('id', 'title', 'rent', 'rental_start_at', 'rental_end_at')
-        .where({ tenant_id: payload.id });
-    }
-    return result;
+    return await query;
   }
   async newProperty(payload: JWTPayload, propertyInput: PropertyInputDto) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
       throw new BadRequestException(
-        'invalid rental period, end date must be less than or equal start date',
+        'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
     }
-    let result: number[];
 
-    result = await this.knex('property')
+    let [{ id }] = await this.knex('property')
       .insert({
         ...propertyInput,
         landlord_id: payload.id,
@@ -70,6 +72,6 @@ export class PropertyService {
       })
       .returning('id');
 
-    return { id: result[0] };
+    return { id };
   }
 }

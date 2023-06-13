@@ -3,7 +3,9 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -19,10 +21,12 @@ import {
 import { useGetPropertyDetailQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import { useParams } from "react-router";
+import { HeaderWithBackButton } from "../components/HeaderWithBackButton";
+import { IsLoading } from "../components/IsLoading";
+import CommonHeader from "../components/CommonHeader";
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
-
   const token = useSelector((state: RootState) => state.auth.token);
   const { data, isFetching, isLoading, isError } = useGetPropertyDetailQuery({
     token,
@@ -31,21 +35,14 @@ export function PropertyDetailPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButton routerLink={routes.property} slot="start">
-            back
-          </IonButton>
-          <IonTitle>Property detail</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <CommonHeader title="Property Details" />
       <IonContent>
         {isError ? (
           <>error</>
         ) : isLoading ? (
-          <>loading</>
+          <>isLoading</>
         ) : isFetching ? (
-          <>Fetching</>
+          <>loading</>
         ) : data ? (
           <IonCard key={data.id}>
             <img src="" alt="" />

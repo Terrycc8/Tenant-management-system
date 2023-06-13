@@ -3,7 +3,7 @@ import {
   Controller,
   Post,
   ValidationPipe,
-  Headers,
+  Request,
   Get,
 } from '@nestjs/common';
 import { EventInputDto } from 'src/dto/post-event.dto';
@@ -18,16 +18,16 @@ export class EventController {
     private eventService: EventService,
   ) {}
   @Get()
-  propertyList(@Headers() headers) {
-    let payLoad: JWTPayload = this.jwtService.decode(headers);
+  propertyList(@Request() req) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
     return this.eventService.eventList(payLoad);
   }
   @Post()
   newEvent(
     @Body(new ValidationPipe()) eventInput: EventInputDto,
-    @Headers() headers,
+    @Request() req,
   ) {
-    let payload = this.jwtService.decode(headers);
+    let payload = this.jwtService.decode(req);
     return this.eventService.newEvent(payload, eventInput);
   }
 }

@@ -9,7 +9,7 @@ import {
 import { PropertyService } from './property.service';
 import { JwtService } from 'src/jwt/jwt.service';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
-import { Headers } from '@nestjs/common';
+import { Request } from '@nestjs/common';
 
 import { JWTPayload } from 'src/types';
 import { IDParamDto } from 'src/dto/IDParams';
@@ -20,25 +20,25 @@ export class PropertyController {
     private jwtService: JwtService,
   ) {}
   @Get()
-  propertyList(@Headers() headers) {
-    let payLoad: JWTPayload = this.jwtService.decode(headers);
+  propertyList(@Request() req) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
     return this.propertyService.propertyList(payLoad);
   }
   @Get(':id')
   propertyDetail(
-    @Headers() headers,
+    @Request() req,
     @Param(new ValidationPipe()) params: IDParamDto,
   ) {
-    let payLoad: JWTPayload = this.jwtService.decode(headers);
+    let payLoad: JWTPayload = this.jwtService.decode(req);
 
     return this.propertyService.propertyDetail(payLoad, params.id);
   }
   @Post()
   newProperty(
     @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
-    @Headers() headers,
+    @Request() req,
   ) {
-    let payLoad: JWTPayload = this.jwtService.decode(headers);
+    let payLoad: JWTPayload = this.jwtService.decode(req);
 
     return this.propertyService.newProperty(payLoad, propertyInput);
   }

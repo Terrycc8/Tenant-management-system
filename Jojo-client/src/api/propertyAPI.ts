@@ -5,18 +5,23 @@ import serverURL from "../ServerDomain";
 import { apiRoutes, routes } from "../routes";
 import { PropertyInput } from "../pages/types";
 import { genHeader } from "./genHeader";
+import { RootState } from "../RTKstore";
+import { AuthState } from "../slices/authSlice";
 // Define a service using a base URL and expected endpoints
 export const propertyApi = createApi({
   reducerPath: "propertyApi",
   baseQuery: fetchBaseQuery({ baseUrl: serverURL + apiRoutes.property }),
   tagTypes: ["property"],
+
   endpoints: (builder) => ({
     getProperty: builder.query({
+      extraOptions: {
+        getState: (state: { auth: AuthState }) => state.auth,
+      },
       query: (token: string | null) => ({
         url: "",
         headers: genHeader(token),
       }),
-
       providesTags: (result, error, arg) =>
         result
           ? [

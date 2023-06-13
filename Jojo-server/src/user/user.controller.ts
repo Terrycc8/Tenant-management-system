@@ -8,7 +8,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Headers } from '@nestjs/common';
+import { Request } from '@nestjs/common';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -23,7 +23,7 @@ export class UserController {
   @Post('login')
   async loginWithPassword(
     @Body(new ValidationPipe()) loginInput: LoginInputWithPasswordDto,
-    @Headers() headers,
+    @Request() headers,
   ) {
     let { isCorrectPassword, jwtPayload } =
       await this.userService.loginWithPassword(loginInput);
@@ -47,12 +47,9 @@ export class UserController {
   @Post('signup')
   async getUsers() {}
   @Get('profile')
-  getProfile(
-    @Headers('Authorization') authorization: string,
-    @Headers() headers,
-  ) {
+  getProfile(@Request() headers) {
     // let token = this.jwtService.decode();
     // let token = authorization.match(/Bearer (.*)+$/)?.[1];
-    return { authorization, headers };
+    return { headers };
   }
 }

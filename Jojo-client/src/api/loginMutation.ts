@@ -23,7 +23,7 @@ export const loginApi = createApi({
     getUsers: builder.query({
       query: () => ({
         url: apiRoutes.user,
-        headers: genHeader(token),
+        headers: genHeader(),
         method: "GET",
         // body: JSON.stringify(loginInput),
       }),

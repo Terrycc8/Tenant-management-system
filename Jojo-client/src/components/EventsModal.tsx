@@ -15,8 +15,8 @@ import { closeOutline } from "ionicons/icons";
 import { FormEvent, useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { CustomIonColInput, CustomIonColInput2 } from "./CustomIonColInput";
-import { CustomSelector, CustomSelector2 } from "./CustomSelector";
+
+import { CustomSelector, CustomSelectorOnFetch } from "./CustomSelector";
 import {
   EventInput,
   FetchError,
@@ -26,15 +26,21 @@ import {
 import { usePostEventMutation } from "../api/eventAPI";
 import { formToJson } from "../helper";
 import { useGetPropertyQuery } from "../api/propertyAPI";
+import { CustomIonColInput } from "./CustomIonColInput";
+import { CommonModalHeader } from "./CommonModalHeader";
 
-export function EventsModal() {
+export function EventsModal(props: { createModalHandler: () => void }) {
   const token = useSelector((state: RootState) => state.auth.token);
   const { data } = useGetPropertyQuery(token);
   const [presentAlert] = useIonAlert();
   const eventsModal = useRef<HTMLIonModalElement>(null);
   const dismissEvents = useCallback(() => {
     eventsModal.current?.dismiss();
-  }, []);
+  }, [eventsModal]);
+  const dismissAll = useCallback(() => {
+    eventsModal.current?.dismiss();
+    props.createModalHandler();
+  }, [props, eventsModal]);
 
   const [newEvent] = usePostEventMutation();
   const OnSubmit = useCallback(async (event: FormEvent) => {
@@ -58,7 +64,6 @@ export function EventsModal() {
           {
             text: "OK",
             role: "confirm",
-            handler: dismissEvents,
           },
         ],
       });
@@ -69,7 +74,7 @@ export function EventsModal() {
           {
             text: "OK",
             role: "confirm",
-            handler: dismissEvents,
+            handler: dismissAll,
           },
         ],
       });
@@ -83,61 +88,46 @@ export function EventsModal() {
       breakpoints={[0, 1]}
       onWillDismiss={dismissEvents}
     >
-      <IonToolbar>
-        <IonLabel slot="start">Events</IonLabel>
-        <IonButtons slot="end">
-          <IonButton onClick={dismissEvents}>
-            <IonIcon icon={closeOutline}></IonIcon>
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
+      <CommonModalHeader
+        handlerOnDismiss={dismissEvents}
+        name="Event"
+      ></CommonModalHeader>
       <IonContent>
         <form onSubmit={OnSubmit}>
           <IonList>
             <IonGrid>
-              <CustomIonColInput
-                elem={
-                  <CustomSelector2
-                    title="Property"
-                    value={data}
-                    name="property_id"
-                  />
-                }
-              />
-              <CustomIonColInput
-                elem={
-                  <IonInput
-                    label="Event title"
-                    labelPlacement="floating"
-                    name="title"
-                    maxlength={32}
-                  />
-                }
-              />
-              <CustomIonColInput2
-                elem={[
-                  <CustomSelector
-                    title="Type"
-                    value={event_type}
-                    name="type"
-                  />,
-                  <CustomSelector
-                    title="Priority"
-                    value={event_priority}
-                    name="priority"
-                  />,
-                ]}
-              />
-              <CustomIonColInput
-                elem={
-                  <IonInput
-                    label="Description"
-                    labelPlacement="floating"
-                    name="description"
-                    maxlength={256}
-                  />
-                }
-              />
+              <CustomIonColInput>
+                <CustomSelectorOnFetch
+                  title="Property"
+                  value={data}
+                  name="property_id"
+                />
+              </CustomIonColInput>
+
+              <CustomIonColInput>
+                <IonInput
+                  label="Event title"
+                  labelPlacement="floating"
+                  name="title"
+                  maxlength={32}
+                />
+              </CustomIonColInput>
+              <CustomIonColInput>
+                <CustomSelector title="Type" value={event_type} name="type" />
+                <CustomSelector
+                  title="Priority"
+                  value={event_priority}
+                  name="priority"
+                />
+              </CustomIonColInput>
+              <CustomIonColInput>
+                <IonInput
+                  label="Description"
+                  labelPlacement="floating"
+                  name="description"
+                  maxlength={256}
+                />
+              </CustomIonColInput>
               <IonButton type="submit" expand="block">
                 SUBMIT
               </IonButton>

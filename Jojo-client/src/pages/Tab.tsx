@@ -26,7 +26,7 @@ import HomePage from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import PaymentPage from "./PaymentPage";
 import { SignUpPage } from "./SignUpPage";
-import { routes } from "../routes";
+import { prefix, routes } from "../routes";
 import { memo, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ErrorPage } from "./ErrorPage";
@@ -42,6 +42,8 @@ export function Tab() {
   return (
     <IonTabs>
       <IonRouterOutlet>
+        <Redirect exact from={prefix} to={routes.home} />
+
         <Route exact path={routes.property}>
           <PropertyPage />
         </Route>
