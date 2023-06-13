@@ -74,10 +74,15 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Redirect exact from="/" to={routes.home} />
-          <GuestOnlyRoute path={routes.login} component={LoginPage} />
-          <GuestOnlyRoute path={routes.signup} component={SignUpPage} />
-
-          <MemberOnlyRoute path={prefix} component={Tab} />
+          <GuestOnlyRoute path={routes.login}>
+            <LoginPage />
+          </GuestOnlyRoute>
+          <GuestOnlyRoute path={routes.signup}>
+            <SignUpPage />
+          </GuestOnlyRoute>
+          <MemberOnlyRoute path={prefix}>
+            <Tab />
+          </MemberOnlyRoute>
           <Route>
             <ErrorPage />
           </Route>

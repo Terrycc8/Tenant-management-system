@@ -1,12 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { IncomingMessage } from 'http';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
 import { JWTPayload, userRole } from 'src/types';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class PropertyService {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private uploadService: UploadService,
+  ) {}
   async propertyDetail(payload: JWTPayload, property_id: number) {
     if (payload.role !== userRole.landlord) {
       throw new BadRequestException(
@@ -40,28 +45,34 @@ export class PropertyService {
     return result;
   }
   async propertyList(payload: JWTPayload) {
-    let result;
+    let query = this.knex('property').select(
+      'id',
+      'title',
+      'rent',
+      'rental_start_at',
+      'rental_end_at',
+    );
     if (payload.role == userRole.landlord) {
-      result = await this.knex('property')
-        .select('id', 'title', 'rent', 'rental_start_at', 'rental_end_at')
-        .where({ landlord_id: payload.id });
+      query = query.where({ landlord_id: payload.id });
+    } else if (payload.role == userRole.tenant) {
+      query = query.where({ tenant_id: payload.id });
+    } else {
+      throw new BadRequestException('Unknown user type');
     }
-    if (payload.role == userRole.tenant) {
-      result = await this.knex('property')
-        .select('id', 'title', 'rent', 'rental_start_at', 'rental_end_at')
-        .where({ tenant_id: payload.id });
-    }
-    return result;
+    return await query;
   }
-  async newProperty(payload: JWTPayload, propertyInput: PropertyInputDto) {
+  async newProperty(
+    payload: JWTPayload,
+    propertyInput: PropertyInputDto,
+    req: IncomingMessage,
+  ) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
       throw new BadRequestException(
-        'invalid rental period, end date must be less than or equal start date',
+        'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
     }
-    let result: number[];
-
-    result = await this.knex('property')
+    let file = await this.uploadService.imageUpload(req);
+    let [{ id }] = await this.knex('property')
       .insert({
         ...propertyInput,
         landlord_id: payload.id,
@@ -70,6 +81,6 @@ export class PropertyService {
       })
       .returning('id');
 
-    return { id: result[0] };
+    return { id };
   }
 }

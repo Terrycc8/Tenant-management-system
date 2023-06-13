@@ -15,27 +15,47 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonicSlides,
 } from "@ionic/react";
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
+import CommonHeader from "../components/CommonHeader";
+import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
 
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/keyboard";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/zoom";
+import "@ionic/react/css/ionic-swiper.css";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+
+// Import Swiper styles
+
+import "swiper/css";
+
+import "swiper/css/navigation";
+
+import "swiper/css/pagination";
+
+import "swiper/css/scrollbar";
+
+import { Navigation } from "swiper";
+import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 export function PropertyPage() {
-  const token = useSelector((state: RootState) => state.auth.token);
   const {
     data,
     isFetching,
     isLoading,
     error: fetchError,
     isError,
-  } = useGetPropertyQuery(token);
+  } = useGetPropertyQuery({});
   const error = fetchError || data?.error;
+
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Property list</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <CommonHeader title="Property List" />
       <IonContent>
         {isError ? (
           <>error: {String(error)}</>
@@ -59,18 +79,26 @@ export function PropertyPage() {
                 key={property.id}
                 routerLink={routes.property + "/" + property.id}
               >
-                <img src="" alt="" />
                 <IonCardHeader>
                   <IonCardTitle>{property.title}</IonCardTitle>
-                  <IonCardSubtitle>{property.rent}</IonCardSubtitle>
                 </IonCardHeader>
 
-                <IonCardContent>{}</IonCardContent>
+                <IonCardContent>
+                  <Swiper
+                    modules={[Autoplay]}
+                    autoplay={false}
+                    scrollbar={{ draggable: false }}
+                  >
+                    <SwiperSlide>Slide 1</SwiperSlide>
+                    <SwiperSlide>Slide 2</SwiperSlide>
+                    <SwiperSlide>Slide 3</SwiperSlide>
+                  </Swiper>
+                </IonCardContent>
               </IonCard>
             )
           )
         ) : (
-          <>invalid data: {JSON.stringify(data)}</>
+          <>Invalid Data: {JSON.stringify(data)}</>
         )}
       </IonContent>
     </IonPage>

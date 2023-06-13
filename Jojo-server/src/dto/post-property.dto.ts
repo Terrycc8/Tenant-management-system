@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
+  IsNumberString,
   IsString,
   IsStrongPassword,
   Length,
@@ -15,7 +16,7 @@ export class PropertyInputDto {
   @IsString()
   @Length(1, 16)
   title: string;
-  @IsNumber()
+  @IsNumberString()
   rent: number;
   @IsString()
   area: 'hong_kong' | 'kowloon' | 'new_territories' | 'island';

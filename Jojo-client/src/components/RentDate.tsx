@@ -5,6 +5,7 @@ import {
   IonLabel,
   IonInput,
 } from "@ionic/react";
+import { memo } from "react";
 
 function RentEndDate(props: { name: string; id: string }) {
   const { name, id } = props;
@@ -22,4 +23,4 @@ function RentEndDate(props: { name: string; id: string }) {
     </>
   );
 }
-export default RentEndDate;
+export default memo(RentEndDate);
