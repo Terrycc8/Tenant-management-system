@@ -87,10 +87,12 @@ export function ChatroomList() {
               <img src="" alt="" />
               <IonCardHeader>
                 <IonCardTitle>{chatroom.username}</IonCardTitle>
+                {/* IonItem */}
                 {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
+                <IonCardContent>{chatroom.last_message}</IonCardContent>
               </IonCardHeader>
 
-              <IonCardContent>{1}</IonCardContent>
+              {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
             </IonCard>
           ))
         ) : (

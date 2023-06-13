@@ -11,6 +11,8 @@ import {
     IonToolbar,
     IonHeader,
     useIonAlert,
+    IonCard,
+    IonCardTitle,
   } from "@ionic/react";
 // import "./ContactModal.scss";
 import { FormEvent, useCallback, useRef,useState, useEffect } from 'react';
@@ -20,6 +22,9 @@ import { useGetUsersQuery } from "../api/loginMutation";
 import { closeOutline } from "ionicons/icons";
 
 export function ContactModal() {
+    // const token = useSelector((state: RootState) => state.auth.token);
+    // const { data, isFetching, isLoading, error } = useContactList(token);
+  
     
     const [presentAlert] = useIonAlert();
     const contactModal = useRef<HTMLIonModalElement>(null);
@@ -79,7 +84,8 @@ export function ContactModal() {
             </IonHeader>
 
             <IonContent>
-                <IonList>
+
+                    <IonList>
 
                         return (
 
@@ -91,8 +97,9 @@ export function ContactModal() {
                                 </IonLabel>
                             </IonItem> */}
                         );
-           
+
                 </IonList>
+
             </IonContent>
         </IonModal>
     );
