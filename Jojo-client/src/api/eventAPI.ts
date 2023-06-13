@@ -4,17 +4,20 @@ import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
 import { EventInput } from "../pages/types";
-import { genHeader } from "./genHeader";
+import { RootState } from "../RTKstore";
+import { prepareHeaders } from "./prepareHeaders";
 // Define a service using a base URL and expected endpoints
 export const eventApi = createApi({
   reducerPath: "eventApi",
-  baseQuery: fetchBaseQuery({ baseUrl: serverURL + apiRoutes.event }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: serverURL + apiRoutes.event,
+    prepareHeaders: prepareHeaders,
+  }),
   tagTypes: ["event"],
   endpoints: (builder) => ({
     getEvent: builder.query({
-      query: (token: string | null) => ({
+      query: () => ({
         url: "",
-        headers: genHeader(token),
       }),
 
       providesTags: (result, error, arg) =>
@@ -29,14 +32,8 @@ export const eventApi = createApi({
           : ["event"],
     }),
     getEventDetail: builder.query({
-      query: (input: { token: string | null; id: string }) => ({
-        url: `/${input.id}`,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + input.token,
-          url: apiRoutes.event + `/${input.id}`,
-        },
+      query: (id: string) => ({
+        url: `/${id}`,
       }),
       providesTags: (result, error, arg) =>
         result
@@ -44,16 +41,11 @@ export const eventApi = createApi({
           : ["event"],
     }),
     postEvent: builder.mutation({
-      query: (input: { eventInput: EventInput; token: string | null }) => ({
+      query: (eventInput: EventInput) => ({
         url: "",
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + input.token,
-          url: apiRoutes.event,
-        },
-        body: JSON.stringify(input.eventInput),
+
+        body: JSON.stringify(eventInput),
       }),
       invalidatesTags: ["event"],
     }),

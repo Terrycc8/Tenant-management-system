@@ -18,7 +18,13 @@ import {
   IonHeader,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
-import { FormEvent, useCallback, useRef, useState } from "react";
+import {
+  FormEvent,
+  MouseEventHandler,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 
@@ -46,33 +52,35 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
   const dismissProperty = useCallback(() => {
     propertyModal.current?.dismiss();
   }, [propertyModal]);
-  const token = useSelector((state: RootState) => state.auth.token);
   const [newProperty] = usePostPropertyMutation();
 
   const OnSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
       const form = event.target as HTMLFormElement;
-      const json = await newProperty({
-        propertyInput: formToJson(form, [
-          "title",
-          "rent",
-          "area",
-          "district",
-          "location",
-          "street",
-          "building",
-          "block",
-          "floor",
-          "room",
-          "rental_start_at",
-          "rental_end_at",
-        ]) as PropertyInput,
-        token,
-      });
+      const json = await newProperty(
+        new FormData(form)
+        // formToJson(form, [
+        //   "title",
+        //   "rent",
+        //   "area",
+        //   "district",
+        //   "location",
+        //   "street",
+        //   "building",
+        //   "block",
+        //   "floor",
+        //   "room",
+        //   "rental_start_at",
+        //   "rental_end_at",
+        // ]) as PropertyInput
+      );
       if ("error" in json) {
+        const mesaage = Array.isArray((json.error as FetchError).data.message)
+          ? (json.error as FetchError).data.message[0]
+          : (json.error as FetchError).data.message;
         presentAlert({
-          header: (json.error as FetchError).data.message[0],
+          header: mesaage,
           buttons: [
             {
               text: "OK",
@@ -93,8 +101,25 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
         });
       }
     },
-    [presentAlert, token, dismissAll, newProperty]
+    [presentAlert, dismissAll, newProperty]
   );
+
+  const dev = useCallback((event: any) => {
+    const form = event.target.parentElement;
+    console.log(form);
+    form.title.value = "sample title";
+    form.rent.value = 123;
+    form.area.value = "hong_kong";
+    form.district.value = "eastern";
+    form.location.value = "sample location";
+    form.street.value = "sample value";
+    form.building.value = "sample value";
+    form.block.value = "A";
+    form.floor.value = "11";
+    form.room.value = "03";
+    form.rental_start_at.value = new Date().toISOString();
+    form.rental_end_at.value = new Date(Date.now() + 10000).toISOString();
+  }, []);
 
   return (
     <IonModal
@@ -109,6 +134,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
       ></CommonModalHeader>
       <IonContent>
         <form onSubmit={OnSubmit}>
+          <IonButton onClick={dev}>dev</IonButton>
           <IonList>
             <IonGrid className="ion-padding">
               <CustomIonColInput>
@@ -191,6 +217,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
                 <IonInput
                   label="Upload Property Pictures"
                   labelPlacement="floating"
+                  type="file"
                 ></IonInput>
               </CustomIonColInput>
 

@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
@@ -13,6 +14,7 @@ import { Request } from '@nestjs/common';
 
 import { JWTPayload } from 'src/types';
 import { IDParamDto } from 'src/dto/IDParams';
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('property')
 export class PropertyController {
   constructor(
@@ -33,13 +35,17 @@ export class PropertyController {
 
     return this.propertyService.propertyDetail(payLoad, params.id);
   }
+
   @Post()
+  @UseInterceptors(FileInterceptor('file'))
   newProperty(
     @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
+    // @Body() propertyInput,
     @Request() req,
   ) {
+    console.log('propertyInput', propertyInput);
     let payLoad: JWTPayload = this.jwtService.decode(req);
 
-    return this.propertyService.newProperty(payLoad, propertyInput);
+    return this.propertyService.newProperty(payLoad, propertyInput, req);
   }
 }

@@ -21,17 +21,13 @@ import {
 import { useGetPropertyDetailQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import { useParams } from "react-router";
-import { HeaderWithBackButton } from "../components/HeaderWithBackButton";
 import { IsLoading } from "../components/IsLoading";
 import CommonHeader from "../components/CommonHeader";
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const token = useSelector((state: RootState) => state.auth.token);
-  const { data, isFetching, isLoading, isError } = useGetPropertyDetailQuery({
-    token,
-    id: id,
-  });
+  const { data, isFetching, isLoading, isError } =
+    useGetPropertyDetailQuery(id);
 
   return (
     <IonPage>

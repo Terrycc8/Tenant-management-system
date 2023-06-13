@@ -3,17 +3,19 @@ import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
 import { LoginInput, SignUpInput } from "../pages/types";
 import { apiRoutes, apiUserPrefix } from "../routes";
-import { genHeader } from "./genHeader";
+import { prepareHeaders } from "./prepareHeaders";
 // Define a service using a base URL and expected endpoints
 export const loginApi = createApi({
   reducerPath: "loginApi",
-  baseQuery: fetchBaseQuery({ baseUrl: serverURL + apiRoutes.user }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: serverURL + apiRoutes.user,
+    prepareHeaders: prepareHeaders,
+  }),
   tagTypes: ["login", "user"],
   endpoints: (builder) => ({
     postUserLogin: builder.mutation({
       query: (loginInput: LoginInput) => ({
         url: apiRoutes.login,
-        headers: genHeader(),
         method: "POST",
         body: JSON.stringify(loginInput),
       }),
@@ -23,9 +25,8 @@ export const loginApi = createApi({
     getUsers: builder.query({
       query: () => ({
         url: apiRoutes.user,
-        headers: genHeader(),
+
         method: "GET",
-        // body: JSON.stringify(loginInput),
       }),
 
       providesTags: (result, error, arg) =>
@@ -43,7 +44,6 @@ export const loginApi = createApi({
       query: (signUpInput: SignUpInput) => ({
         url: apiRoutes.signup,
         method: "POST",
-        headers: genHeader(),
         body: signUpInput,
       }),
       invalidatesTags: ["login"],

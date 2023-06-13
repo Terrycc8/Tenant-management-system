@@ -4,24 +4,25 @@ import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
 import { PropertyInput } from "../pages/types";
-import { genHeader } from "./genHeader";
+
 import { RootState } from "../RTKstore";
 import { AuthState } from "../slices/authSlice";
+import { prepareHeaders } from "./prepareHeaders";
 // Define a service using a base URL and expected endpoints
 export const propertyApi = createApi({
   reducerPath: "propertyApi",
-  baseQuery: fetchBaseQuery({ baseUrl: serverURL + apiRoutes.property }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: serverURL + apiRoutes.property,
+    prepareHeaders: prepareHeaders,
+  }),
   tagTypes: ["property"],
 
   endpoints: (builder) => ({
     getProperty: builder.query({
-      extraOptions: {
-        getState: (state: { auth: AuthState }) => state.auth,
-      },
-      query: (token: string | null) => ({
+      query: () => ({
         url: "",
-        headers: genHeader(token),
       }),
+
       providesTags: (result, error, arg) =>
         result
           ? [
@@ -34,9 +35,8 @@ export const propertyApi = createApi({
           : ["property"],
     }),
     getPropertyDetail: builder.query({
-      query: (input: { token: string | null; id: string }) => ({
-        url: `/${input.id}`,
-        headers: genHeader(input.token),
+      query: (id: string) => ({
+        url: `/${id}`,
       }),
       providesTags: (result, error, arg) =>
         result
@@ -44,14 +44,11 @@ export const propertyApi = createApi({
           : ["property"],
     }),
     postProperty: builder.mutation({
-      query: (input: {
-        propertyInput: PropertyInput;
-        token: string | null;
-      }) => ({
+      query: (body: FormData) => ({
         url: "",
         method: "POST",
-        headers: genHeader(input.token),
-        body: JSON.stringify(input.propertyInput),
+        headers: {},
+        body,
       }),
       invalidatesTags: ["property"],
     }),

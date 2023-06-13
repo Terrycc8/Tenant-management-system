@@ -25,13 +25,13 @@ import {
 } from "../pages/types";
 import { usePostEventMutation } from "../api/eventAPI";
 import { formToJson } from "../helper";
-import { useGetPropertyQuery } from "../api/propertyAPI";
+
 import { CustomIonColInput } from "./CustomIonColInput";
 import { CommonModalHeader } from "./CommonModalHeader";
+import { useGetPropertyQuery } from "../api/propertyAPI";
 
 export function EventsModal(props: { createModalHandler: () => void }) {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const { data } = useGetPropertyQuery(token);
+  const { data } = useGetPropertyQuery({});
   const [presentAlert] = useIonAlert();
   const eventsModal = useRef<HTMLIonModalElement>(null);
   const dismissEvents = useCallback(() => {
@@ -43,50 +43,51 @@ export function EventsModal(props: { createModalHandler: () => void }) {
   }, [props, eventsModal]);
 
   const [newEvent] = usePostEventMutation();
-  const OnSubmit = useCallback(async (event: FormEvent) => {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
+  const OnSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault();
+      const form = event.target as HTMLFormElement;
 
-    const json = await newEvent({
-      eventInput: formToJson(form, [
-        "property_id",
-        "title",
-        "type",
-        "priority",
-        "description",
-      ]) as EventInput,
-      token,
-    });
-    if ("error" in json) {
-      presentAlert({
-        header: (json.error as FetchError).data.message,
-        buttons: [
-          {
-            text: "OK",
-            role: "confirm",
-          },
-        ],
-      });
-    } else {
-      presentAlert({
-        header: "Successful",
-        buttons: [
-          {
-            text: "OK",
-            role: "confirm",
-            handler: dismissAll,
-          },
-        ],
-      });
-    }
-  }, []);
+      const json = await newEvent(
+        formToJson(form, [
+          "property_id",
+          "title",
+          "type",
+          "priority",
+          "description",
+        ]) as EventInput
+      );
+      if ("error" in json) {
+        presentAlert({
+          header: (json.error as FetchError).data.message,
+          buttons: [
+            {
+              text: "OK",
+              role: "confirm",
+            },
+          ],
+        });
+      } else {
+        presentAlert({
+          header: "Successful",
+          buttons: [
+            {
+              text: "OK",
+              role: "confirm",
+              handler: dismissAll,
+            },
+          ],
+        });
+      }
+    },
+    [presentAlert, dismissAll]
+  );
   return (
     <IonModal
       ref={eventsModal}
       trigger="open-events-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
-      onWillDismiss={dismissEvents}
     >
       <CommonModalHeader
         handlerOnDismiss={dismissEvents}

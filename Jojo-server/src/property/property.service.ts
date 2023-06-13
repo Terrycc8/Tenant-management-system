@@ -1,12 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { IncomingMessage } from 'http';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
 import { JWTPayload, userRole } from 'src/types';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class PropertyService {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private uploadService: UploadService,
+  ) {}
   async propertyDetail(payload: JWTPayload, property_id: number) {
     if (payload.role !== userRole.landlord) {
       throw new BadRequestException(
@@ -56,13 +61,17 @@ export class PropertyService {
     }
     return await query;
   }
-  async newProperty(payload: JWTPayload, propertyInput: PropertyInputDto) {
+  async newProperty(
+    payload: JWTPayload,
+    propertyInput: PropertyInputDto,
+    req: IncomingMessage,
+  ) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
       throw new BadRequestException(
         'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
     }
-
+    let file = await this.uploadService.imageUpload(req);
     let [{ id }] = await this.knex('property')
       .insert({
         ...propertyInput,

@@ -9,6 +9,7 @@ import { env } from './env';
 import { JwtService } from './jwt/jwt.service';
 import { PropertyModule } from './property/property.module';
 import { EventModule } from './event/event.module';
+import { UploadModule } from './upload/upload.module';
 const config = require('../knexfile');
 
 @Module({
@@ -24,6 +25,7 @@ const config = require('../knexfile');
     }),
     PropertyModule,
     EventModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
