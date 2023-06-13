@@ -1,4 +1,4 @@
-let serverURL: string;
+export let serverURL: string;
 
 if (window.location.href.includes("localhost")) {
   serverURL = "http://localhost:8100";

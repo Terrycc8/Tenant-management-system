@@ -31,3 +31,18 @@ export type PropertyListOutput = {
 export type UserType = 'landlord' | 'tenant';
 
 export const userRole = { landlord: 'landlord', tenant: 'tenant' };
+
+export type ChatroomListOutput = {
+  id: number;
+  creator_id: number;
+  receiver_id: number;
+};
+
+
+export type MessageOutput = {
+  id: number;
+  room_id: number;
+  sender_id: number;
+  content: string;
+  created_at: Date;
+};

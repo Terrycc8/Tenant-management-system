@@ -37,7 +37,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(loginApi.middleware, propertyApi.middleware, eventApi.middleware),
+    }).concat(loginApi.middleware, propertyApi.middleware, eventApi.middleware, chatroomApi.middleware),
 });
 setupListeners(store.dispatch);
 export default store;

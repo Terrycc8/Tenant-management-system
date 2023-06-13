@@ -12,12 +12,12 @@ import {
     IonHeader,
     useIonAlert,
   } from "@ionic/react";
-import "./ContactModal.scss";
+// import "./ContactModal.scss";
 import { FormEvent, useCallback, useRef,useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { useGetUsersQuery } from "../api/loginMutation";
-
+import { closeOutline } from "ionicons/icons";
 
 export function ContactModal() {
     
@@ -29,8 +29,10 @@ export function ContactModal() {
   
     const token = useSelector((state: RootState) => state.auth.token);
     const { data } = useGetUsersQuery(token); 
+    const dismissContact = useCallback(() => {
+        contactModal.current?.dismiss();
+      }, []);
 
-    
 
     // const [newProperty] = usePostPropertyMutation();
   
@@ -59,17 +61,19 @@ export function ContactModal() {
   
     return (
       <IonModal
-        ref={propertyModal}
-        trigger="open-property-modal"
+        ref={contactModal}
+        trigger="open-contact-modal"
         initialBreakpoint={1}
         breakpoints={[0, 1]}
-        onWillDismiss={dismissProperty}
+        onWillDismiss={dismissContact}
       >
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>New Chat</IonTitle>
+                    <IonTitle slot="start">Contact</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton fill="clear" onClick={ close }>Cancel</IonButton>
+                        <IonButton fill="clear" onClick={ dismissContact }>
+                            <IonIcon icon={closeOutline}></IonIcon>
+                        </IonButton>
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
@@ -79,17 +83,17 @@ export function ContactModal() {
 
                         return (
 
-                            <IonItem key={ `contact_${ contact.id }` } lines="full" className="contact-item">
+                            {/* <IonItem key={ `contact_${ contact.id }` } lines="full" className="contact-item">
                                 <img src={ contact.avatar } alt="contact avatar" />
                                 <IonLabel>
                                     <h1>{ contact.name }</h1>
                                     <p>{ status }</p>
                                 </IonLabel>
-                            </IonItem>
+                            </IonItem> */}
                         );
-                    })}
+           
                 </IonList>
             </IonContent>
-        </div>
+        </IonModal>
     );
 }

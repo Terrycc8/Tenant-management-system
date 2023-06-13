@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "gen": "bash scripts/gen.sh",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start --watch",
@@ -57,6 +58,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.5.0",
+    "nest-gen": "^1.1.0",
     "prettier": "^2.3.2",
     "quick-erd": "^4.6.2",
     "source-map-support": "^0.5.20",
