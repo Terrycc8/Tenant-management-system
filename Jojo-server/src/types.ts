@@ -46,3 +46,12 @@ export type MessageOutput = {
   content: string;
   created_at: Date;
 };
+
+
+export type UserListOutput = {
+  id: number;
+  avatar: string;
+  first_name: string;
+  last_name: string;
+  status: string;
+};

@@ -214,11 +214,11 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
               </CustomIonColInput>
 
               <CustomIonColInput>
-                <IonInput
+                {/* <IonInput
                   label="Upload Property Pictures"
                   labelPlacement="floating"
                   type="file"
-                ></IonInput>
+                ></IonInput> */}
               </CustomIonColInput>
 
               <IonButton type="submit" expand="block">

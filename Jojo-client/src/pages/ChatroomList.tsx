@@ -26,7 +26,7 @@ import {
   IonCardContent,
 } from "@ionic/react";
 // import { createNewRoom, getRoomList, GetRoomListOutput } from "../sdk";
-import ExploreContainer from "../components/ExploreContainer";
+// import ExploreContainer from "../components/ExploreContainer";
 import { routes } from "../routes";
 import { contactList } from "../contactData";
 import { checkmarkDone, createOutline } from "ionicons/icons";
@@ -38,7 +38,7 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useChatroomList } from "../api/chatroomAPI";
 import { RootState } from "../RTKstore";
-import { CommonHeaderMemo } from "../components/CommonHeader";
+// import { CommonHeaderMemo } from "../components/CommonHeader";
 import { ContactModal } from "../components/ContactModal";
 // import { useParams } from "react-router";
 
@@ -82,9 +82,11 @@ export function ChatroomList() {
           data.rooms.map((chatroom) => (
             <IonCard
               key={chatroom.id}
-              routerLink={routes.chat + "/" + chatroom.id}
+              routerLink={routes.chat + "/" 
+              + chatroom.id
+            }
             >
-              <img src="" alt="" />
+              {/* <img src="" alt="" /> */}
               <IonCardHeader>
                 <IonCardTitle>{chatroom.username}</IonCardTitle>
                 {/* IonItem */}
