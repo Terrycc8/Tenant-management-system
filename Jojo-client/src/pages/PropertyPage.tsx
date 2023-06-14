@@ -21,29 +21,19 @@ import {
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import CommonHeader from "../components/CommonHeader";
-import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import { Autoplay } from "swiper";
 
 import "swiper/css";
 import "swiper/css/autoplay";
-import "swiper/css/keyboard";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import "swiper/css/zoom";
 import "@ionic/react/css/ionic-swiper.css";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-
 import "swiper/css";
-
 import "swiper/css/navigation";
-
 import "swiper/css/pagination";
-
 import "swiper/css/scrollbar";
 
-import { Navigation } from "swiper";
-import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
 import serverURL from "../ServerDomain";
 import { PropertyListOutput } from "../types";
 
@@ -80,7 +70,6 @@ export function PropertyPage() {
               <IonCardHeader>
                 <IonCardTitle>{property.title}</IonCardTitle>
               </IonCardHeader>
-
               <IonCardContent>
                 <Swiper
                   modules={[Autoplay]}

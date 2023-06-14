@@ -4,7 +4,7 @@ import { InjectModel } from 'nest-knexjs';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { comparePassword, hashPassword } from 'src/hash';
-import { JWTPayload, UserListOutput,userRole } from 'src/types';
+import { JWTPayload, UserListOutput, userRole } from 'src/types';
 
 @Injectable()
 export class UserService {
@@ -56,25 +56,24 @@ export class UserService {
     return { id: userID[0].id, role: sigUpInput.user_type };
   }
 
-    async UsersById(payload: JWTPayload,) {
+  async UsersById(payload: JWTPayload) {
+    let result = this.knex('user').select(
+      'id',
+      'avatar',
+      'first_name',
+      'last_name',
+      'status',
+      'user_type',
+    );
+    // .where({ creator_id: payload.id });
 
-        let result = await this.knex('user').select(
-          'id',
-          'avatar',
-          'first_name',
-          'last_name',
-          'status',
-          'user_type'
-          );
-          // .where({ creator_id: payload.id });
-
-          if (payload.role == userRole.landlord) {
-            result = result.where({ tenant_id: payload.id });
-          } else if (payload.role == userRole.tenant) {
-            result = result.where({ landlord_id: payload.id });
-          } else {
-            throw new BadRequestException('Unknown user type');
-          }
-          return await result;
-      }
+    if (payload.role == userRole.landlord) {
+      result = result.where({ tenant_id: payload.id });
+    } else if (payload.role == userRole.tenant) {
+      result = result.where({ landlord_id: payload.id });
+    } else {
+      throw new BadRequestException('Unknown user type');
+    }
+    return await result;
+  }
 }

@@ -5,12 +5,15 @@ import {
   IsEnum,
   IsNumber,
   IsNumberString,
+  IsOptional,
   IsString,
   IsStrongPassword,
   Length,
+  isNumberString,
   minLength,
 } from 'class-validator';
 import { UserType } from 'src/types';
+import { isNull } from 'util';
 
 export class PropertyInputDto {
   @IsString()
@@ -63,4 +66,10 @@ export class PropertyInputDto {
   rental_start_at: Date;
   @IsDateString()
   rental_end_at: Date;
+  @IsOptional()
+  @IsDateString()
+  edited_at: Date;
+  @IsOptional()
+  @IsString()
+  tenant_id: string;
 }

@@ -6,6 +6,7 @@ import {
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -56,11 +57,19 @@ export class PropertyController {
   ) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
 
-    return this.propertyService.newProperty(
-      payLoad,
-      propertyInput,
-      images,
-      req,
-    );
+    return this.propertyService.newProperty(payLoad, propertyInput, images);
+  }
+  @Patch(':id')
+  @UseInterceptors(filesInterceptorConfig(20))
+  propertyEdit(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Request()
+    req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+    @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
+  ) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+
+    return this.propertyService.propertyEdit(payLoad, propertyInput, params.id);
   }
 }

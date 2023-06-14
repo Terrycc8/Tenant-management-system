@@ -14,7 +14,7 @@ export function formToJson<K extends string>(
 export function showMessage(
   json: any,
   presentAlert: (input: object) => void,
-  dismissAll: () => void
+  dismissAll?: () => void
 ) {
   if ("error" in json) {
     let errorMessages = (json.error as FetchError).data.message;

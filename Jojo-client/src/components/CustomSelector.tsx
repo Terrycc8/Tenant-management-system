@@ -1,7 +1,9 @@
 import { IonCol, IonLabel, IonSelect, IonSelectOption } from "@ionic/react";
-import { PropertyListOutput } from "../pages/types";
+import { PropertyListOutput } from "../types";
 
 export function CustomSelector(props: {
+  readonly?: boolean;
+  defaultValue?: string;
   value: string[][];
   title: string;
   name: string;
@@ -14,9 +16,14 @@ export function CustomSelector(props: {
         labelPlacement="floating"
         fill="outline"
         name={name}
+        value={props.defaultValue || ""}
       >
         {value.map((item, idx) => (
-          <IonSelectOption value={item[0]} key={idx + 1}>
+          <IonSelectOption
+            disabled={props.readonly || false}
+            value={item[0]}
+            key={idx + 1}
+          >
             {item[1]}
           </IonSelectOption>
         ))}

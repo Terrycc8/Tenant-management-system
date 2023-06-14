@@ -50,12 +50,23 @@ export const propertyApi = createApi({
       }),
       invalidatesTags: ["property"],
     }),
+    patchProperty: builder.mutation({
+      query: (arg: { body: FormData; id: number }) => ({
+        url: `/${arg.id}`,
+        method: "PATCH",
+        body: arg.body,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "property", id: arg.id },
+      ],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  usePatchPropertyMutation,
   usePostPropertyMutation,
   useGetPropertyQuery,
   useGetPropertyDetailQuery,

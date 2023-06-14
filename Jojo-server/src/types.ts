@@ -34,7 +34,6 @@ export type UserType = 'landlord' | 'tenant';
 export const uploadDir = './upload';
 export const userRole = { landlord: 'landlord', tenant: 'tenant' };
 
-<<<<<<< HEAD
 export type PropertyInput = {
   title: string;
   rent: number;
@@ -107,13 +106,11 @@ export const event_status: string[][] = [
   ['pending', 'Pending'],
   ['rejected', 'Rejected'],
 ];
-=======
 export type ChatroomListOutput = {
   id: number;
   creator_id: number;
   receiver_id: number;
 };
-
 
 export type MessageOutput = {
   id: number;
@@ -123,7 +120,6 @@ export type MessageOutput = {
   created_at: Date;
 };
 
-
 export type UserListOutput = {
   id: number;
   avatar: string;
@@ -131,4 +127,3 @@ export type UserListOutput = {
   last_name: string;
   status: string;
 };
->>>>>>> ee4fcbf20f5ac3bb2626bc00edf7614a2a197b08

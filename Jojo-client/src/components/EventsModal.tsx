@@ -16,8 +16,6 @@ import { FormEvent, useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 
-import { CustomSelector, CustomSelectorOnFetch } from "./CustomSelector";
-
 import { formToJson, showMessage } from "../helper";
 
 import { CustomIonColInput } from "./CustomIonColInput";
@@ -25,6 +23,7 @@ import { CommonModalHeader } from "./CommonModalHeader";
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { usePostEventMutation } from "../api/eventAPI";
 import { event_type, event_priority } from "../types";
+import { CustomSelector, CustomSelectorOnFetch } from "./CustomSelector";
 
 export function EventsModal(props: { createModalHandler: () => void }) {
   const { data } = useGetPropertyQuery({});
