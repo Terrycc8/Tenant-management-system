@@ -18,7 +18,7 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
-      location.href = routes.login;
+      window.location.href = routes.home;
     },
   },
 });

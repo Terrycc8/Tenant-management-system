@@ -21,8 +21,7 @@ import { useGetEventQuery } from "../api/eventAPI";
 import { CommonHeader } from "../components/CommonHeader";
 
 export function EventsPage() {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const { data, isFetching, isLoading, isError } = useGetEventQuery(token);
+  const { data, isFetching, isLoading, isError } = useGetEventQuery({});
 
   return (
     <IonPage>

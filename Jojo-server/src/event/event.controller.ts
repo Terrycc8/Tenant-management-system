@@ -18,7 +18,7 @@ export class EventController {
     private eventService: EventService,
   ) {}
   @Get()
-  propertyList(@Request() req) {
+  eventList(@Request() req) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
     return this.eventService.eventList(payLoad);
   }

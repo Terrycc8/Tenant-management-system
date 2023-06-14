@@ -22,7 +22,7 @@ import { Capacitor } from "@capacitor/core";
 import { isIphone } from "../platform";
 import { sleep } from "../async";
 
-export let CommonHeader: FC<{ title: string }> = (props) => {
+export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
   const [modal, setModal] = useState("");
   const setDelayModal = useCallback(async () => {
     if (!isIphone) {
@@ -46,7 +46,9 @@ export let CommonHeader: FC<{ title: string }> = (props) => {
         <IonToolbar>
           <IonTitle>{props.title}</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton></IonBackButton>
+            {props.backUrl ? (
+              <IonBackButton defaultHref={props.backUrl}></IonBackButton>
+            ) : null}
           </IonButtons>
           <IonButtons slot="end">
             <IonButton onClick={setModalMenu}>
@@ -73,12 +75,7 @@ export let CommonHeader: FC<{ title: string }> = (props) => {
             <IonItem button lines="none" onClick={setModalToProfile}>
               Profile
             </IonItem>
-            <IonItem
-              lines="none"
-              button={true}
-              onClick={logOutOnClick}
-              routerLink={routes.login}
-            >
+            <IonItem lines="none" button={true} onClick={logOutOnClick}>
               Logout
             </IonItem>
           </IonList>

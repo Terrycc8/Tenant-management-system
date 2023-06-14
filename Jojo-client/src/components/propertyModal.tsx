@@ -25,24 +25,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../RTKstore";
 
-import { FetchError, PropertyInput, area, district } from "../pages/types";
-
-import CustomIonDateTimeButton from "./RentDate";
-import { formToJson } from "../helper";
-import { setCredentials } from "../slices/authSlice";
-import { Root } from "react-dom/client";
-
-import RentEndDate from "./RentDate";
+import { showMessage } from "../helper";
 import RentDate from "./RentDate";
 import { usePostPropertyMutation } from "../api/propertyAPI";
 import { CustomSelector } from "./CustomSelector";
 import { CommonModalHeader } from "./CommonModalHeader";
 import { CustomIonColInput } from "./CustomIonColInput";
-
+import { fileToBase64String, selectImage } from "@beenotung/tslib/file";
+import { dataURItoFile, resizeBase64WithRatio } from "@beenotung/tslib";
+import { area, district } from "../types";
 export function PropertyModal(props: { createModalHandler: () => void }) {
+  const [images, setImages] = useState<File[]>([]);
   const [presentAlert] = useIonAlert();
   const propertyModal = useRef<HTMLIonModalElement>(null);
   const dismissAll = useCallback(() => {
@@ -50,63 +44,46 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
     props.createModalHandler();
   }, [propertyModal, props]);
   const dismissProperty = useCallback(() => {
+    setImages((images) => {
+      return (images = []);
+    });
     propertyModal.current?.dismiss();
   }, [propertyModal]);
   const [newProperty] = usePostPropertyMutation();
-
+  const pickImages = useCallback(async () => {
+    let files = await selectImage({ multiple: true });
+    // console.log(files);
+    for (let file of files) {
+      // let dataUrl = await fileToBase64String(file);
+      // dataUrl = await resizeBase64WithRatio(
+      //   dataUrl,
+      //   { width: 460, height: 900 },
+      //   "with_in"
+      // );
+      // file = dataURItoFile(dataUrl, file);
+    }
+    // console.log(files);
+    setImages((images) => {
+      return (images = files);
+    });
+  }, [selectImage]);
   const OnSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
       const form = event.target as HTMLFormElement;
-      const json = await newProperty(
-        new FormData(form)
-        // formToJson(form, [
-        //   "title",
-        //   "rent",
-        //   "area",
-        //   "district",
-        //   "location",
-        //   "street",
-        //   "building",
-        //   "block",
-        //   "floor",
-        //   "room",
-        //   "rental_start_at",
-        //   "rental_end_at",
-        // ]) as PropertyInput
-      );
-      if ("error" in json) {
-        const mesaage = Array.isArray((json.error as FetchError).data.message)
-          ? (json.error as FetchError).data.message[0]
-          : (json.error as FetchError).data.message;
-        presentAlert({
-          header: mesaage,
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-            },
-          ],
-        });
-      } else {
-        presentAlert({
-          header: "Successful",
-          buttons: [
-            {
-              text: "OK",
-              role: "confirm",
-              handler: dismissAll,
-            },
-          ],
-        });
+      let formData = new FormData(form);
+      for (let image of images) {
+        formData.append("image", image);
       }
+
+      const json = await newProperty(formData);
+      showMessage(json, presentAlert, dismissAll);
     },
-    [presentAlert, dismissAll, newProperty]
+    [presentAlert, dismissAll, newProperty, showMessage, images]
   );
 
   const dev = useCallback((event: any) => {
     const form = event.target.parentElement;
-    console.log(form);
     form.title.value = "sample title";
     form.rent.value = 123;
     form.area.value = "hong_kong";
@@ -214,11 +191,12 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
               </CustomIonColInput>
 
               <CustomIonColInput>
-                <IonInput
-                  label="Upload Property Pictures"
-                  labelPlacement="floating"
-                  type="file"
-                ></IonInput>
+                <IonButtons>
+                  <IonButton onClick={pickImages}>
+                    Upload Property Pictures
+                  </IonButton>
+                  <IonLabel>Total files selected:{images.length}/20</IonLabel>
+                </IonButtons>
               </CustomIonColInput>
 
               <IonButton type="submit" expand="block">

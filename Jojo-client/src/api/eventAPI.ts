@@ -3,7 +3,7 @@ import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
-import { EventInput } from "../pages/types";
+
 import { RootState } from "../RTKstore";
 import { prepareHeaders } from "./prepareHeaders";
 // Define a service using a base URL and expected endpoints
@@ -41,11 +41,10 @@ export const eventApi = createApi({
           : ["event"],
     }),
     postEvent: builder.mutation({
-      query: (eventInput: EventInput) => ({
+      query: (body: FormData) => ({
         url: "",
         method: "POST",
-
-        body: JSON.stringify(eventInput),
+        body,
       }),
       invalidatesTags: ["event"],
     }),

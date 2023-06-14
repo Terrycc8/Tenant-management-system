@@ -3,7 +3,6 @@ import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
-import { PropertyInput } from "../pages/types";
 
 import { RootState } from "../RTKstore";
 import { AuthState } from "../slices/authSlice";
@@ -47,7 +46,6 @@ export const propertyApi = createApi({
       query: (body: FormData) => ({
         url: "",
         method: "POST",
-        headers: {},
         body,
       }),
       invalidatesTags: ["property"],
