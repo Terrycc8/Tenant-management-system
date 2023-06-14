@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
-import { LoginInput, SignUpInput } from "../pages/types";
+
 import { apiRoutes, apiUserPrefix } from "../routes";
 import { prepareHeaders } from "./prepareHeaders";
+import { LoginInput, SignUpInput } from "../types";
 // Define a service using a base URL and expected endpoints
 export const loginApi = createApi({
   reducerPath: "loginApi",
@@ -17,6 +18,7 @@ export const loginApi = createApi({
       query: (loginInput: LoginInput) => ({
         url: apiRoutes.login,
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginInput),
       }),
 
@@ -25,8 +27,6 @@ export const loginApi = createApi({
     getUsers: builder.query({
       query: () => ({
         url: apiRoutes.user,
-
-        method: "GET",
       }),
 
       providesTags: (result, error, arg) =>
@@ -43,8 +43,9 @@ export const loginApi = createApi({
     postUserSignUp: builder.mutation({
       query: (signUpInput: SignUpInput) => ({
         url: apiRoutes.signup,
+        headers: { "Content-Type": "application/json" },
         method: "POST",
-        body: signUpInput,
+        body: JSON.stringify(signUpInput),
       }),
       invalidatesTags: ["login"],
     }),

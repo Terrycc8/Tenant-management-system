@@ -1,7 +1,7 @@
 export const prefix = "/tab";
 export const routes = {
-  login: "/login",
-  signup: "/signup",
+  // login: "/login",
+  // signup: "/signup",
   home: prefix + "/home",
   chat: prefix + "/chat",
   events: prefix + "/events",

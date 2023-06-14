@@ -16,17 +16,17 @@ import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginMutation";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-import { FetchError } from "./types";
-import { useCheckBox } from "../useHook/useCheckBox";
 
-export function LoginPage(props: {}) {
+import { useCheckBox } from "../useHook/useCheckBox";
+import { FetchError } from "../types";
+
+export function LoginPage(props: { setPage(page: string): void }) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
   const dispatch = useDispatch();
   const { checked, checkBoxOnClick } = useCheckBox();
   const [errors, setErrors] = useState<string[]>([]);
-
   const loginOnClick = useCallback(async () => {
     let json: any;
     try {
@@ -46,9 +46,15 @@ export function LoginPage(props: {}) {
       console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
-      // window.location.href = "123";
     }
-  }, []);
+  }, [
+    loginFetch,
+    setCredentials,
+    setErrors,
+    dispatch,
+    ionUsername,
+    ionPassword,
+  ]);
 
   return (
     <IonPage>
@@ -78,11 +84,9 @@ export function LoginPage(props: {}) {
               placeholder="Enter text"
             ></IonInput>
           </IonItem>
-          {errors.length > 0 ? (
-            errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
-          ) : (
-            <></>
-          )}
+          {errors.length > 0
+            ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+            : null}
           <IonCheckbox
             checked={checked}
             color="primary"
@@ -106,7 +110,8 @@ export function LoginPage(props: {}) {
             expand="block"
             className="ion-margin"
             color={"dark"}
-            routerLink={routes.signup}
+            // routerLink={routes.signup}
+            onClick={() => props.setPage("register")}
           >
             Create An Account
           </IonButton>

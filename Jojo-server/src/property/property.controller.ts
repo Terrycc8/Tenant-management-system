@@ -1,9 +1,14 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
+  Patch,
   Post,
+  UploadedFiles,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
@@ -12,9 +17,14 @@ import { JwtService } from 'src/jwt/jwt.service';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
 import { Request } from '@nestjs/common';
 
-import { JWTPayload } from 'src/types';
+import { JWTPayload, uploadDir } from 'src/types';
 import { IDParamDto } from 'src/dto/IDParams';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { mkdirSync } from 'fs';
+import { randomUUID } from 'crypto';
+import { filesInterceptorConfig } from 'src/helper';
+
 @Controller('property')
 export class PropertyController {
   constructor(
@@ -37,15 +47,29 @@ export class PropertyController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(filesInterceptorConfig(20))
   newProperty(
+    @UploadedFiles()
+    images: Express.Multer.File[],
     @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
-    // @Body() propertyInput,
-    @Request() req,
+    @Request()
+    req,
   ) {
-    console.log('propertyInput', propertyInput);
     let payLoad: JWTPayload = this.jwtService.decode(req);
 
-    return this.propertyService.newProperty(payLoad, propertyInput, req);
+    return this.propertyService.newProperty(payLoad, propertyInput, images);
+  }
+  @Patch(':id')
+  @UseInterceptors(filesInterceptorConfig(20))
+  propertyEdit(
+    @UploadedFiles() images: Express.Multer.File[],
+    @Request()
+    req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+    @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
+  ) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+
+    return this.propertyService.propertyEdit(payLoad, propertyInput, params.id);
   }
 }

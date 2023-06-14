@@ -3,7 +3,6 @@ import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
 
 import { apiRoutes, routes } from "../routes";
-import { PropertyInput } from "../pages/types";
 
 import { RootState } from "../RTKstore";
 import { AuthState } from "../slices/authSlice";
@@ -47,10 +46,19 @@ export const propertyApi = createApi({
       query: (body: FormData) => ({
         url: "",
         method: "POST",
-        headers: {},
         body,
       }),
       invalidatesTags: ["property"],
+    }),
+    patchProperty: builder.mutation({
+      query: (arg: { body: FormData; id: number }) => ({
+        url: `/${arg.id}`,
+        method: "PATCH",
+        body: arg.body,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "property", id: arg.id },
+      ],
     }),
   }),
 });
@@ -58,6 +66,7 @@ export const propertyApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  usePatchPropertyMutation,
   usePostPropertyMutation,
   useGetPropertyQuery,
   useGetPropertyDetailQuery,

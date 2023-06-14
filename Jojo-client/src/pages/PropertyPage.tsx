@@ -13,6 +13,7 @@ import {
   IonHeader,
   IonItem,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
   IonicSlides,
@@ -20,29 +21,22 @@ import {
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import CommonHeader from "../components/CommonHeader";
-import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+import { Autoplay } from "swiper";
 
 import "swiper/css";
 import "swiper/css/autoplay";
-import "swiper/css/keyboard";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import "swiper/css/zoom";
 import "@ionic/react/css/ionic-swiper.css";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-
 import "swiper/css";
-
 import "swiper/css/navigation";
-
 import "swiper/css/pagination";
-
 import "swiper/css/scrollbar";
 
-import { Navigation } from "swiper";
-import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
+import serverURL from "../ServerDomain";
+import { PropertyListOutput } from "../types";
+
 export function PropertyPage() {
   const {
     data,
@@ -55,7 +49,7 @@ export function PropertyPage() {
 
   return (
     <IonPage>
-      <CommonHeader title="Property List" />
+      <CommonHeader title="Property List" backUrl={routes.home} />
       <IonContent>
         {isError ? (
           <>error: {String(error)}</>
@@ -68,35 +62,33 @@ export function PropertyPage() {
         ) : data.length == 0 ? (
           <>no property yet</>
         ) : data.length > 0 ? (
-          data.map(
-            (property: {
-              id: number;
-              title: string;
-              rent: number;
-              rental_start_at: string;
-            }) => (
-              <IonCard
-                key={property.id}
-                routerLink={routes.property + "/" + property.id}
-              >
-                <IonCardHeader>
-                  <IonCardTitle>{property.title}</IonCardTitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  <Swiper
-                    modules={[Autoplay]}
-                    autoplay={false}
-                    scrollbar={{ draggable: false }}
-                  >
-                    <SwiperSlide>Slide 1</SwiperSlide>
-                    <SwiperSlide>Slide 2</SwiperSlide>
-                    <SwiperSlide>Slide 3</SwiperSlide>
-                  </Swiper>
-                </IonCardContent>
-              </IonCard>
-            )
-          )
+          data.map((property: PropertyListOutput) => (
+            <IonCard
+              key={property.id}
+              routerLink={routes.property + "/" + property.id}
+            >
+              <IonCardHeader>
+                <IonCardTitle>{property.title}</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <Swiper
+                  modules={[Autoplay]}
+                  autoplay={false}
+                  scrollbar={{ draggable: false }}
+                >
+                  {property.attachments.map((image, idx) => (
+                    <SwiperSlide key={idx + 1}>
+                      <img src={serverURL + "/" + image} alt="" />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </IonCardContent>
+              <IonRow>
+                Tenant:
+                {property.tenant_id ? property.tenant_id : " No tenant yet"}
+              </IonRow>
+            </IonCard>
+          ))
         ) : (
           <>Invalid Data: {JSON.stringify(data)}</>
         )}

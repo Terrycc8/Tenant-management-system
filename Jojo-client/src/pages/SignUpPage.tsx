@@ -21,15 +21,16 @@ import { routes } from "../routes";
 import { Link, Redirect } from "react-router-dom";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { usePostUserSignUpMutation } from "../api/loginMutation";
-import { FetchError, SignUpInput } from "./types";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { formToJson } from "../helper";
 import { RootState } from "../RTKstore";
 
 import { useCheckBox } from "../useHook/useCheckBox";
+import { FetchError } from "../types";
 
-export function SignUpPage() {
+export function SignUpPage(props: { setPage(page: string): void }) {
   const token = useSelector((state: RootState) => state.auth.token);
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
@@ -198,10 +199,11 @@ export function SignUpPage() {
 
       <IonFooter>
         <IonItem
-          routerLink={routes.login}
+          // routerLink={routes.login}
           routerDirection="back"
           lines="none"
           className="ion-text-center"
+          onClick={() => props.setPage("login")}
         >
           back to login
         </IonItem>

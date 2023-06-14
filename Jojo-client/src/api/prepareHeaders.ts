@@ -9,7 +9,6 @@ export function prepareHeaders(
 
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
-    // headers.set("Content-Type", "multipart/form-data");
     headers.set("Accept", "application/json");
   }
   return headers;
