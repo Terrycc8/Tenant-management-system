@@ -58,7 +58,7 @@ export class UserService {
 
     async UsersById(payload: JWTPayload,) {
 
-        let result = await this.knex('user').select(
+        let result =  this.knex('user').select(
           'id',
           'avatar',
           'first_name',

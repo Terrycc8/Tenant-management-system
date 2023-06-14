@@ -19,14 +19,17 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
+  IonCol,
+  IonGrid,
+  IonRow,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import io from "socket.io-client";
-import { useAppSelector } from "../../redux/hooks"
+import { useAppSelector } from "../../redux/hooks", 
 import { selectIsLoading, selectRooms } from "../../redux/room/roomSlice"
 import { useGetUsersQuery } from "../api/loginMutation";
 import { routes } from "../routes";
-
+import { addOutline, cameraOutline } from "@ionicons";
 const socket = io("/");
 interface Message {
   body: string;
@@ -68,6 +71,25 @@ export function ChatroomPage() {
   //   setMessage("");
   //   socket.emit("message", newMessage.body);
 
+  const getNotificationCount = (allChats) => {
+
+    let notificationCount = 0;
+  
+    allChats.forEach(chats => {
+  
+      chats.chats.forEach(chat => {
+  
+        if (!chat.read) {
+  
+          notificationCount++;
+        }
+      })
+    });
+  
+  //   return notificationCount;
+  // }
+
+
 
     
       return (
@@ -75,7 +97,7 @@ export function ChatroomPage() {
           <IonHeader>
             <IonToolbar>
                 <IonBackButton slot="start" text={ (notificationCount > 0) ? notificationCount : "" } />
-                <IonTitle>
+                {/* <IonTitle>
 
                     <div className="chat-contact">
                         <img src={ contact.avatar } alt="avatar" />
@@ -83,7 +105,7 @@ export function ChatroomPage() {
                             <p>{ contact.name }</p>
                         </div>
                     </div>
-                </IonTitle>
+                </IonTitle> */}
             </IonToolbar>
           </IonHeader>
         <IonContent>
@@ -98,25 +120,44 @@ export function ChatroomPage() {
             ) : data.rooms.length == 0 ? (
               <>no chatroom yet</>
             ) : data.rooms.length > 0 ? (
-              data.rooms.map((chatroom) => (
-                <IonCard
-                  key={chatroom.id}
-                  routerLink={routes.chat + "/" 
-                  + chatroom.id
-                }
-                >
-                  {/* <img src="" alt="" /> */}
-                  <IonCardHeader>
-                    <IonCardTitle>{chatroom.username}</IonCardTitle>
-                    {/* IonItem */}
-                    {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
-                    <IonCardContent>{chatroom.last_message}</IonCardContent>
-                  </IonCardHeader>
+              data.rooms.map((chatroom:string) => (
+                // <IonCard
+                //   key={chatroom.id}
+                //   routerLink={routes.chat + "/" 
+                //   + chatroom.id
+                // }
+                // >
+                //   {/* <img src="" alt="" /> */}
+                //   <IonCardHeader>
+                //     <IonCardTitle>{chatroom.username}</IonCardTitle>
+                //     {/* IonItem */}
+                //     {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
+                //     <IonCardContent>{chatroom.last_message}</IonCardContent>
+                //   </IonCardHeader>
 
-                  {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
-                </IonCard>
-              ))
-            ) : (
+                //   {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
+                // </IonCard>
+
+                <IonFooter>
+                  <IonGrid>
+                    <IonRow className="ion-align-items-center">
+                        <IonCol size="1">
+                            <IonIcon icon="addOutline" color="primary" onClick={ handlePrompt } />
+                        </IonCol>
+
+                        <IonItem>
+                                <IonTextarea rows="1" value={ message } onIonChange={ e => setMessage(e.target.value) } />
+                        </IonItem>
+
+                        <IonCol size="1" className="chat-send-button" onClick={ sendMessage }>
+                                <IonIcon icon="send" />
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
+                </IonFooter>
+                
+                ))
+              ) : (
               <>invalid data: {JSON.stringify(data)}</>
             )}
           </IonContent>
@@ -125,5 +166,5 @@ export function ChatroomPage() {
     }
     
   };
-}
+
 

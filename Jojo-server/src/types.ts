@@ -55,3 +55,23 @@ export type UserListOutput = {
   last_name: string;
   status: string;
 };
+
+export type Message = {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  content: string;
+  timestamp: string;
+};
+
+export type ChatRoomProps = {
+  senderId: number;
+  receiverId: number;
+}
+
+export type chatroom = {
+  id: number;
+  creator_id: number;
+  receiver_id: number;
+  created_at: string;
+};

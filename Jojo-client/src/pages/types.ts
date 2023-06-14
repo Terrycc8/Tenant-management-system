@@ -94,3 +94,23 @@ export const event_status: string[][] = [
   ["pending", "Pending"],
   ["rejected", "Rejected"],
 ];
+
+export type Message = {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  content: string;
+  timestamp: string;
+};
+
+export type ChatRoomProps = {
+  senderId: number;
+  receiverId: number;
+}
+
+export type chatroom = {
+  id: number;
+  creator_id: number;
+  receiver_id: number;
+  created_at: string;
+};

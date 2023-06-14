@@ -30,6 +30,10 @@ export const chatroomApi = createApi({
   }),
 });
 
+export const {
+  // useGetChatQuery,
+} = chatroomApi;
+
 export function useChatroomList(token: string | null) {
   const query = useQuery({
     queryKey: ['/chat/rooms'],
@@ -44,6 +48,3 @@ export function useChatroomList(token: string | null) {
 }
 
 
-// export const {
-//   useGetChatQuery,
-// } = chatroomApi;

@@ -28,18 +28,18 @@ export function ContactModal() {
     
     const [presentAlert] = useIonAlert();
     const contactModal = useRef<HTMLIonModalElement>(null);
-    const dismissProperty = useCallback(() => {
-      contactModal.current?.dismiss();
-    }, []);
-  
     const token = useSelector((state: RootState) => state.auth.token);
     const { data } = useGetUsersQuery(token); 
     const dismissContact = useCallback(() => {
         contactModal.current?.dismiss();
-      }, []);
+      }, [contactModal]);
 
 
-    // const [newProperty] = usePostPropertyMutation();
+    //   const { mutate, isLoading } = useMutation(createEmployee, {
+    //     onSuccess: data => {
+    //        console.log(data);
+    //        const message = "success"
+    //        presentAlert(message)
   
     //   if ("error" in json) {
     //     presentAlert({

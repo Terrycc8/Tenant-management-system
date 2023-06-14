@@ -44,12 +44,21 @@ export class UserController {
 
     return { token };
   }
-  @Post('signup')
-  async getUsers() {}
+  // @Post('signup')
+  // async getUsers() {}
   @Get('profile')
   getProfile(@Request() headers) {
     // let token = this.jwtService.decode();
     // let token = authorization.match(/Bearer (.*)+$/)?.[1];
     return { headers };
+  }
+  @Get('account')
+  async account(
+    @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
+  ) {
+    let payload = await this.userService.signUp(signUpInput);
+    let token = this.jwtService.encode(payload);
+
+    return { token };
   }
 }

@@ -23,3 +23,5 @@ export class SignUpInputWithPasswordDto {
   @IsString()
   user_type: UserType;
 }
+
+
