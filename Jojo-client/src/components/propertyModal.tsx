@@ -191,12 +191,20 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
               </CustomIonColInput>
 
               <CustomIonColInput>
+<<<<<<< HEAD
                 <IonButtons>
                   <IonButton onClick={pickImages}>
                     Upload Property Pictures
                   </IonButton>
                   <IonLabel>Total files selected:{images.length}/20</IonLabel>
                 </IonButtons>
+=======
+                {/* <IonInput
+                  label="Upload Property Pictures"
+                  labelPlacement="floating"
+                  type="file"
+                ></IonInput> */}
+>>>>>>> ee4fcbf20f5ac3bb2626bc00edf7614a2a197b08
               </CustomIonColInput>
 
               <IonButton type="submit" expand="block">
