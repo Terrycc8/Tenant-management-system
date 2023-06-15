@@ -111,7 +111,7 @@ export class PropertyService {
   async newProperty(
     payload: JWTPayload,
     propertyInput: PropertyInputDto,
-       //@ts-ignore
+    //@ts-ignore
     images: Express.Multer.File[],
   ) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
@@ -192,7 +192,7 @@ export class PropertyService {
       .where({ id })
       .returning('id');
     result = await this.knex('property').select('*').where({ id });
-
+    console.log(result);
     return { tenant_id: propertyInput.tenant_id };
   }
   async propertyDelete(

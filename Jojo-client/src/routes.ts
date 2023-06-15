@@ -10,12 +10,12 @@ export const routes = {
   property: prefix + "/property",
   propertyDetail: prefix + "/property/:id",
 };
-export const apiUserPrefix = "/user";
+
 export const apiRoutes = {
-  login: "/login",
-  signup: "/signup",
+  login: "/user/login",
+  signup: "/user/signup",
   property: "/property",
   event: "/event",
-  user: "/",
+  user: "/user",
   chatroom: "/chatroom",
 };

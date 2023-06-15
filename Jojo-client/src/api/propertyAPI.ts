@@ -7,19 +7,13 @@ import { apiRoutes, routes } from "../routes";
 import { RootState } from "../RTKstore";
 import { AuthState } from "../slices/authSlice";
 import { prepareHeaders } from "./prepareHeaders";
+import { jojoAPI } from "./jojoAPI";
 // Define a service using a base URL and expected endpoints
-export const propertyApi = createApi({
-  reducerPath: "propertyApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: serverURL + apiRoutes.property,
-    prepareHeaders: prepareHeaders,
-  }),
-  tagTypes: ["property", "user", "event"],
-
+export const propertyApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
     getProperty: builder.query({
       query: () => ({
-        url: "",
+        url: apiRoutes.property,
       }),
 
       providesTags: (result, error, arg) =>
@@ -35,7 +29,7 @@ export const propertyApi = createApi({
     }),
     getPropertyDetail: builder.query({
       query: (id: string) => ({
-        url: `/${id}`,
+        url: apiRoutes.property + `/${id}`,
       }),
       providesTags: (result, error, arg) =>
         result
@@ -44,7 +38,7 @@ export const propertyApi = createApi({
     }),
     postProperty: builder.mutation({
       query: (body: FormData) => ({
-        url: "",
+        url: apiRoutes.property,
         method: "POST",
         body,
       }),
@@ -52,7 +46,7 @@ export const propertyApi = createApi({
     }),
     patchProperty: builder.mutation({
       query: (arg: { body: FormData; id: number }) => ({
-        url: `/${arg.id}`,
+        url: apiRoutes.property + `/${arg.id}`,
         method: "PATCH",
         body: arg.body,
       }),
@@ -60,7 +54,7 @@ export const propertyApi = createApi({
     }),
     deleteProperty: builder.mutation({
       query: (arg: { id: number }) => ({
-        url: `/${arg.id}`,
+        url: apiRoutes.property + `/${arg.id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["property", "user", "event"],

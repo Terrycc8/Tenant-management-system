@@ -6,18 +6,13 @@ import { apiRoutes, routes } from "../routes";
 
 import { RootState } from "../RTKstore";
 import { prepareHeaders } from "./prepareHeaders";
+import { jojoAPI } from "./jojoAPI";
 // Define a service using a base URL and expected endpoints
-export const eventApi = createApi({
-  reducerPath: "eventApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: serverURL + apiRoutes.event,
-    prepareHeaders: prepareHeaders,
-  }),
-  tagTypes: ["property", "user", "event"],
+export const eventApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
     getEvent: builder.query({
       query: () => ({
-        url: "",
+        url: apiRoutes.event,
       }),
 
       providesTags: (result, error, arg) =>
@@ -33,7 +28,7 @@ export const eventApi = createApi({
     }),
     getEventDetail: builder.query({
       query: (id: string) => ({
-        url: `/${id}`,
+        url: apiRoutes.event + `/${id}`,
       }),
       providesTags: (result, error, arg) =>
         result
@@ -42,7 +37,7 @@ export const eventApi = createApi({
     }),
     postEvent: builder.mutation({
       query: (body: FormData) => ({
-        url: "",
+        url: apiRoutes.event,
         method: "POST",
         body,
       }),

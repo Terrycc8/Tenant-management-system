@@ -2,17 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Method } from "ionicons/dist/types/stencil-public-runtime";
 import serverURL from "../ServerDomain";
 
-import { apiRoutes, apiUserPrefix } from "../routes";
-import { prepareHeaders } from "./prepareHeaders";
+import { apiRoutes } from "../routes";
 import { LoginInput, SignUpInput } from "../types";
+import { jojoAPI } from "./jojoAPI";
+
 // Define a service using a base URL and expected endpoints
-export const loginApi = createApi({
-  reducerPath: "loginApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: serverURL + apiUserPrefix,
-    prepareHeaders: prepareHeaders,
-  }),
-  tagTypes: ["login", "user"],
+export const loginApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
     postUserLogin: builder.mutation({
       query: (loginInput: LoginInput) => ({
@@ -22,23 +17,14 @@ export const loginApi = createApi({
         body: JSON.stringify(loginInput),
       }),
 
-      invalidatesTags: ["login"],
+      invalidatesTags: ["user"],
     }),
     getUsers: builder.query({
       query: () => ({
         url: apiRoutes.user,
       }),
 
-      providesTags: (result, error, arg) =>
-        result
-          ? [
-            ...result.map((item: { id: number }) => ({
-              type: "user" as const,
-              id: item.id,
-            })),
-            "user",
-          ]
-          : ["user"],
+      providesTags: ["user"],
     }),
     postUserSignUp: builder.mutation({
       query: (signUpInput: SignUpInput) => ({
@@ -47,7 +33,7 @@ export const loginApi = createApi({
         method: "POST",
         body: JSON.stringify(signUpInput),
       }),
-      invalidatesTags: ["login"],
+      invalidatesTags: ["user"],
     }),
   }),
 });
