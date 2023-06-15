@@ -119,7 +119,11 @@ export class PropertyService {
         'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
     }
-
+    if (payload.role !== userRole.landlord) {
+      throw new BadRequestException(
+        'Invalid request, only landlord can list new property',
+      );
+    }
     let [{ id }] = await this.knex('property')
       .insert({
         ...propertyInput,
