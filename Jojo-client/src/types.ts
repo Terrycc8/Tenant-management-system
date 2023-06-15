@@ -106,3 +106,11 @@ export const event_status: string[][] = [
   ['pending', 'Pending'],
   ['rejected', 'Rejected'],
 ];
+
+export type UserListOutput = {
+  id: number;
+  avatar: string;
+  first_name: string;
+  last_name: string;
+  status: string;
+};

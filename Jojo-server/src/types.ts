@@ -127,7 +127,6 @@ export type UserListOutput = {
   last_name: string;
   status: string;
 };
-<<<<<<< HEAD
 
 export type Message = {
   id: number;
@@ -148,5 +147,3 @@ export type chatroom = {
   receiver_id: number;
   created_at: string;
 };
-=======
->>>>>>> 735a619479e0c17d90ba5f21230f93930f0432e8

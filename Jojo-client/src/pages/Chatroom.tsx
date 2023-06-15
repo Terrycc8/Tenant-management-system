@@ -30,6 +30,7 @@ import { selectIsLoading, selectRooms } from "../../redux/room/roomSlice"
 import { useGetUsersQuery } from "../api/loginMutation";
 import { routes } from "../routes";
 import { addOutline, cameraOutline } from "@ionicons";
+import { chatroom } from '../../../Jojo-server/dist/src/types';
 const socket = io("/");
 interface Message {
   body: string;
@@ -121,22 +122,23 @@ export function ChatroomPage() {
               <>no chatroom yet</>
             ) : data.rooms.length > 0 ? (
               data.rooms.map((chatroom:string) => (
-                // <IonCard
-                //   key={chatroom.id}
-                //   routerLink={routes.chat + "/" 
-                //   + chatroom.id
-                // }
-                // >
-                //   {/* <img src="" alt="" /> */}
-                //   <IonCardHeader>
-                //     <IonCardTitle>{chatroom.username}</IonCardTitle>
-                //     {/* IonItem */}
-                //     {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
-                //     <IonCardContent>{chatroom.last_message}</IonCardContent>
-                //   </IonCardHeader>
+                <IonCard
+                  key={chatroom.id}
+                  routerLink={routes.chat + "/" 
+                  + chat.id}
+                >
+              {/* <img src="" alt="" /> */}
+                  <IonCardHeader>
+                    <IonCardTitle>{chatroom.username}</IonCardTitle>
+                  </IonCardHeader>
+                    {/* IonItem */}
+                    {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
+                    <IonCardContent>{chatroom.last_message}</IonCardContent>
+                  
 
-                //   {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
-                // </IonCard>
+                  {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
+                </IonCard>
+              )}
 
                 <IonFooter>
                   <IonGrid>
@@ -154,6 +156,36 @@ export function ChatroomPage() {
                         </IonCol>
                       </IonRow>
                     </IonGrid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 
                 </IonFooter>
                 
                 ))

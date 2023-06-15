@@ -30,9 +30,9 @@ export const chatroomApi = createApi({
   }),
 });
 
-export const {
-  // useGetChatQuery,
-} = chatroomApi;
+// export const {
+//   // useGetChatQuery,
+// } = chatroomApi;
 
 export function useChatroomList(token: string | null) {
   const query = useQuery({
@@ -41,7 +41,7 @@ export function useChatroomList(token: string | null) {
     queryFn: () =>
       chatService.getRooms()
   })
-  console.log('chat room list query:', query)
+  // console.log('chat room list query:', query)
   const error = (query.error as any)?.response?.data?.error
   const data = query.data
   return { error, isLoading: query.isLoading, isFetching: query.isFetching, data }
