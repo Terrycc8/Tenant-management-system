@@ -47,4 +47,17 @@ export function useChatroomList(token: string | null) {
   return { error, isLoading: query.isLoading, isFetching: query.isFetching, data }
 }
 
+// export function usePostChatroomMutation(token: string | null) {
+//   const query = useQuery({
+//     queryKey: ['/chat/rooms'],
+//     retry: false,
+//     queryFn: () =>
+//       chatService.getRooms()
+//   })
+//   // console.log('chat room list query:', query)
+//   const error = (query.error as any)?.response?.data?.error
+//   const data = query.data
+//   return { error, isLoading: query.isLoading, isFetching: query.isFetching, data }
+// }
+
 

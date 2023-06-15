@@ -36,6 +36,7 @@ import { PropertyPage } from "./PropertyPage";
 import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
 import { ChatroomList } from "./ChatroomList";
+import { ChatroomPage } from "./Chatroom";
 import { RootState } from "../RTKstore";
 
 export function Tab() {
@@ -61,6 +62,9 @@ export function Tab() {
         </Route>
         <Route path={routes.chat}>
           <ChatroomList />
+        </Route>
+        <Route path={routes.chatroom}>
+          {/* <ChatroomPage /> */}
         </Route>
         <Route>
           <ErrorPage />

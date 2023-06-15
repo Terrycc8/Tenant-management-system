@@ -4,7 +4,7 @@ export const routes = {
   // signup: "/signup",
   home: prefix + "/home",
   chat: prefix + "/chat",
-  chatDetail: prefix + "/chat/:id",
+  chatroom: prefix + "/chat/:id",
   events: prefix + "/events",
   payments: prefix + "/payments",
   property: prefix + "/property",

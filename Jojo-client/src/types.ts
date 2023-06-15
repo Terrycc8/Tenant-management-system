@@ -114,3 +114,4 @@ export type UserListOutput = {
   last_name: string;
   status: string;
 };
+

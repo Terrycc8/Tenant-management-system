@@ -31,6 +31,7 @@ import { useGetUsersQuery } from "../api/loginMutation";
 import { routes } from "../routes";
 import { addOutline, cameraOutline } from "@ionicons";
 import { chatroom } from '../../../Jojo-server/dist/src/types';
+import serverURL from "../ServerDomain";
 const socket = io("/");
 interface Message {
   body: string;
@@ -110,7 +111,7 @@ export function ChatroomPage() {
             </IonToolbar>
           </IonHeader>
         <IonContent>
-            {error ? (
+            {isError ? (
               <>error: {String(error)}</>
             ) : isLoading ? (
               <>loading</>
@@ -196,7 +197,5 @@ export function ChatroomPage() {
         </IonPage>
       );
     }
-    
-  };
 
 

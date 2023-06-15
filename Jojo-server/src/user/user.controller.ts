@@ -19,7 +19,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   @Post('login')
   async loginWithPassword(
@@ -65,7 +65,15 @@ export class UserController {
 
   @Get()
   users(@Request() req) {
-    let payLoad: JWTPayload = this.jwtService.decode(req);
-    return this.userService.users(payLoad);
+    try {
+
+      let payLoad: JWTPayload = this.jwtService.decode(req);
+
+      return this.userService.users(payLoad);
+    } catch (error) {
+      console.log(error);
+      return []
+
+    }
   }
 }
