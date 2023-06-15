@@ -111,6 +111,7 @@ export class PropertyService {
   async newProperty(
     payload: JWTPayload,
     propertyInput: PropertyInputDto,
+       //@ts-ignore
     images: Express.Multer.File[],
   ) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {

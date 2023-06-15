@@ -8,7 +8,7 @@ import { JWTPayload, UserListOutput, userRole } from 'src/types';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel() private readonly knex: Knex) {}
+  constructor(@InjectModel() private readonly knex: Knex) { }
 
   async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
     let { id, hash, role } = await this.knex('user')
@@ -56,24 +56,69 @@ export class UserService {
     return { id: userID[0].id, role: sigUpInput.user_type };
   }
 
-  async UsersById(payload: JWTPayload) {
-    let result = this.knex('user').select(
-      'id',
-      'avatar',
-      'first_name',
-      'last_name',
-      'status',
-      'user_type',
-    );
-    // .where({ creator_id: payload.id });
+  async users(payload: JWTPayload) {
+    // let result = this.knex('user').select(
+    //   'id',
+    //   'avatar',
+    //   'first_name',
+    //   'last_name',
+    //   'status',
+    //   'user_type',
+    // );
+    // // .where({ creator_id: payload.id });
+    
 
-    if (payload.role == userRole.landlord) {
-      result = result.where({ tenant_id: payload.id });
-    } else if (payload.role == userRole.tenant) {
-      result = result.where({ landlord_id: payload.id });
-    } else {
-      throw new BadRequestException('Unknown user type');
-    }
-    return await result;
+
+
+    // let result = this.knex('user').select(
+      // 'id',
+      // 'avatar',
+      // 'first_name',
+      // 'last_name',
+      // 'status',
+      // 'user_type'
+    // )
+    // ;
+
+    let result = await this.knex('property')
+    .select('tenant_id as id')
+    .where({ landlord_id : payload.id})
+    
+    console.log(result);
+    // .where({ creator_id: payload.id });
+    
+   result = result.map((item)=>{return item.id})
+    console.log(result)
+    let result1 = await this.knex('user')
+    .select( 'id',
+    'avatar',
+    'first_name',
+    'last_name',
+    'status')
+    .whereIn('id',result)
+
+    console.log(result1)
+
+    console.log("get start");
+    // if (payload.role == userRole.landlord) {
+    //   result = result.where({ tenant_id: payload.id });
+    //   console.log("get start1");
+    // } 
+    // else if (payload.role == userRole.tenant) {
+    //   result = result.where({ landlord_id: payload.id });
+    //   console.log("get start2");
+    // } else {
+    //   throw new BadRequestException('Unknown user type');
+    // }
+    // console.log("get completed");
+    return result1;
   }
+  // if (payload.role == userRole.landlord) {
+  //   result = result.where({ tenant_id: payload.id });
+  // } else if (payload.role == userRole.tenant) {
+  //   result = result.where({ landlord_id: payload.id });
+  // } else {
+  //   throw new BadRequestException('Unknown user type');
+  // }
+  // return await result;
 }

@@ -57,7 +57,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
     //   ]) as SignUpInput
     // );
     const json = await signUp({
-      first_name: "alice",
+      first_name: "alice" + Math.floor(Math.random() * 50),
       last_name: "wong",
       email: Date.now() + "@gmail.com",
       password: "Aa!11234",

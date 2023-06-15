@@ -13,8 +13,10 @@ export class ChatService {
         let result;
         if (payload.id == chatroom.creator_id) {
           result = await this.knex('chatroom')
+            // .join(
             .select('creator_id')
             .where({ creator_id: payload.id });
+            
         }
         return result;
         // for(let i = 0; i< result.length; i++) 

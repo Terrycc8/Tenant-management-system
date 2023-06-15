@@ -9,7 +9,7 @@ import { LoginInput, SignUpInput } from "../types";
 export const loginApi = createApi({
   reducerPath: "loginApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: serverURL + apiRoutes.user,
+    baseUrl: serverURL + apiUserPrefix,
     prepareHeaders: prepareHeaders,
   }),
   tagTypes: ["login", "user"],
@@ -32,12 +32,12 @@ export const loginApi = createApi({
       providesTags: (result, error, arg) =>
         result
           ? [
-              ...result.map((item: { id: number }) => ({
-                type: "user" as const,
-                id: item.id,
-              })),
-              "user",
-            ]
+            ...result.map((item: { id: number }) => ({
+              type: "user" as const,
+              id: item.id,
+            })),
+            "user",
+          ]
           : ["user"],
     }),
     postUserSignUp: builder.mutation({
