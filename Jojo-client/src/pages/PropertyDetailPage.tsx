@@ -25,12 +25,14 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import {
+  useDeletePropertyMutation,
   useGetPropertyDetailQuery,
   usePatchPropertyMutation,
 } from "../api/propertyAPI";
-import { useParams } from "react-router";
+import { Redirect, useParams } from "react-router";
 import CommonHeader from "../components/CommonHeader";
 import { Autoplay } from "swiper";
 
@@ -49,6 +51,7 @@ import { showMessage } from "../helper";
 import { CustomSelector } from "../components/CustomSelector";
 import { district, area } from "../types";
 import RentDate from "../components/RentDate";
+import { routes } from "../routes";
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -56,10 +59,14 @@ export function PropertyDetailPage() {
     useGetPropertyDetailQuery(id);
   const [editable, setEditable] = useState(true);
   const editMode = useCallback(() => {
-    setEditable((state) => (state = !state));
+    setEditable((state) => {
+      console.log(state);
+      return (state = !state);
+    });
   }, [setEditable]);
   const [presentAlert] = useIonAlert();
   const [updateProperty] = usePatchPropertyMutation();
+  const [deleteProperty] = useDeletePropertyMutation();
   const saveEditing = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
@@ -75,13 +82,18 @@ export function PropertyDetailPage() {
     },
     [updateProperty, setEditable, presentAlert, showMessage, data]
   );
-
+  const deletePropertyBtn = useCallback(async () => {
+    const json = await deleteProperty({ id: data.id });
+  }, [deleteProperty, data, showMessage, presentAlert]);
+  useIonViewDidLeave(() => {
+    setEditable((state) => (state = true));
+  });
   return (
     <IonPage>
-      <CommonHeader title="Property Details" />
+      <CommonHeader title="Property Details" backUrl={routes.property} />
       <IonContent>
         {isError ? (
-          <>error</>
+          <Redirect to={routes.property}></Redirect>
         ) : isLoading ? (
           <>isLoading</>
         ) : isFetching ? (
@@ -90,17 +102,34 @@ export function PropertyDetailPage() {
           <form onSubmit={saveEditing}>
             <IonCard key={data.id}>
               <IonToolbar color="light">
-                <IonButtons slot="end">
-                  {editable ? (
-                    <IonButton onClick={editMode} color="primary">
-                      Edit
-                    </IonButton>
-                  ) : (
-                    <IonButton type="submit" color="primary">
-                      Save
-                    </IonButton>
-                  )}
-                </IonButtons>
+                {editable ? (
+                  <>
+                    <IonButtons slot="start">
+                      <IonButton onClick={deletePropertyBtn} color="primary">
+                        Delete
+                      </IonButton>
+                    </IonButtons>
+                    <IonButtons slot="end">
+                      <IonButton onClick={editMode} color="primary">
+                        Edit
+                      </IonButton>
+                    </IonButtons>
+                  </>
+                ) : (
+                  <>
+                    <IonButtons slot="start">
+                      <IonButton onClick={editMode} color="primary">
+                        Cancel
+                      </IonButton>
+                    </IonButtons>
+
+                    <IonButtons slot="end">
+                      <IonButton type="submit" color="primary">
+                        Save
+                      </IonButton>
+                    </IonButtons>
+                  </>
+                )}
               </IonToolbar>
               <IonCardHeader>
                 <IonCardTitle>

@@ -13,7 +13,7 @@ export const eventApi = createApi({
     baseUrl: serverURL + apiRoutes.event,
     prepareHeaders: prepareHeaders,
   }),
-  tagTypes: ["event"],
+  tagTypes: ["property", "user", "event"],
   endpoints: (builder) => ({
     getEvent: builder.query({
       query: () => ({
@@ -46,7 +46,7 @@ export const eventApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["event"],
+      invalidatesTags: ["property", "user", "event"],
     }),
   }),
 });

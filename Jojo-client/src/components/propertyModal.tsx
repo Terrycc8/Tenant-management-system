@@ -33,7 +33,7 @@ import { CustomSelector } from "./CustomSelector";
 import { CommonModalHeader } from "./CommonModalHeader";
 import { CustomIonColInput } from "./CustomIonColInput";
 import { fileToBase64String, selectImage } from "@beenotung/tslib/file";
-import { dataURItoFile, resizeBase64WithRatio } from "@beenotung/tslib";
+import { dataURItoFile, resizeBase64WithRatio } from "@beenotung/tslib/image";
 import { area, district } from "../types";
 export function PropertyModal(props: { createModalHandler: () => void }) {
   const [images, setImages] = useState<File[]>([]);
@@ -52,21 +52,27 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
   const [newProperty] = usePostPropertyMutation();
   const pickImages = useCallback(async () => {
     let files = await selectImage({ multiple: true });
-    // console.log(files);
+
     for (let file of files) {
-      // let dataUrl = await fileToBase64String(file);
-      // dataUrl = await resizeBase64WithRatio(
-      //   dataUrl,
-      //   { width: 460, height: 900 },
-      //   "with_in"
-      // );
-      // file = dataURItoFile(dataUrl, file);
+      let dataUrl = await fileToBase64String(file);
+      dataUrl = await resizeBase64WithRatio(
+        dataUrl,
+        { width: 460, height: 900 },
+        "with_in"
+      );
+      file = dataURItoFile(dataUrl, file);
     }
-    // console.log(files);
+
     setImages((images) => {
       return (images = files);
     });
-  }, [selectImage]);
+  }, [
+    selectImage,
+    fileToBase64String,
+    resizeBase64WithRatio,
+    dataURItoFile,
+    setImages,
+  ]);
   const OnSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();

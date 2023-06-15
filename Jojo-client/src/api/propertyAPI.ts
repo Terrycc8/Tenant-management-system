@@ -14,7 +14,7 @@ export const propertyApi = createApi({
     baseUrl: serverURL + apiRoutes.property,
     prepareHeaders: prepareHeaders,
   }),
-  tagTypes: ["property"],
+  tagTypes: ["property", "user", "event"],
 
   endpoints: (builder) => ({
     getProperty: builder.query({
@@ -48,7 +48,7 @@ export const propertyApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["property"],
+      invalidatesTags: ["property", "user", "event"],
     }),
     patchProperty: builder.mutation({
       query: (arg: { body: FormData; id: number }) => ({
@@ -56,9 +56,14 @@ export const propertyApi = createApi({
         method: "PATCH",
         body: arg.body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "property", id: arg.id },
-      ],
+      invalidatesTags: ["property", "user", "event"],
+    }),
+    deleteProperty: builder.mutation({
+      query: (arg: { id: number }) => ({
+        url: `/${arg.id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["property", "user", "event"],
     }),
   }),
 });
@@ -68,6 +73,7 @@ export const propertyApi = createApi({
 export const {
   usePatchPropertyMutation,
   usePostPropertyMutation,
+  useDeletePropertyMutation,
   useGetPropertyQuery,
   useGetPropertyDetailQuery,
 } = propertyApi;
