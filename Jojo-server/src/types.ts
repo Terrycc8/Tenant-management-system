@@ -139,11 +139,16 @@ export type Message = {
 export type ChatRoomProps = {
   senderId: number;
   receiverId: number;
-}
+};
 
 export type chatroom = {
   id: number;
   creator_id: number;
   receiver_id: number;
   created_at: string;
+};
+
+export type User = {
+  email: string;
+  name: string;
 };

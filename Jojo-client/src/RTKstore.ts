@@ -17,6 +17,7 @@ import { loginApi } from "./api/loginMutation";
 import { chatroomApi } from "./api/chatroomAPI";
 import { propertyApi } from "./api/propertyAPI";
 import { eventApi } from "./api/eventAPI";
+import { jojoAPI } from "./api/jojoAPI";
 const persistConfig = {
   key: "root",
   storage: storage,
@@ -24,10 +25,7 @@ const persistConfig = {
 };
 export const rootReducers = combineReducers({
   auth: authReducer,
-  [loginApi.reducerPath]: loginApi.reducer,
-  [propertyApi.reducerPath]: propertyApi.reducer,
-  [eventApi.reducerPath]: eventApi.reducer,
-  [chatroomApi.reducerPath]: chatroomApi.reducer,
+  [jojoAPI.reducerPath]: jojoAPI.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 const store = configureStore({
@@ -37,7 +35,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(loginApi.middleware, propertyApi.middleware, eventApi.middleware, chatroomApi.middleware),
+    }).concat(jojoAPI.middleware),
 });
 setupListeners(store.dispatch);
 export default store;

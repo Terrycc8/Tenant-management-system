@@ -7,19 +7,13 @@ import { apiRoutes, routes } from "../routes";
 import { RootState } from "../RTKstore";
 import { AuthState } from "../slices/authSlice";
 import { prepareHeaders } from "./prepareHeaders";
+import { jojoAPI } from "./jojoAPI";
 // Define a service using a base URL and expected endpoints
-export const propertyApi = createApi({
-  reducerPath: "propertyApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: serverURL + apiRoutes.property,
-    prepareHeaders: prepareHeaders,
-  }),
-  tagTypes: ["property"],
-
+export const propertyApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
     getProperty: builder.query({
       query: () => ({
-        url: "",
+        url: apiRoutes.property,
       }),
 
       providesTags: (result, error, arg) =>
@@ -35,7 +29,7 @@ export const propertyApi = createApi({
     }),
     getPropertyDetail: builder.query({
       query: (id: string) => ({
-        url: `/${id}`,
+        url: apiRoutes.property + `/${id}`,
       }),
       providesTags: (result, error, arg) =>
         result
@@ -44,21 +38,26 @@ export const propertyApi = createApi({
     }),
     postProperty: builder.mutation({
       query: (body: FormData) => ({
-        url: "",
+        url: apiRoutes.property,
         method: "POST",
         body,
       }),
-      invalidatesTags: ["property"],
+      invalidatesTags: ["property", "user", "event"],
     }),
     patchProperty: builder.mutation({
       query: (arg: { body: FormData; id: number }) => ({
-        url: `/${arg.id}`,
+        url: apiRoutes.property + `/${arg.id}`,
         method: "PATCH",
         body: arg.body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "property", id: arg.id },
-      ],
+      invalidatesTags: ["property", "user", "event"],
+    }),
+    deleteProperty: builder.mutation({
+      query: (arg: { id: number }) => ({
+        url: apiRoutes.property + `/${arg.id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["property", "user", "event"],
     }),
   }),
 });
@@ -68,6 +67,7 @@ export const propertyApi = createApi({
 export const {
   usePatchPropertyMutation,
   usePostPropertyMutation,
+  useDeletePropertyMutation,
   useGetPropertyQuery,
   useGetPropertyDetailQuery,
 } = propertyApi;

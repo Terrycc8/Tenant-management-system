@@ -19,7 +19,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   @Post('login')
   async loginWithPassword(
@@ -66,14 +66,18 @@ export class UserController {
   @Get()
   users(@Request() req) {
     try {
-
       let payLoad: JWTPayload = this.jwtService.decode(req);
 
       return this.userService.users(payLoad);
     } catch (error) {
       console.log(error);
-      return []
-
+      return [];
     }
+  }
+
+  @Get('/contacts')
+  async getContractList(@Request() req) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+    return await this.userService.getContactList(payLoad);
   }
 }

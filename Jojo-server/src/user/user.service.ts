@@ -1,15 +1,24 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotImplementedException,
+} from '@nestjs/common';
 
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { comparePassword, hashPassword } from 'src/hash';
+import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 import { JWTPayload, UserListOutput, userRole } from 'src/types';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel() private readonly knex: Knex) { }
+  constructor(
+    @InjectModel() private readonly knex: Knex,
+    private mailService: MailService,
+  ) {}
 
   async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
     let { id, hash, role } = await this.knex('user')
@@ -54,74 +63,67 @@ export class UserService {
       })
       .returning('id');
 
+    this.mailService.sendOPT(
+      {
+        email: sigUpInput.email,
+        name: sigUpInput.first_name + sigUpInput.last_name,
+      },
+      '1',
+    );
     return { id: userID[0].id, role: sigUpInput.user_type };
   }
 
   async users(payload: JWTPayload) {
-    // let result = this.knex('user').select(
-    //   'id',
-    //   'avatar',
-    //   'first_name',
-    //   'last_name',
-    //   'status',
-    //   'user_type',
-    // );
-    // // .where({ creator_id: payload.id });
-
-
-
-
-    // let result = this.knex('user').select(
-    // 'id',
-    // 'avatar',
-    // 'first_name',
-    // 'last_name',
-    // 'status',
-    // 'user_type'
-    // )
-    // ;
-
-    console.log(payload);
-
     if (payload.role === 'landlord') {
       let result = await this.knex('property')
         .select('tenant_id as id')
-        .where({ landlord_id: payload.id })
+        .where({ landlord_id: payload.id });
 
-      console.log(result);
-      // .where({ creator_id: payload.id });
-
-      result = result.map((item) => { return item.id })
-      console.log(result)
+      result = result.map((item) => {
+        return item.id;
+      });
       let result1 = await this.knex('user')
-        .select('id',
-          'avatar',
-          'first_name',
-          'last_name',
-          'status')
-        .whereIn('id', result)
-
-      console.log(result1)
-
-      console.log("get start");
+        .select('id', 'avatar', 'first_name', 'last_name', 'status')
+        .whereIn('id', result);
 
       return result1;
-    } else if
-      (payload.role === 'tenant') {
+    } else if (payload.role === 'tenant') {
       let result = await this.knex('property')
         .select('landlord_id as id')
-        .where({ tenant_id: payload.id })
-      result = result.map((item) => { return item.id })
-      console.log(result)
+        .where({ tenant_id: payload.id });
+      result = result.map((item) => {
+        return item.id;
+      });
+      // console.log(result)
       let result1 = await this.knex('user')
-        .select('id',
-          'avatar',
-          'first_name',
-          'last_name',
-          'status')
-        .whereIn('id', result)
+        .select('id', 'avatar', 'first_name', 'last_name', 'status')
+        .whereIn('id', result);
       return result1;
     }
   }
-}
 
+  async getContactList(user: JWTPayload) {
+    let query = this.knex
+      .from('user')
+      .select(
+        'user.id',
+        'user.avatar',
+        'user.first_name',
+        'user.last_name',
+        'user.status',
+      );
+    if (user.role === 'landlord') {
+      query = query
+        .innerJoin('property', 'property.tenant_id', 'user.id')
+        .where('landlord_id', user.id);
+    } else if (user.role === 'tenant') {
+      query = query
+        .innerJoin('property', 'property.landlord_id', 'user.id')
+        .where('tenant_id', user.id);
+    } else {
+      throw new NotImplementedException('this api is not supported for admin');
+    }
+    let contacts = await query;
+    return { contacts };
+  }
+}

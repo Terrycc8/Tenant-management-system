@@ -1,6 +1,6 @@
 export type JWTPayload = {
   id: number;
-  role: 'admin' | 'landlord' | 'tenant';
+  role: "admin" | "landlord" | "tenant";
 };
 
 export type FetchError = {
@@ -30,9 +30,9 @@ export type PropertyListOutput = {
   tenant_id: number;
 };
 
-export type UserType = 'landlord' | 'tenant';
-export const uploadDir = './upload';
-export const userRole = { landlord: 'landlord', tenant: 'tenant' };
+export type UserType = "landlord" | "tenant";
+export const uploadDir = "./upload";
+export const userRole = { landlord: "landlord", tenant: "tenant" };
 
 export type PropertyInput = {
   title: string;
@@ -62,49 +62,49 @@ export interface LocationSlice {
 }
 
 export const district: string[][] = [
-  ['central_west', 'Central west'],
-  ['eastern', 'Eastern'],
-  ['southern', 'Southern'],
-  ['wan_chai', 'Wan Chai'],
-  ['kowloon_city', 'Kowloon City'],
-  ['kwun_tong', 'Kwun Tong'],
-  ['sham_shui_po', 'Sham Shui Po'],
-  ['wong_tai_sin', 'Wong Tai Sin'],
-  ['yau_tsim_mong', 'Yau Tsim Mong'],
-  ['island', 'Island'],
-  ['kwai_tsing', 'Kwai Tsing'],
-  ['north', 'North'],
-  ['sai_kung', 'Sai Kung'],
-  ['sha_tin', 'Sha Tin'],
-  ['tai_po', 'Tai Po'],
-  ['tsuen_wan', 'Tsuen Wan'],
-  ['tuen_mun', 'Tuen Mun'],
-  ['yuen_long', 'Yuen Long'],
+  ["central_west", "Central west"],
+  ["eastern", "Eastern"],
+  ["southern", "Southern"],
+  ["wan_chai", "Wan Chai"],
+  ["kowloon_city", "Kowloon City"],
+  ["kwun_tong", "Kwun Tong"],
+  ["sham_shui_po", "Sham Shui Po"],
+  ["wong_tai_sin", "Wong Tai Sin"],
+  ["yau_tsim_mong", "Yau Tsim Mong"],
+  ["island", "Island"],
+  ["kwai_tsing", "Kwai Tsing"],
+  ["north", "North"],
+  ["sai_kung", "Sai Kung"],
+  ["sha_tin", "Sha Tin"],
+  ["tai_po", "Tai Po"],
+  ["tsuen_wan", "Tsuen Wan"],
+  ["tuen_mun", "Tuen Mun"],
+  ["yuen_long", "Yuen Long"],
 ];
 
 export const area: string[][] = [
-  ['hong_kong', 'Hong Kong'],
-  ['kowloon', 'Kowloon'],
-  ['new_territories', 'New Territories'],
-  ['island', 'Island'],
+  ["hong_kong", "Hong Kong"],
+  ["kowloon", "Kowloon"],
+  ["new_territories", "New Territories"],
+  ["island", "Island"],
 ];
 
 export const event_type: string[][] = [
-  ['maintenance', 'Maintenance'],
-  ['notices', 'Notices'],
-  ['reimbursement', 'Reimbursement'],
-  ['complaint', 'Complaint'],
+  ["maintenance", "Maintenance"],
+  ["notices", "Notices"],
+  ["reimbursement", "Reimbursement"],
+  ["complaint", "Complaint"],
 ];
 
 export const event_priority: string[][] = [
-  ['high', 'High'],
-  ['medium', 'Medium'],
-  ['low', 'Low'],
+  ["high", "High"],
+  ["medium", "Medium"],
+  ["low", "Low"],
 ];
 export const event_status: string[][] = [
-  ['resolved', 'Resolved'],
-  ['pending', 'Pending'],
-  ['rejected', 'Rejected'],
+  ["resolved", "Resolved"],
+  ["pending", "Pending"],
+  ["rejected", "Rejected"],
 ];
 
 export type UserListOutput = {
@@ -114,4 +114,3 @@ export type UserListOutput = {
   last_name: string;
   status: string;
 };
-

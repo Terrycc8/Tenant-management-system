@@ -27,7 +27,7 @@ function RentEndDate(props: {
           id={id}
           presentation="date"
           showDefaultButtons={true}
-          value={props.value || ""}
+          value={props.value}
         ></IonDatetime>
       </IonModal>
     </>

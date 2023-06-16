@@ -1,201 +1,101 @@
 import {
   IonBackButton,
-  IonButton,
   IonButtons,
   IonContent,
   IonFooter,
   IonHeader,
   IonIcon,
   IonItem,
-  IonList,
   IonPage,
-  IonProgressBar,
-  IonRefresher,
-  IonRefresherContent,
   IonTextarea,
   IonTitle,
   IonToolbar,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonCol,
-  IonGrid,
-  IonRow,
+  IonButton,
 } from "@ionic/react";
-import React, { useEffect, useState } from 'react';
-import io from "socket.io-client";
-import { useAppSelector } from "../../redux/hooks", 
-import { selectIsLoading, selectRooms } from "../../redux/room/roomSlice"
-import { useGetUsersQuery } from "../api/loginMutation";
+import { useCallback, useState } from "react";
 import { routes } from "../routes";
-import { addOutline, cameraOutline } from "@ionicons";
-import { chatroom } from '../../../Jojo-server/dist/src/types';
-import serverURL from "../ServerDomain";
-const socket = io("/");
-interface Message {
-  body: string;
-  from: string;
-}
+import { addOutline, send } from "ionicons/icons";
+import "./Chatroom.css";
+import { useSocket } from "../useHook/use-socket";
+import { useValue } from "../useHook/use-value";
+import { useParams } from "react-router";
+import { chatService } from "../api";
+
+type Message = {
+  id: number;
+  content: string;
+};
 
 export function ChatroomPage() {
-  const {
-    data,
-    isFetching,
-    isLoading,
-    error: fetchError,
-    isError,
-  } = useGetUsersQuery({});
-  const error = fetchError || data?.error;
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  // const [messages, setMessages] = useState<Message[]>([]);
-  // const [message, setMessage] = useState<string>("");
+  const handleNewMessage = useCallback((event: { data: string }) => {
+    console.log("new message from ws:", event);
+    // setMessages((messages) => [...messages, event.data]);
+  }, []);
 
-  // useEffect(() => {
-  //   const receiveMessage = (message: Message) => {
-  //     setMessages([message, ...messages]);
-  //   };
+  useSocket((socket) => {
+    socket.on("new-message", handleNewMessage);
+    return () => {
+      socket.off("new-message", handleNewMessage);
+    };
+  });
 
-  //   socket.on("message", receiveMessage);
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref={routes.chatlist} />
+          </IonButtons>
+          <IonTitle>Chat</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent id="main-chat-content">
+        {messages.map((message) => (
+          <IonCard key={message.id}>{message.content}</IonCard>
+        ))}
+      </IonContent>
 
-  //   return () => {
-  //     socket.off("message", receiveMessage);
-  //   };
-  // }, [messages]);
+      <Footer />
+    </IonPage>
+  );
+}
 
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const newMessage = {
-  //     body: message,
-  //     from: "Me",
-  //   };
-  //   setMessages([newMessage, ...messages]);
-  //   setMessage("");
-  //   socket.emit("message", newMessage.body);
-
-  const getNotificationCount = (allChats) => {
-
-    let notificationCount = 0;
-  
-    allChats.forEach(chats => {
-  
-      chats.chats.forEach(chat => {
-  
-        if (!chat.read) {
-  
-          notificationCount++;
-        }
-      })
+function Footer() {
+  const params = useParams<{ id: string }>();
+  const room_id = params.id;
+  const input = useValue("");
+  function addAttachment() {}
+  function submitNewMessage() {
+    // chatService.sendMessage(room_id, input.value);
+    fetch(`http://localhost:8100/chat/rooms/${room_id}/message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input.value }),
     });
-  
-  //   return notificationCount;
-  // }
+  }
 
-
-
-    
-      return (
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-                <IonBackButton slot="start" text={ (notificationCount > 0) ? notificationCount : "" } />
-                {/* <IonTitle>
-
-                    <div className="chat-contact">
-                        <img src={ contact.avatar } alt="avatar" />
-                        <div className="chat-contact-details">
-                            <p>{ contact.name }</p>
-                        </div>
-                    </div>
-                </IonTitle> */}
-            </IonToolbar>
-          </IonHeader>
-        <IonContent>
-            {isError ? (
-              <>error: {String(error)}</>
-            ) : isLoading ? (
-              <>loading</>
-            ) : isFetching ? (
-              <>Fetching</>
-            ) : !data ? (
-              <>no data??</>
-            ) : data.rooms.length == 0 ? (
-              <>no chatroom yet</>
-            ) : data.rooms.length > 0 ? (
-              data.rooms.map((chatroom:string) => (
-                <IonCard
-                  key={chatroom.id}
-                  routerLink={routes.chat + "/" 
-                  + chat.id}
-                >
-              {/* <img src="" alt="" /> */}
-                  <IonCardHeader>
-                    <IonCardTitle>{chatroom.username}</IonCardTitle>
-                  </IonCardHeader>
-                    {/* IonItem */}
-                    {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
-                    <IonCardContent>{chatroom.last_message}</IonCardContent>
-                  
-
-                  {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
-                </IonCard>
-              )}
-
-                <IonFooter>
-                  <IonGrid>
-                    <IonRow className="ion-align-items-center">
-                        <IonCol size="1">
-                            <IonIcon icon="addOutline" color="primary" onClick={ handlePrompt } />
-                        </IonCol>
-
-                        <IonItem>
-                                <IonTextarea rows="1" value={ message } onIonChange={ e => setMessage(e.target.value) } />
-                        </IonItem>
-
-                        <IonCol size="1" className="chat-send-button" onClick={ sendMessage }>
-                                <IonIcon icon="send" />
-                        </IonCol>
-                      </IonRow>
-                    </IonGrid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                 
-                </IonFooter>
-                
-                ))
-              ) : (
-              <>invalid data: {JSON.stringify(data)}</>
-            )}
-          </IonContent>
-        </IonPage>
-      );
-    }
-
-
+  return (
+    <IonFooter className="chat-footer" id="chat-footer">
+      <IonItem>
+        <IonButtons slot="start">
+          <IonButton onClick={addAttachment}>
+            <IonIcon icon={addOutline}> </IonIcon>
+          </IonButton>
+        </IonButtons>
+        <IonTextarea
+          value={input.value}
+          placeholder="New message..."
+          onIonInput={input.onIonChange}
+        />
+        <IonButtons slot="end">
+          <IonButton onClick={submitNewMessage}>
+            <IonIcon icon={send}> </IonIcon>
+          </IonButton>
+        </IonButtons>
+      </IonItem>
+    </IonFooter>
+  );
+}

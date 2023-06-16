@@ -3,23 +3,30 @@ import {
   IonButtons,
   IonContent,
   IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
   IonModal,
   IonTitle,
   IonToolbar,
   IonHeader,
+  useIonAlert,
   IonCard,
   IonCardTitle,
   IonCardHeader,
 } from "@ionic/react";
-import { useCallback, useRef, useState, useEffect } from "react";
+// import "./ContactModal.scss";
+import { FormEvent, useCallback, useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
+import { useGetUsersQuery } from "../api/loginMutation";
 import { closeOutline } from "ionicons/icons";
 import { UserListOutput, PropertyListOutput } from "../types";
 import { routes } from "../routes";
 import serverURL from "../ServerDomain";
+import { log } from "console";
 
-export function ContactModal(props: { trigger: string }) {
+export function ContactModal() {
   const contactModal = useRef<HTMLIonModalElement>(null);
   const token = useSelector((state: RootState) => state.auth.token);
 
@@ -46,10 +53,37 @@ export function ContactModal(props: { trigger: string }) {
     token && getUserList();
   }, [token]);
 
+  //     onSuccess: data => {
+  //        console.log(data);
+  //        const message = "success"
+  //        presentAlert(message)
+
+  //   if ("error" in json) {
+  //     presentAlert({
+  //       header: (json.error as FetchError).data.message,
+  //       buttons: [
+  //         {
+  //           text: "OK",
+  //           role: "confirm",
+  //           handler: dismissProperty,
+  //         },
+  //       ],
+  //     });
+  //   } else {
+  //     presentAlert({
+  //       header: "Successful",
+  //       buttons: [
+  //         {
+  //           text: "OK",
+  //           role: "confirm",
+  //           handler: dismissProperty,
+  //         },
+  //       ],
+
   return (
     <IonModal
       ref={contactModal}
-      trigger={props.trigger}
+      trigger="open-contact-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
       onWillDismiss={dismissContact}

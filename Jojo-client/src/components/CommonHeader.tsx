@@ -29,7 +29,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
       await sleep(250);
     }
     setModal((model) => model.replace("to:", ""));
-  }, [isIphone]);
+  }, [isIphone, sleep, setModal, modal]);
   const setModalMenu = useCallback(() => setModal("main-menu"), [setModal]);
   const setModalToProfile = useCallback(
     () => setModal("to:profile"),
@@ -39,7 +39,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
   const setModalEmpty = useCallback(() => setModal(""), [setModal]);
   const logOutOnClick = useCallback(() => {
     dispath(logout());
-  }, []);
+  }, [dispath]);
   return (
     <>
       <IonHeader>

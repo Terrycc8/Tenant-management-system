@@ -64,6 +64,7 @@ import { MemberOnlyRoute } from "./components/MemberOnlyRoute";
 
 import { Tab } from "./pages/Tab";
 import { GuestOnlyRoute } from "./components/GuestOnlyRoute";
+import { ChatroomPage } from "./pages/Chatroom";
 
 setupIonicReact();
 
@@ -74,6 +75,9 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Redirect exact from="/" to={routes.home} />
+          <MemberOnlyRoute path={routes.chatroom(":id")}>
+            <ChatroomPage />
+          </MemberOnlyRoute>
           <MemberOnlyRoute path={prefix}>
             <Tab />
           </MemberOnlyRoute>

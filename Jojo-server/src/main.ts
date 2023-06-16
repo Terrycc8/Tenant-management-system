@@ -2,15 +2,32 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { print } from 'listening-on';
 import { env } from './env';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { uploadDir } from './types';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as socketIO from 'socket.io';
+import * as http from 'http';
+import * as cors from 'cors';
+import * as express from 'express';
+import { ChatController } from './chat/chat.controller';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets('upload');
-  app.enableCors();
+  const expressApp = express();
 
-  await app.listen(env.SERVER_PORT, () => {
+  expressApp.use(cors());
+
+  const nestApp = await NestFactory.create(
+    AppModule,
+    new ExpressAdapter(expressApp),
+  );
+  await nestApp.init();
+
+  const server = http.createServer(expressApp);
+
+  const io = new socketIO.Server(server, {
+    cors: { origin: '*' },
+  });
+  ChatController.io = io;
+
+  server.listen(env.SERVER_PORT, () => {
     print(env.SERVER_PORT);
   });
 }

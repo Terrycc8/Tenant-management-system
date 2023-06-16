@@ -10,14 +10,21 @@ import { JWTPayload, userRole } from 'src/types';
 export class PropertyService {
   constructor(@InjectModel() private readonly knex: Knex) {}
   async propertyDetail(payload: JWTPayload, property_id: number) {
-    let owner = await this.knex('property')
+    let thisProperty = await this.knex('property')
       .select('landlord_id', 'tenant_id')
       .where({ id: property_id })
       .first();
-
-    if (owner.landlord_id !== payload.id && owner.tenant_id !== payload.id) {
+    if (!thisProperty) {
       throw new BadRequestException(
-        'invalid request, you are not authorized to access information of this property',
+        'Invalid request, this property does not exist',
+      );
+    }
+    if (
+      thisProperty.landlord_id !== payload.id &&
+      thisProperty.tenant_id !== payload.id
+    ) {
+      throw new BadRequestException(
+        'Invalid request, you are not authorized to access information of this property',
       );
     }
 
@@ -104,7 +111,7 @@ export class PropertyService {
   async newProperty(
     payload: JWTPayload,
     propertyInput: PropertyInputDto,
-       //@ts-ignore
+    //@ts-ignore
     images: Express.Multer.File[],
   ) {
     if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
@@ -112,7 +119,11 @@ export class PropertyService {
         'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
     }
-
+    if (payload.role !== userRole.landlord) {
+      throw new BadRequestException(
+        'Invalid request, only landlord can list new property',
+      );
+    }
     let [{ id }] = await this.knex('property')
       .insert({
         ...propertyInput,
@@ -185,6 +196,33 @@ export class PropertyService {
       .where({ id })
       .returning('id');
     result = await this.knex('property').select('*').where({ id });
+    console.log(result);
+    return { tenant_id: propertyInput.tenant_id };
+  }
+  async propertyDelete(
+    payload: JWTPayload,
+
+    id: number,
+  ) {
+    let result = await this.knex('property')
+      .select('id', 'landlord_id')
+      .where({ id })
+      .first();
+
+    if (!result.id) {
+      throw new BadRequestException(
+        'Invalid property ID, this property does not exist',
+      );
+    }
+    if (result.landlord_id !== payload.id) {
+      throw new BadRequestException(
+        'Invalid request, you are not allowed to delete this information',
+      );
+    }
+    await this.knex.transaction(async (transaction) => {
+      await transaction('propertyAttachments').where({ property_id: id }).del();
+      await transaction('property').where({ id }).del();
+    });
 
     return {};
   }

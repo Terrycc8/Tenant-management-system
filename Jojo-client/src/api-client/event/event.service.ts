@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe, Headers, Get, injectNestClient } from 'nest-client';
+import { Body, Controller, Post, ValidationPipe, Get, injectNestClient } from 'nest-client';
 import { EventInputDto } from 'src/dto/post-event.dto';
 import { JWTPayload } from 'src/types';
 
@@ -10,12 +10,12 @@ export class EventService {
     }
 
     @Get()
-    propertyList(@Headers() headers: string) {
+    eventList(@Request() req: string) {
         throw new Error("stub")
     }
 
     @Post()
-    newEvent(@Body(new ValidationPipe()) eventInput: EventInputDto, @Headers() headers: string) {
+    newEvent(@Body(new ValidationPipe()) eventInput: EventInputDto, @Request() req: string) {
         throw new Error("stub")
     }
 }

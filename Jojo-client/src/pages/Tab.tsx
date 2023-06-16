@@ -5,11 +5,6 @@ import {
   IonTabButton,
   IonIcon,
   IonLabel,
-  IonButton,
-  IonButtons,
-  IonHeader,
-  IonContent,
-  IonToolbar,
 } from "@ionic/react";
 import {
   homeOutline,
@@ -18,26 +13,20 @@ import {
   cashOutline,
   chatboxEllipsesSharp,
   chatboxEllipsesOutline,
-  personCircle,
 } from "ionicons/icons";
-import { Redirect, Route, useLocation } from "react-router";
+import { Redirect, Route } from "react-router";
 
 import HomePage from "./HomePage";
-import { LoginPage } from "./LoginPage";
 import PaymentPage from "./PaymentPage";
-import { SignUpPage } from "./SignUpPage";
 import { prefix, routes } from "../routes";
-import { memo, useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { ErrorPage } from "./ErrorPage";
 
 import { CreateModal } from "../components/CreateModal";
 import { PropertyPage } from "./PropertyPage";
 import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
+// import { ChatroomList } from "./ChatroomList";
 import { ChatroomList } from "./ChatroomList";
-import { ChatroomPage } from "./Chatroom";
-import { RootState } from "../RTKstore";
 
 export function Tab() {
   return (
@@ -60,12 +49,10 @@ export function Tab() {
         <Route path={routes.home}>
           <HomePage />
         </Route>
-        <Route path={routes.chat}>
+        <Route path={routes.chatlist}>
           <ChatroomList />
         </Route>
-        <Route path={routes.chatroom}>
-          {/* <ChatroomPage /> */}
-        </Route>
+
         <Route>
           <ErrorPage />
         </Route>
@@ -93,7 +80,7 @@ export function Tab() {
           <IonIcon aria-hidden="true" icon={cashOutline} />
           <IonLabel>Payment</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="chat" href={routes.chat}>
+        <IonTabButton tab="chat" href={routes.chatlist}>
           {true ? (
             <IonIcon
               aria-hidden="true"

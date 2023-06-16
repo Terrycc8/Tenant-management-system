@@ -5,7 +5,7 @@ export const env = {
   DB_NAME: '',
   DB_USERNAME: '',
   DB_PASSWORD: '',
-  PORT: '5432',
+  PORT: 5432,
   SERVER_PORT: 8100,
   NODE_ENV: 'development',
   JWT_SECRET: '',

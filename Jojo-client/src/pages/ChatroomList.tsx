@@ -48,6 +48,7 @@ export function ChatroomList() {
   const token = useSelector((state: RootState) => state.auth.token);
   const { data, isFetching, isLoading, error } = useChatroomList(token);
 
+  const modalTrigger = "open-contact-modal";
   return (
     <IonPage>
       <IonHeader>
@@ -59,13 +60,13 @@ export function ChatroomList() {
             fill="clear"
             slot="end"
             className="ion-margin-end"
-            id="open-contact-modal"
+            id={modalTrigger}
           >
             <IonIcon size="large" icon={createOutline} />
-            <ContactModal /> 
+            <ContactModal trigger={modalTrigger} />
           </IonButton>
         </IonToolbar>
-        <IonSearchbar onIonChange={ e => search(e) } />
+        <IonSearchbar onIonChange={(e) => search(e)} />
       </IonHeader>
       <IonContent>
         {error ? (
@@ -82,9 +83,7 @@ export function ChatroomList() {
           data.rooms.map((chatroom) => (
             <IonCard
               key={chatroom.id}
-              routerLink={routes.chat + "/" 
-              + chatroom.id
-            }
+              routerLink={routes.chatroom(chatroom.id)}
             >
               {/* <img src="" alt="" /> */}
               <IonCardHeader>

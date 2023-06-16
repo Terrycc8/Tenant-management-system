@@ -12,6 +12,8 @@ import { EventModule } from './event/event.module';
 
 import { MulterModule } from '@nestjs/platform-express';
 import { uploadDir } from './types';
+import { MailModule } from './mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 const config = require('../knexfile');
 
 @Module({
@@ -27,6 +29,10 @@ const config = require('../knexfile');
     }),
     PropertyModule,
     EventModule,
+    MailModule,
+    ConfigModule.forRoot({
+      isGlobal: true, // no need to import into other modules
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

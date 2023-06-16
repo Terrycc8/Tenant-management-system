@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -73,5 +74,15 @@ export class PropertyController {
     let payLoad: JWTPayload = this.jwtService.decode(req);
 
     return this.propertyService.propertyEdit(payLoad, propertyInput, params.id);
+  }
+  @Delete(':id')
+  propertyDelete(
+    @Request()
+    req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+  ) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+
+    return this.propertyService.propertyDelete(payLoad, params.id);
   }
 }

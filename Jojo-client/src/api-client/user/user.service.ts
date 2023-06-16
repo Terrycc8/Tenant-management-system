@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Header, Post, UnauthorizedException, ValidationPipe, injectNestClient } from 'nest-client';
-import { Headers } from 'nest-client';
+import {  } from 'nest-client';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
+import { JWTPayload, uploadDir } from 'src/types';
 
 
 @Controller('user')
@@ -10,8 +11,11 @@ export class UserService {
         injectNestClient(this)
     }
 
+  // @Post('signup')
+  // async getUsers() {}
+
     @Post('login')
-    async loginWithPassword(@Body(new ValidationPipe()) loginInput: LoginInputWithPasswordDto, @Headers() headers: string) {
+    async loginWithPassword(@Body(new ValidationPipe()) loginInput: LoginInputWithPasswordDto, @Request() headers: string) {
         throw new Error("stub")
     }
 
@@ -20,13 +24,23 @@ export class UserService {
         throw new Error("stub")
     }
 
-    @Post('signup')
-    async getUsers() {
+    @Get('profile')
+    getProfile(@Request() headers: string) {
         throw new Error("stub")
     }
 
-    @Get('profile')
-    getProfile(@Headers('Authorization') authorization: string, @Headers() headers: string) {
+    @Get('account')
+    async account(@Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto) {
+        throw new Error("stub")
+    }
+
+    @Get()
+    users(@Request() req: string) {
+        throw new Error("stub")
+    }
+
+    @Get('/contacts')
+    async getContractList(@Request() req: string) {
         throw new Error("stub")
     }
 }
