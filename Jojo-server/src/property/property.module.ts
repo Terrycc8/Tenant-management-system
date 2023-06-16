@@ -5,6 +5,6 @@ import { JwtService } from 'src/jwt/jwt.service';
 
 @Module({
   controllers: [PropertyController],
-  providers: [PropertyService, JwtService],
+  providers: [PropertyService],
 })
 export class PropertyModule {}

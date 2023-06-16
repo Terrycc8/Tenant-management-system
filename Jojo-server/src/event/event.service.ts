@@ -12,13 +12,14 @@ export class EventService {
     eventInput: EventInputDto,
     images: Express.Multer.File[],
   ) {
+    if (payload.role !== userRole.tenant) {
+      throw new BadRequestException(
+        'Invalid request, only tenant can create new event',
+      );
+    }
     let id = eventInput.property_id;
-    let result: number[];
-    let handled_by =
-      payload.role == userRole.landlord ? 'tenant_id' : 'landlord_id';
-
     const { handled_by_id } = await this.knex('property')
-      .select(`${handled_by} as handled_by_id`)
+      .select('landlord_id as handled_by_id')
       .where({ id })
       .first();
 
@@ -73,8 +74,7 @@ export class EventService {
       .groupBy('event.id', 'title', 'type', 'priority', 'event.status')
       .where({ created_by_id: payload.id })
       .orWhere({ handled_by_id: payload.id });
-    let result = await query;
-    console.log(result);
-    return result;
+
+    return await query;
   }
 }

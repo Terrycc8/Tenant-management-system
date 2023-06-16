@@ -225,6 +225,17 @@ export class PropertyService {
       );
     }
     await this.knex.transaction(async (transaction) => {
+      let result = await transaction('event')
+        .select('id')
+        .where({ property_id: id });
+      if (result.length > 0) {
+        result = result.map((item) => {
+          return item.id;
+        });
+
+        await transaction('eventAttachments').whereIn('event_id', result).del();
+        await transaction('event').where({ property_id: id }).del();
+      }
       await transaction('propertyAttachments').where({ property_id: id }).del();
       await transaction('property').where({ id }).del();
     });

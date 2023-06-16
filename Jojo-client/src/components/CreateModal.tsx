@@ -49,11 +49,11 @@ export function CreateModal() {
             <IonLabel>Create new event</IonLabel>
             <EventsModal createModalHandler={dismiss} />
           </IonItem>
-          <IonItem button={true} detail={false} id="open-payments-modal">
+          {/* <IonItem button={true} detail={false} id="open-payments-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
             <IonLabel>Create new payment</IonLabel>
             <PaymentsModal />
-          </IonItem>
+          </IonItem> */}
         </IonList>
       </IonContent>
     </IonModal>

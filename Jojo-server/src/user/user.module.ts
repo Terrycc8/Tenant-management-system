@@ -6,6 +6,6 @@ import { MailService } from 'src/mail/mail.service';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, JwtService],
+  providers: [UserService],
 })
 export class UserModule {}

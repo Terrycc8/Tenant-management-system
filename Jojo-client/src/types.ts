@@ -42,6 +42,7 @@ export type EventListOutput = {
   handled_by_id: number;
   reason: string;
   created_by_id: number;
+  description: string;
 };
 
 export type UserType = 'landlord' | 'tenant';
@@ -223,5 +224,5 @@ export const propertyDistrictEnumMsg = {
 
 export type ClientPayload = {
   token: string;
-  role: 'admin' | 'landlord' | 'tenant';
+  role: 'admin' | 'landlord' | 'tenant' | null;
 };

@@ -81,11 +81,16 @@ export function HomePage() {
           <IonCardContent>
             <Doughnut
               data={{
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: [
+                  "Notice",
+                  "Complaints",
+                  "reimbursement",
+                  "Maintenance",
+                ],
                 datasets: [
                   {
-                    label: "events",
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: "No.s of events",
+                    data: [12, 19, 1, 5],
                     borderWidth: 2,
                   },
                 ],
