@@ -196,7 +196,7 @@ export class PropertyService {
       .where({ id })
       .returning('id');
     result = await this.knex('property').select('*').where({ id });
-    console.log(result);
+
     return { tenant_id: propertyInput.tenant_id };
   }
   async propertyDelete(

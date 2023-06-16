@@ -11,12 +11,12 @@ export class EventService {
     let result: number[];
     let handler;
     if (payload.role == userRole.landlord) {
-      handler = await this.knex('property')
+      handler = await this.knex('event')
         .select('tenant_id')
         .where({ id: eventInput.property_id })
         .first();
     } else if (payload.role == userRole.tenant) {
-      handler = await this.knex('property')
+      handler = await this.knex('event')
         .select('landlord_id' as 'id')
         .where({ property_id: eventInput.property_id })
         .first();

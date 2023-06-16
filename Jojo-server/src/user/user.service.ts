@@ -42,6 +42,13 @@ export class UserService {
         'Invalid email, this email has been registered',
       );
     }
+    await this.mailService.sendOPT(
+      {
+        email: sigUpInput.email,
+        name: sigUpInput.first_name + sigUpInput.last_name,
+      },
+      '1',
+    );
 
     let userID: number = await this.knex('user')
       .insert({
@@ -58,13 +65,6 @@ export class UserService {
       })
       .returning('id');
 
-    this.mailService.sendOPT(
-      {
-        email: sigUpInput.email,
-        name: sigUpInput.first_name + sigUpInput.last_name,
-      },
-      '1',
-    );
     return { id: userID[0].id, role: sigUpInput.user_type };
   }
 

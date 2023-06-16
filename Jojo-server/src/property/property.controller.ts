@@ -51,7 +51,6 @@ export class PropertyController {
   @UseInterceptors(filesInterceptorConfig(20))
   newProperty(
     @UploadedFiles()
-       //@ts-ignore
     images: Express.Multer.File[],
     @Body(new ValidationPipe()) propertyInput: PropertyInputDto,
     @Request()

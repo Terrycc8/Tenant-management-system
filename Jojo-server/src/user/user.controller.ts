@@ -41,6 +41,7 @@ export class UserController {
     @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
   ) {
     let payload = await this.userService.signUp(signUpInput);
+
     let token = this.jwtService.encode(payload);
 
     return { token };
