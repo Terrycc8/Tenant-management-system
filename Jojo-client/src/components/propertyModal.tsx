@@ -26,7 +26,7 @@ import {
   useState,
 } from "react";
 
-import { showMessage } from "../helper";
+import { showResponseMessage } from "../helper";
 import RentDate from "./RentDate";
 import { usePostPropertyMutation } from "../api/propertyAPI";
 import { CustomSelector } from "./CustomSelector";
@@ -82,9 +82,9 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
         formData.append("image", image);
       }
       const json = await newProperty(formData);
-      showMessage(json, presentAlert, dismissAll);
+      showResponseMessage(json, presentAlert, dismissAll);
     },
-    [presentAlert, dismissAll, newProperty, showMessage, images]
+    [presentAlert, dismissAll, newProperty, showResponseMessage, images]
   );
 
   const dev = useCallback((event: any) => {

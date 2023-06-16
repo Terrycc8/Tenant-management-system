@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  Global,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { JWTPayload } from 'src/types';
 const permit = new Bearer({
   query: 'access_token',
 });
+
 @Injectable({})
 export class JwtService {
   decode(req: Request): JWTPayload {

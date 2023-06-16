@@ -21,6 +21,7 @@ import { routes } from "../routes";
 import { Capacitor } from "@capacitor/core";
 import { isIphone } from "../platform";
 import { sleep } from "../async";
+import { ProfileModal } from "./ProfileModal";
 
 export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
   const [modal, setModal] = useState("");
@@ -63,7 +64,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
       >
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot="start">
+            <IonButtons slot="end">
               <IonButton onClick={setModalEmpty}>
                 <IonIcon icon={closeOutline}></IonIcon>
               </IonButton>
@@ -82,17 +83,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
         </IonContent>
       </IonModal>
       <IonModal isOpen={modal === "profile"}>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="end">
-              <IonButton onClick={setModalEmpty}>Back</IonButton>
-            </IonButtons>
-            <IonTitle>Profile</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList></IonList>
-        </IonContent>
+        <ProfileModal setModalEmpty={setModalEmpty} />
       </IonModal>
     </>
   );

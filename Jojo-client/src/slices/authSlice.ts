@@ -3,21 +3,25 @@ import { routes } from "../routes";
 
 export interface AuthState {
   token: null | string;
+  role: null | string;
 }
 
 const initialState: AuthState = {
   token: null,
+  role: null,
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials: (state, { payload: { token } }) => {
+    setCredentials: (state, { payload: { token, role } }) => {
       state.token = token;
+      state.role = role;
     },
     logout: (state) => {
       state.token = null;
+      state.role = null;
       window.location.href = routes.home;
     },
   },

@@ -12,7 +12,13 @@ import {
   isNumberString,
   minLength,
 } from 'class-validator';
-import { UserType } from 'src/types';
+import {
+  PropertyArea,
+  PropertyDistrict,
+  UserType,
+  propertyAreaEnumMsg,
+  propertyDistrictEnumMsg,
+} from 'src/types';
 import { isNull } from 'util';
 
 export class PropertyInputDto {
@@ -21,32 +27,13 @@ export class PropertyInputDto {
   title: string;
   @IsNumberString()
   rent: number;
-  @IsString()
-  area: 'hong_kong' | 'kowloon' | 'new_territories' | 'island';
-  @IsString()
-  district:
-    | 'central_west'
-    | 'eastern'
-    | 'southern'
-    | 'wan_chai'
-    | 'kowloon_city'
-    | 'kwun_tong'
-    | 'sham_shui_po'
-    | 'wong_tai_sin'
-    | 'yau_tsim_mong'
-    | 'island'
-    | 'kwai_tsing'
-    | 'north'
-    | 'sai_kung'
-    | 'sha_tin'
-    | 'tai_po'
-    | 'tsuen_wan'
-    | 'tuen_mun'
-    | 'yuen_long';
+  @IsEnum(PropertyArea, propertyAreaEnumMsg)
+  area: string;
+  @IsEnum(PropertyDistrict, propertyDistrictEnumMsg)
+  district: string;
   @IsString()
   @Length(1, 32)
   location: string;
-
   @IsString()
   @Length(1, 32)
   street: string;
@@ -66,9 +53,6 @@ export class PropertyInputDto {
   rental_start_at: Date;
   @IsDateString()
   rental_end_at: Date;
-  @IsOptional()
-  @IsDateString()
-  edited_at: Date;
   @IsOptional()
   @IsString()
   tenant_id: string;

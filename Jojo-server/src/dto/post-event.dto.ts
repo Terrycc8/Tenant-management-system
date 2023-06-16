@@ -10,16 +10,22 @@ import {
   Length,
   minLength,
 } from 'class-validator';
-import { UserType } from 'src/types';
+import {
+  EventPriority,
+  EventTypes,
+  UserType,
+  eventPriorityEnumMsg,
+  eventTypesEnumMsg,
+} from 'src/types';
 
 export class EventInputDto {
   @IsString()
   @Length(1, 32)
   title: string;
-  @IsString()
-  type: 'maintenance' | 'notices' | 'reimbursement' | 'complaint';
-  @IsString()
-  priority: 'high' | 'medium' | 'low';
+  @IsEnum(EventTypes, eventTypesEnumMsg)
+  type: string;
+  @IsEnum(EventPriority, eventPriorityEnumMsg)
+  priority: string;
   @IsString()
   @Length(0, 256)
   description: string;

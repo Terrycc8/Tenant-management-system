@@ -19,4 +19,6 @@ export const apiRoutes = {
   event: "/event",
   user: "/user",
   chatroom: "/chatroom",
+  index: "/",
+  profile: "/profile",
 };

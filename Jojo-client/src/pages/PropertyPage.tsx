@@ -9,9 +9,12 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonItem,
+  IonLabel,
   IonPage,
   IonRow,
   IonTitle,
@@ -22,10 +25,9 @@ import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import CommonHeader from "../components/CommonHeader";
 import { Autoplay } from "swiper";
-
 import "swiper/css";
 import "swiper/css/autoplay";
-import "@ionic/react/css/ionic-swiper.css";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -36,6 +38,7 @@ import "swiper/css/scrollbar";
 
 import serverURL from "../ServerDomain";
 import { PropertyListOutput } from "../types";
+import { format, parseISO } from "date-fns";
 
 export function PropertyPage() {
   const {
@@ -63,13 +66,26 @@ export function PropertyPage() {
           <>no property yet</>
         ) : data.length > 0 ? (
           data.map((property: PropertyListOutput) => (
-            <IonCard
-              key={property.id}
-              routerLink={routes.property + "/" + property.id}
-            >
+            <IonCard key={property.id}>
               <IonCardHeader>
-                <IonCardTitle>{property.title}</IonCardTitle>
+                <IonRow>
+                  <IonCol className="propertyListTitle">
+                    Tenant:{" "}
+                    {property.first_name && property.last_name
+                      ? property.first_name + " " + property.last_name
+                      : " No tenant yet"}
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonLabel>Title: {property.title}</IonLabel>
+                  </IonCol>
+                  <IonCol>
+                    <IonLabel>Monthly rent: {property.rent}</IonLabel>
+                  </IonCol>
+                </IonRow>
               </IonCardHeader>
+
               <IonCardContent>
                 <Swiper
                   modules={[Autoplay]}
@@ -83,10 +99,12 @@ export function PropertyPage() {
                   ))}
                 </Swiper>
               </IonCardContent>
-              <IonRow>
-                Tenant:
-                {property.tenant_id ? property.tenant_id : " No tenant yet"}
-              </IonRow>
+              <IonButton
+                fill="clear"
+                routerLink={routes.property + "/" + property.id}
+              >
+                View more Info
+              </IonButton>
             </IonCard>
           ))
         ) : (

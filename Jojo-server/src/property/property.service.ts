@@ -77,12 +77,13 @@ export class PropertyService {
   async propertyList(payload: JWTPayload) {
     let query = this.knex('property')
       .select(
-        'property.id',
+        'property.id as id',
         'title',
         'rent',
         'rental_start_at',
         'rental_end_at',
-        'tenant_id',
+        'first_name',
+        'last_name',
         this.knex.raw('ARRAY_AGG(attachments) as attachments'),
       )
       .innerJoin(
@@ -90,13 +91,15 @@ export class PropertyService {
         'property.id',
         'propertyAttachments.property_id',
       )
+      .leftJoin('user', 'tenant_id', 'user.id')
       .groupBy(
         'property.id',
         'title',
         'rent',
         'rental_start_at',
         'rental_end_at',
-        'tenant_id',
+        'first_name',
+        'last_name',
       );
     if (payload.role == userRole.landlord) {
       query = query.where({ landlord_id: payload.id });
@@ -124,30 +127,32 @@ export class PropertyService {
         'Invalid request, only landlord can list new property',
       );
     }
-    let [{ id }] = await this.knex('property')
-      .insert({
-        ...propertyInput,
-        landlord_id: payload.id,
-        created_at: new Date(),
-        edited_at: new Date(),
-        tenant_id: null,
-      })
-      .returning('id');
-    let imagesData:
-      | Record<string, string | number>
-      | Record<string, string | number>[];
-    if (images.length > 0) {
-      imagesData = images.map((item) => ({
-        attachments: item.filename,
-        property_id: id,
-      }));
-    } else
-      imagesData = {
-        attachments: 'propertyDefault.jpeg',
-        property_id: id,
-      };
+    await this.knex.transaction(async (txn) => {
+      const [{ property_id }] = await txn('property')
+        .insert({
+          ...propertyInput,
+          landlord_id: payload.id,
+          created_at: new Date(),
+          edited_at: new Date(),
+          tenant_id: null,
+        })
+        .returning('id as property_id');
+      let imagesData:
+        | Record<string, string | number>
+        | Record<string, string | number>[];
+      if (images.length > 0) {
+        imagesData = images.map((item) => ({
+          attachments: item.filename,
+          property_id,
+        }));
+      } else
+        imagesData = {
+          attachments: 'propertyDefault.jpeg',
+          property_id,
+        };
 
-    await this.knex('propertyAttachments').insert(imagesData).returning('id');
+      await txn('propertyAttachments').insert(imagesData);
+    });
 
     return {};
   }
@@ -196,7 +201,7 @@ export class PropertyService {
       .where({ id })
       .returning('id');
     result = await this.knex('property').select('*').where({ id });
-    console.log(result);
+
     return { tenant_id: propertyInput.tenant_id };
   }
   async propertyDelete(
@@ -220,6 +225,17 @@ export class PropertyService {
       );
     }
     await this.knex.transaction(async (transaction) => {
+      let result = await transaction('event')
+        .select('id')
+        .where({ property_id: id });
+      if (result.length > 0) {
+        result = result.map((item) => {
+          return item.id;
+        });
+
+        await transaction('eventAttachments').whereIn('event_id', result).del();
+        await transaction('event').where({ property_id: id }).del();
+      }
       await transaction('propertyAttachments').where({ property_id: id }).del();
       await transaction('property').where({ id }).del();
     });

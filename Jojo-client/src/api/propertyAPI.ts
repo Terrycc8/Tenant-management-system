@@ -40,6 +40,7 @@ export const propertyApi = jojoAPI.injectEndpoints({
       query: (body: FormData) => ({
         url: apiRoutes.property,
         method: "POST",
+
         body,
       }),
       invalidatesTags: ["property", "user", "event"],

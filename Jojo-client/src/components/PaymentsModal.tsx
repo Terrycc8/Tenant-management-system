@@ -10,13 +10,12 @@ import {
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
 import { useCallback, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../RTKstore";
-
 
 export function PaymentsModal() {
   const paymentsModal = useRef<HTMLIonModalElement>(null);
-  const dismissPayments = useCallback(()=>{paymentsModal.current?.dismiss()},[])
+  const dismissPayments = useCallback(() => {
+    paymentsModal.current?.dismiss();
+  }, []);
   return (
     <IonModal
       ref={paymentsModal}
