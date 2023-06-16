@@ -11,7 +11,7 @@ export function formToJson<K extends string>(
   return json;
 }
 
-export function showMessage(
+export function showResponseMessage(
   json: any,
   presentAlert: (input: object) => void,
   dismissAll?: () => void

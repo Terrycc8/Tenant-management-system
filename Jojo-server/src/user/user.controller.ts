@@ -26,25 +26,21 @@ export class UserController {
     @Body(new ValidationPipe()) loginInput: LoginInputWithPasswordDto,
     @Request() headers,
   ) {
-    let { isCorrectPassword, jwtPayload } =
-      await this.userService.loginWithPassword(loginInput);
+    let jwtPayload = await this.userService.loginWithPassword(loginInput);
 
-    if (!isCorrectPassword) {
-      throw new UnauthorizedException('Incorrect password');
-    }
     let token = this.jwtService.encode(jwtPayload);
 
-    return { token };
+    return { token, role: jwtPayload.role };
   }
   @Post('signup')
   async signUp(
     @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
   ) {
-    let payload = await this.userService.signUp(signUpInput);
+    let jwtPayload = await this.userService.signUp(signUpInput);
 
-    let token = this.jwtService.encode(payload);
+    let token = this.jwtService.encode(jwtPayload);
 
-    return { token };
+    return { token, role: jwtPayload.role };
   }
   // @Post('signup')
   // async getUsers() {}

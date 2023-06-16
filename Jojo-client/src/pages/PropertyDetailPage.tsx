@@ -47,11 +47,12 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import serverURL from "../ServerDomain";
-import { showMessage } from "../helper";
+import { showResponseMessage } from "../helper";
 import { CustomSelector } from "../components/CustomSelector";
 import { district, area } from "../types";
 import RentDate from "../components/RentDate";
 import { routes } from "../routes";
+import { format, parseISO } from "date-fns";
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -71,23 +72,43 @@ export function PropertyDetailPage() {
     async (event: FormEvent) => {
       event.preventDefault();
       const form = event.target as HTMLFormElement;
+      const edited_at = form.getElementsByClassName("edited_at")[0];
+      edited_at.parentNode?.removeChild(edited_at);
+
+      console.log(form);
       let formData = new FormData(form);
 
       const json = await updateProperty({
         body: formData,
         id: data.id as number,
       });
-      showMessage(json, presentAlert);
+      showResponseMessage(json, presentAlert);
       setEditable((state) => (state = true));
     },
-    [updateProperty, setEditable, presentAlert, showMessage, data]
+    [updateProperty, setEditable, presentAlert, showResponseMessage, data]
   );
-  const deletePropertyBtn = useCallback(async () => {
-    const json = await deleteProperty({ id: data.id });
-  }, [deleteProperty, data, showMessage, presentAlert]);
+
   useIonViewDidLeave(() => {
     setEditable((state) => (state = true));
   });
+  const showAlert = useCallback(() => {
+    presentAlert({
+      header: "Delete property",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "OK",
+          role: "confirm",
+          handler: async () => {
+            const json = await deleteProperty({ id: data.id });
+          },
+        },
+      ],
+    });
+  }, [deleteProperty, data]);
   return (
     <IonPage>
       <CommonHeader title="Property Details" backUrl={routes.property} />
@@ -105,7 +126,7 @@ export function PropertyDetailPage() {
                 {editable ? (
                   <>
                     <IonButtons slot="start">
-                      <IonButton onClick={deletePropertyBtn} color="primary">
+                      <IonButton onClick={showAlert} color="primary">
                         Delete
                       </IonButton>
                     </IonButtons>
@@ -125,12 +146,13 @@ export function PropertyDetailPage() {
 
                     <IonButtons slot="end">
                       <IonButton type="submit" color="primary">
-                        Save
+                        Modify
                       </IonButton>
                     </IonButtons>
                   </>
                 )}
               </IonToolbar>
+
               <IonCardHeader>
                 <IonCardTitle>
                   <IonInput
@@ -283,14 +305,16 @@ export function PropertyDetailPage() {
                       />
                     </IonCol>
                   </IonRow>
+
                   <IonRow>
                     <IonInput
                       label="Last Modified: "
                       labelPlacement="stacked"
                       fill="outline"
                       readonly={true}
-                      value={data.edited_at}
+                      value={format(parseISO(data.edited_at), "yyyy-MMM-dd-p")}
                       name="edited_at"
+                      className="edited_at"
                     ></IonInput>
                   </IonRow>
                 </IonGrid>

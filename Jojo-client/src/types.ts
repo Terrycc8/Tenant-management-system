@@ -1,3 +1,5 @@
+import { ValidationArguments } from 'class-validator';
+
 export type JWTPayload = {
   id: number;
   role: 'admin' | 'landlord' | 'tenant';
@@ -24,10 +26,22 @@ export type PropertyListOutput = {
   id: string;
   title: string;
   rent: number;
-  rental_start_at: Date;
-  rental_end_at: Date;
+  rental_start_at: string;
+  rental_end_at: string;
   attachments: string[];
-  tenant_id: number;
+  last_name: string;
+  first_name: string;
+};
+export type EventListOutput = {
+  id: string;
+  title: string;
+  type: string;
+  priority: string;
+  status: string;
+  attachments: string[];
+  handled_by_id: number;
+  reason: string;
+  created_by_id: number;
 };
 
 export type UserType = 'landlord' | 'tenant';
@@ -106,6 +120,19 @@ export const event_status: string[][] = [
   ['pending', 'Pending'],
   ['rejected', 'Rejected'],
 ];
+export type ChatroomListOutput = {
+  id: number;
+  creator_id: number;
+  receiver_id: number;
+};
+
+export type MessageOutput = {
+  id: number;
+  room_id: number;
+  sender_id: number;
+  content: string;
+  created_at: Date;
+};
 
 export type UserListOutput = {
   id: number;
@@ -113,4 +140,88 @@ export type UserListOutput = {
   first_name: string;
   last_name: string;
   status: string;
+};
+
+export type Message = {
+  id: number;
+  sender_id: number;
+  receiver_id: number;
+  content: string;
+  timestamp: string;
+};
+
+export type ChatRoomProps = {
+  senderId: number;
+  receiverId: number;
+};
+
+export type chatroom = {
+  id: number;
+  creator_id: number;
+  receiver_id: number;
+  created_at: string;
+};
+
+export type User = {
+  email: string;
+  name: string;
+};
+
+export enum EventTypes {
+  'maintenance',
+  'notices',
+  'reimbursement',
+  'complaint',
+}
+
+export enum EventPriority {
+  'high',
+  'medium',
+  'low',
+}
+
+export const eventTypesEnumMsg = {
+  message: `Please select an event type`,
+};
+
+export const eventPriorityEnumMsg = {
+  message: `Please select an event priority`,
+};
+
+export enum PropertyArea {
+  'hong_kong',
+  'kowloon',
+  'new_territories',
+  'island',
+}
+export enum PropertyDistrict {
+  'central_west',
+  'eastern',
+  'southern',
+  'wan_chai',
+  'kowloon_city',
+  'kwun_tong',
+  'sham_shui_po',
+  'wong_tai_sin',
+  'yau_tsim_mong',
+  'island',
+  'kwai_tsing',
+  'north',
+  'sai_kung',
+  'sha_tin',
+  'tai_po',
+  'tsuen_wan',
+  'tuen_mun',
+  'yuen_long',
+}
+export const propertyAreaEnumMsg = {
+  message: `Please select the property's area`,
+};
+export const propertyDistrictEnumMsg = {
+  message: `Please select the property's district`,
+};
+
+export type ClientPayload = {
+  token: string;
+  role: 'admin' | 'landlord' | 'tenant';
 };

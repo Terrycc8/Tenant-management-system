@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
@@ -18,7 +22,7 @@ export class UserService {
   async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
     let { id, hash, role } = await this.knex('user')
       .select({ id: 'id', hash: 'password_hash', role: 'user_type' })
-      .where({ email: email })
+      .where({ email })
       .first();
 
     if (!id) {
@@ -28,8 +32,10 @@ export class UserService {
       password,
       hash,
     });
-
-    return { isCorrectPassword, jwtPayload: { id, role } };
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException('Incorrect password');
+    }
+    return { id, role };
   }
   async signUp(sigUpInput: SignUpInputWithPasswordDto): Promise<JWTPayload> {
     let user = await this.knex('user')
@@ -42,13 +48,13 @@ export class UserService {
         'Invalid email, this email has been registered',
       );
     }
-    await this.mailService.sendOPT(
-      {
-        email: sigUpInput.email,
-        name: sigUpInput.first_name + sigUpInput.last_name,
-      },
-      '1',
-    );
+    // await this.mailService.sendOPT(
+    //   {
+    //     email: sigUpInput.email,
+    //     name: sigUpInput.first_name + sigUpInput.last_name,
+    //   },
+    //   '1',
+    // );
 
     let userID: number = await this.knex('user')
       .insert({

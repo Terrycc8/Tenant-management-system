@@ -39,10 +39,9 @@ export const eventApi = jojoAPI.injectEndpoints({
       query: (body: FormData) => ({
         url: apiRoutes.event,
         method: "POST",
-
         body,
       }),
-      invalidatesTags: ["property", "user", "event"],
+      invalidatesTags: ["event"],
     }),
   }),
 });

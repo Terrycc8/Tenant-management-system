@@ -34,6 +34,6 @@ export class EventController {
     @Request() req,
   ) {
     let payload = this.jwtService.decode(req);
-    return this.eventService.newEvent(payload, eventInput);
+    return this.eventService.newEvent(payload, eventInput, images);
   }
 }
