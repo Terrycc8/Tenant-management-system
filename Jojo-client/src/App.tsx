@@ -69,7 +69,6 @@ import { ChatroomPage } from "./pages/Chatroom";
 setupIonicReact();
 
 const App: React.FC = () => {
-  console.log("render App");
   return (
     <IonApp>
       <IonReactRouter>

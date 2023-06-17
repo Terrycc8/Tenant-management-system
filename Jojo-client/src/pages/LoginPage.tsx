@@ -43,7 +43,6 @@ export function LoginPage(props: { setPage(page: string): void }) {
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
-      console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
     }

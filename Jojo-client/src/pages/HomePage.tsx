@@ -27,77 +27,116 @@ import { RouteComponentProps } from "react-router";
 import { RootState } from "../RTKstore";
 import { LoginPage } from "./LoginPage";
 import { CommonHeader } from "../components/CommonHeader";
-import "./home.module.scss";
+import "../theme/home.modules.scss";
 import { format } from "date-fns";
 import { ArcElement } from "chart.js";
 import { Chart, registerables } from "chart.js";
+import { useGetHomeQuery } from "../api/homeAPI";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 Chart.register(...registerables);
+Chart.register(ChartDataLabels);
 
 let props_history: RouteComponentProps[] = [];
 
 Object.assign(window, { props_history });
 
 export function HomePage() {
+  const { data, isFetching, isLoading, error, isError } = useGetHomeQuery({});
+
   return (
     <IonPage>
       <CommonHeader title="Home" />
 
       <IonContent fullscreen>
-        <IonGrid>
+        <IonGrid className="homeButtons">
           <IonRow>
-            <IonLabel>Welcome Back,{}</IonLabel>
+            <IonLabel className="welcomeMsg">
+              Welcome Back,{" "}
+              {isError
+                ? null
+                : isLoading
+                ? null
+                : isFetching
+                ? null
+                : data
+                ? data.name
+                : null}
+            </IonLabel>
           </IonRow>
           <IonRow>
-            <IonCol>
-              <IonCard routerLink={routes.property}>
+            <IonCol className="home-col">
+              <IonCard
+                className="top-left-card top-card"
+                routerLink={routes.property}
+              >
                 <IonCardContent>Total Property</IonCardContent>
               </IonCard>
             </IonCol>
 
-            <IonCol>
-              <IonCard>
+            <IonCol className="home-col">
+              <IonCard className="top-right-card top-card">
                 <IonCardContent>Total Tenant</IonCardContent>
               </IonCard>
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol>
-              <IonCard>
+            <IonCol className="home-col">
+              <IonCard className="left-right-card bottom-card">
                 <IonCardContent>Payment received</IonCardContent>
               </IonCard>
             </IonCol>
 
-            <IonCol>
-              <IonCard>
+            <IonCol className="home-col">
+              <IonCard className="bottom-right-card bottom-card">
                 <IonCardContent>Payment to be received</IonCardContent>
               </IonCard>
             </IonCol>
           </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonCard className="stats">
+                <IonCardHeader>
+                  Total numbers of event in {format(new Date(), "MMM-yyyy")}
+                </IonCardHeader>
+                <IonCardContent>
+                  {isError ? (
+                    <>{String(error)};</>
+                  ) : isLoading ? (
+                    <></>
+                  ) : isFetching ? (
+                    <></>
+                  ) : (
+                    <Doughnut
+                      width="100%"
+                      options={{
+                        maintainAspectRatio: false,
+                        plugins: {
+                          datalabels: {
+                            color: "black",
+                            font: {
+                              size: 16,
+                              weight: "bold",
+                            },
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: data.label,
+                        datasets: [
+                          {
+                            label: "No.s of events",
+                            data: data.data,
+                            borderWidth: 2,
+                          },
+                        ],
+                      }}
+                    />
+                  )}
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
         </IonGrid>
-        <IonCard>
-          <IonCardHeader>
-            Event of {format(new Date(), "MMM-yyyy")}
-          </IonCardHeader>
-          <IonCardContent>
-            <Doughnut
-              data={{
-                labels: [
-                  "Notice",
-                  "Complaints",
-                  "reimbursement",
-                  "Maintenance",
-                ],
-                datasets: [
-                  {
-                    label: "No.s of events",
-                    data: [12, 19, 1, 5],
-                    borderWidth: 2,
-                  },
-                ],
-              }}
-            />
-          </IonCardContent>
-        </IonCard>
       </IonContent>
       <IonFooter></IonFooter>
     </IonPage>

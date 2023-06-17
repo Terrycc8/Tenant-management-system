@@ -41,8 +41,10 @@ import { EventListOutput, userRole } from "../types";
 
 export function EventsPage() {
   const role = useSelector((state: RootState) => state.auth.role);
+
   const { data, isFetching, isLoading, isError } = useGetEventQuery({});
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
+
   return (
     <IonPage>
       <CommonHeader title="Event list" />

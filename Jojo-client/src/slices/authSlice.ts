@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { routes } from "../routes";
+import { jojoAPI } from "../api/jojoAPI";
 
 export interface AuthState {
   token: null | string;
@@ -22,6 +23,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.role = null;
+
       window.location.href = routes.home;
     },
   },

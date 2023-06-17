@@ -1,14 +1,9 @@
 import {
   BadRequestException,
   Injectable,
-<<<<<<< HEAD
   NotImplementedException,
-} from '@nestjs/common';
-
-=======
   UnauthorizedException,
 } from '@nestjs/common';
->>>>>>> a6e939612c75f92de872bdbcc37c666a55d2e97c
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
@@ -132,5 +127,64 @@ export class UserService {
     }
     let contacts = await query;
     return { contacts };
+  }
+  async getProfile(jwtPayLoad: JWTPayload) {
+    const profile = await this.knex('user')
+      .select(
+        'email',
+        'last_name',
+        'first_name',
+        'avatar',
+        'registered_at',
+        'user_type',
+        'last_login_time',
+      )
+      .where({ id: jwtPayLoad.id })
+      .first();
+
+    return profile;
+  }
+  async deleteAccount(jwtPayLoad: JWTPayload) {
+    await this.knex.transaction(async (txn) => {
+      if (jwtPayLoad.role == userRole.tenant) {
+        let events = await txn('event')
+          .select('id')
+          .where({ created_by_id: jwtPayLoad.id });
+        if (events.length > 0) {
+          events = events.map((item) => {
+            return item.id;
+          });
+          await txn('eventAttachments').whereIn('event_id', events).del();
+        }
+        await txn('event').where({ created_by_id: jwtPayLoad.id }).del();
+      }
+      if (jwtPayLoad.role == userRole.landlord) {
+        let properties = await txn('property')
+          .select('id')
+          .where({ landlord_id: jwtPayLoad.id });
+        if (properties.length > 0) {
+          properties = properties.map((item) => {
+            return item.id;
+          });
+          let events = await txn('event')
+            .select('id')
+            .whereIn('property_id', properties);
+          if (events.length > 0) {
+            events = events.map((item) => {
+              return item.id;
+            });
+            await txn('eventAttachments').whereIn('event_id', events).del();
+          }
+          await txn('event').whereIn('property_id', properties).del();
+        }
+        await txn('propertyAttachments')
+          .whereIn('property_id', properties)
+          .del();
+        await txn('property').where({ landlord_id: jwtPayLoad.id }).del();
+      }
+      await txn('user').where({ id: jwtPayLoad.id }).del();
+    });
+
+    return {};
   }
 }

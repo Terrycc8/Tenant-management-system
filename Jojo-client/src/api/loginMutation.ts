@@ -35,6 +35,13 @@ export const loginApi = jojoAPI.injectEndpoints({
       }),
       invalidatesTags: ["user"],
     }),
+    deleteUser: builder.mutation({
+      query: () => ({
+        url: apiRoutes.user,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["user", "property", "event", "profile"],
+    }),
   }),
 });
 
@@ -44,4 +51,5 @@ export const {
   usePostUserLoginMutation,
   useGetUsersQuery,
   usePostUserSignUpMutation,
+  useDeleteUserMutation,
 } = loginApi;

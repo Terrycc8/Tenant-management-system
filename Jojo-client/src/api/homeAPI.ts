@@ -14,7 +14,6 @@ export const homeApi = jojoAPI.injectEndpoints({
       query: () => ({
         url: apiRoutes.index,
       }),
-
       providesTags: ["home"],
     }),
   }),

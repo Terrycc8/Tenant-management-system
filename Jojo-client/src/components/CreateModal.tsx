@@ -1,24 +1,18 @@
 import {
   IonModal,
   IonContent,
-  IonToolbar,
   IonLabel,
-  IonButtons,
-  IonButton,
   IonIcon,
   IonList,
   IonItem,
-  IonHeader,
 } from "@ionic/react";
-import { closeOutline, shapesOutline } from "ionicons/icons";
+import { shapesOutline } from "ionicons/icons";
 import { useCallback, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../RTKstore";
 
 import { EventsModal } from "./EventsModal";
-import { PaymentsModal } from "./PaymentsModal";
-import { PropertyModal } from "./PropertyModal";
+
 import { CommonModalHeader } from "./CommonModalHeader";
+import { PropertyModal } from "./propertyModal";
 
 export function CreateModal() {
   const createModal = useRef<HTMLIonModalElement>(null);

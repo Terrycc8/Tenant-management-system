@@ -41,7 +41,7 @@ export const eventApi = jojoAPI.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["event"],
+      invalidatesTags: ["event", "home"],
     }),
   }),
 });
