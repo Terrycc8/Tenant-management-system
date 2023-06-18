@@ -7,6 +7,9 @@ import {
   Get,
   UseInterceptors,
   UploadedFiles,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { EventInputDto } from 'src/dto/post-event.dto';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -21,9 +24,14 @@ export class EventController {
     private eventService: EventService,
   ) {}
   @Get()
-  eventList(@Request() req) {
+  eventList(
+    @Request() req,
+    @Query('offset', new DefaultValuePipe(10), ParseIntPipe) offset: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
-    return this.eventService.eventList(payLoad);
+
+    return this.eventService.eventList(payLoad, offset, page);
   }
   @Post()
   @UseInterceptors(filesInterceptorConfig(5))

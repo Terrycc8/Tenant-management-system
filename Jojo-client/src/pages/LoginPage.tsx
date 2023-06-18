@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
   IonHeader,
@@ -16,7 +17,7 @@ import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginMutation";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-
+import "../theme/login.modules.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 
@@ -45,7 +46,6 @@ export function LoginPage(props: {
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
-      console.log("setC");
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
     }
@@ -62,64 +62,71 @@ export function LoginPage(props: {
   }, [props.setPage]);
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle size="large">Sign In</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <IonList>
-          <IonItem>
-            <IonInput
-              label="Your Username/ Email"
-              labelPlacement="stacked"
-              fill="solid"
-              placeholder="Enter text"
-              ref={ionUsername}
-            ></IonInput>
-          </IonItem>
-          <IonItem>
-            <IonInput
-              label="Password"
-              labelPlacement="stacked"
-              type={!checked ? "password" : "text"}
-              fill="solid"
-              ref={ionPassword}
-              placeholder="Enter text"
-            ></IonInput>
-          </IonItem>
-          {errors.length > 0
-            ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
-            : null}
-          <IonCheckbox
-            checked={checked}
-            color="primary"
-            onIonChange={checkBoxOnClick}
-          >
-            Show Password
-          </IonCheckbox>
-          <IonButton
-            expand="block"
-            className="ion-margin"
-            color={"danger"}
-            onClick={loginOnClick}
-          >
-            Login
-          </IonButton>
-          <IonLabel className="ion-text-center">
-            Don't have an account?
-          </IonLabel>
+      <IonContent className="login-form">
+        <div className="login-form">
+          <div className="login-app-name">E-Housing</div>
+          <div className="login-signin-label">Sign in</div>
+          <IonList>
+            <div className="login-input">
+              <IonInput
+                className="login-ion-input1"
+                label="Your Username/ Email"
+                labelPlacement="stacked"
+                fill="solid"
+                placeholder=""
+                ref={ionUsername}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    loginOnClick();
+                  }
+                }}
+              ></IonInput>
+            </div>
+            <div className="login-input">
+              <IonInput
+                className="login-ion-input1"
+                label="Password"
+                labelPlacement="stacked"
+                type={!checked ? "password" : "text"}
+                fill="solid"
+                ref={ionPassword}
+                placeholder=""
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    loginOnClick();
+                  }
+                }}
+              ></IonInput>
+            </div>
+            {errors.length > 0
+              ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+              : null}
+            <div className="login-show-pw-label">
+              <IonButtons slot="start">
+                <IonCheckbox
+                  checked={checked}
+                  color="primary"
+                  onIonChange={checkBoxOnClick}
+                ></IonCheckbox>
 
-          <IonButton
-            expand="block"
-            className="ion-margin"
-            color={"dark"}
-            // routerLink={routes.signup}
-            onClick={setPageRegister}
-          >
-            Create An Account
-          </IonButton>
-        </IonList>
+                <IonLabel> Show Password</IonLabel>
+              </IonButtons>
+            </div>
+            <IonButton className="login-btn" onClick={loginOnClick}>
+              Login
+            </IonButton>
+            <div className="login-account-label">
+              <IonLabel>Don't have an account?</IonLabel>
+            </div>
+            <IonButton
+              className="login-signup-btn"
+              // routerLink={routes.signup}
+              onClick={setPageRegister}
+            >
+              Create An Account
+            </IonButton>
+          </IonList>
+        </div>
       </IonContent>
     </IonPage>
   );

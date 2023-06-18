@@ -11,7 +11,7 @@ export let MemberOnlyRoute = memo(
     const token = useSelector((state: RootState) => {
       return state.auth.token;
     });
-    console.log(token);
+
     const Child = props.children;
     return <Route path={path}>{!token ? <LoginRegisterPage /> : Child}</Route>;
   }

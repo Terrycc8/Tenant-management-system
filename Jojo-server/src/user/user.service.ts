@@ -193,8 +193,19 @@ export class UserService {
       throw new BadRequestException('This api is only for landlord');
     }
     const result = await this.knex('property')
-      .select('id', 'tenant_id')
+      .select('id')
       .where({ landlord_id: jwtPayLoad.id });
-    return {};
+    if (result.length <= 0) {
+      return [];
+    }
+    result.map((property) => {
+      return property.id;
+    });
+    const events = await this.knex('event')
+      .select('id')
+      .whereIn('property_id', result)
+      .orderBy('event.created_at')
+      .limit(5);
+    return events;
   }
 }

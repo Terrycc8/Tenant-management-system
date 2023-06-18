@@ -59,8 +59,8 @@ export class EventService {
     return {};
   }
 
-  async eventList(payload: JWTPayload) {
-    let query = this.knex('event')
+  async eventList(payload: JWTPayload, offset: number, page: number) {
+    let query = await this.knex('event')
       .select(
         'event.id as id',
         'title',
@@ -73,8 +73,16 @@ export class EventService {
       .innerJoin('user', 'handled_by_id', 'user.id')
       .groupBy('event.id', 'title', 'type', 'priority', 'event.status')
       .where({ created_by_id: payload.id })
-      .orWhere({ handled_by_id: payload.id });
+      .orWhere({ handled_by_id: payload.id })
+      .orderBy('event.created_at')
+      .limit(offset)
+      .offset(offset * (page - 1));
+    let total = await this.knex('event')
+      .count('id')
+      .where({ created_by_id: payload.id })
+      .orWhere({ handled_by_id: payload.id })
+      .first();
 
-    return await query;
+    return { result: query, totalItem: +total.count || 1 };
   }
 }
