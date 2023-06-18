@@ -22,15 +22,13 @@ div.login-account-label {
   text-align: center;
   margin-top: 11vh;
 }
-div.login-input{
-	
+
+ion-input.login-input{
+	--padding-start	:1rem;
 	margin-top: 1rem;
 	background:#F2F3F3 ;
 	border-radius	:9px;
 	font-size:1.2rem
-}
-ion-input.login-ion-input1{
-	margin-left: 1rem;
 }
 div.login-signin-label{
 	font-weight: bold;

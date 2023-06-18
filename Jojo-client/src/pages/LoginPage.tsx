@@ -62,42 +62,40 @@ export function LoginPage(props: {
   }, [props.setPage]);
   return (
     <IonPage>
-      <IonContent className="login-form">
+      <IonContent>
         <div className="login-form">
           <div className="login-app-name">E-Housing</div>
           <div className="login-signin-label">Sign in</div>
           <IonList>
-            <div className="login-input">
-              <IonInput
-                className="login-ion-input1"
-                label="Your Username/ Email"
-                labelPlacement="stacked"
-                fill="solid"
-                placeholder=""
-                ref={ionUsername}
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    loginOnClick();
-                  }
-                }}
-              ></IonInput>
-            </div>
-            <div className="login-input">
-              <IonInput
-                className="login-ion-input1"
-                label="Password"
-                labelPlacement="stacked"
-                type={!checked ? "password" : "text"}
-                fill="solid"
-                ref={ionPassword}
-                placeholder=""
-                onKeyDown={(e) => {
-                  if (e.key == "Enter") {
-                    loginOnClick();
-                  }
-                }}
-              ></IonInput>
-            </div>
+            <IonInput
+              className="login-input"
+              label="Your Username/ Email"
+              labelPlacement="stacked"
+              fill="solid"
+              placeholder=""
+              ref={ionUsername}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  loginOnClick();
+                }
+              }}
+            ></IonInput>
+
+            <IonInput
+              className="login-input"
+              label="Password"
+              labelPlacement="stacked"
+              type={!checked ? "password" : "text"}
+              fill="solid"
+              ref={ionPassword}
+              placeholder=""
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  loginOnClick();
+                }
+              }}
+            ></IonInput>
+
             {errors.length > 0
               ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
               : null}

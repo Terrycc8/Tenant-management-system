@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonCol,
   IonContent,
@@ -26,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { formToJson } from "../helper";
 import { RootState } from "../RTKstore";
-
+import "../theme/signup.modules.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
 
@@ -87,30 +88,30 @@ export function SignUpPage(props: {
   }, [props.setPage]);
   return (
     <IonPage>
-      <IonContent>
+      <IonContent className="signup-form">
         {/* {token ? <Redirect to={routes.home} /> : null} */}
 
         <form onSubmit={signUpOnSubmit}>
-          <IonItem lines="none">
-            <IonLabel>
-              Congratulations <br /> on verifying the email belongs to you
-            </IonLabel>
-          </IonItem>
-          <IonItem lines="none">
+          <div className="signup-signup-label">
             <IonLabel>Sign Up</IonLabel>
-          </IonItem>
+          </div>
+          <div className="signup-more-label">
+            <IonLabel>we need something more</IonLabel>
+          </div>
           <IonList>
-            <IonGrid className="ion-padding">
+            <IonGrid>
               <IonRow>
-                <IonCol>
+                <IonCol className="signup-col">
                   <IonInput
                     fill="solid"
                     placeholder="First Name"
                     name="first_name"
+                    className="signup-input"
                   ></IonInput>
                 </IonCol>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Last Name"
                     name="last_name"
@@ -120,6 +121,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="please enter your email address"
                     name="email"
@@ -129,6 +131,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Password"
                     name="password"
@@ -142,6 +145,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Confirmed password"
                     name="confirm_password"
@@ -150,13 +154,15 @@ export function SignUpPage(props: {
                   ></IonInput>
                 </IonCol>
               </IonRow>
-              <IonCheckbox
-                checked={checked}
-                color="primary"
-                onIonChange={checkBoxOnClick}
-              >
-                Show Password
-              </IonCheckbox>
+              <IonButtons>
+                <IonCheckbox
+                  checked={checked}
+                  color="primary"
+                  onIonChange={checkBoxOnClick}
+                ></IonCheckbox>
+                <IonLabel>Show Password</IonLabel>
+              </IonButtons>
+
               {errors.length > 0 ? (
                 errors.map((error: string, idx: number) => (
                   <div key={idx + 1}>{error}</div>
@@ -192,7 +198,7 @@ export function SignUpPage(props: {
             type="submit"
             size="large"
             expand="block"
-            className="ion-padding"
+            className="signup-submit-btn"
             onSubmit={signUpOnSubmit}
           >
             Submit
