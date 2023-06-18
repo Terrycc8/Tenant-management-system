@@ -20,7 +20,7 @@ import {
 import { Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { memo, useCallback, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { routes } from "../routes";
 import { CustomIonColInput } from "../components/CustomIonColInput";
 import { RouteComponentProps } from "react-router";
@@ -33,6 +33,7 @@ import { ArcElement } from "chart.js";
 import { Chart, registerables } from "chart.js";
 import { useGetHomeQuery } from "../api/homeAPI";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import React from "react";
 Chart.register(...registerables);
 Chart.register(ChartDataLabels);
 
@@ -98,14 +99,18 @@ export function HomePage() {
                 <IonCardHeader>
                   Total numbers of event in {format(new Date(), "MMM-yyyy")}
                 </IonCardHeader>
-                <IonCardContent>
+                <IonCardContent className="d-chart">
                   {isError ? (
                     <>{String(error)};</>
                   ) : isLoading ? (
                     <></>
                   ) : isFetching ? (
                     <></>
-                  ) : (
+                  ) : !data ? (
+                    <>data??</>
+                  ) : data.label.length == 0 ? (
+                    <IonLabel>No new event</IonLabel>
+                  ) : data.label.length > 0 ? (
                     <Doughnut
                       width="100%"
                       options={{
@@ -130,8 +135,9 @@ export function HomePage() {
                           },
                         ],
                       }}
+                      redraw
                     />
-                  )}
+                  ) : null}
                 </IonCardContent>
               </IonCard>
             </IonCol>

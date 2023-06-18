@@ -51,7 +51,6 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
           role: "confirm",
           handler: async () => {
             const json = await deleteUser({});
-            console.log("test");
             dispatch(logout());
             dispatch(jojoAPI.util.resetApiState());
           },
@@ -59,6 +58,7 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
       ],
     });
   }, [deleteUser, dispatch, logout, presentAlert, jojoAPI]);
+
   return (
     <>
       <IonHeader>

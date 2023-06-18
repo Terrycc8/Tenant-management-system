@@ -20,7 +20,9 @@ import { setCredentials } from "../slices/authSlice";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 
-export function LoginPage(props: { setPage(page: string): void }) {
+export function LoginPage(props: {
+  setPage(cb: (state: string) => string): void;
+}) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -43,6 +45,7 @@ export function LoginPage(props: { setPage(page: string): void }) {
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
+      console.log("setC");
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
     }
@@ -54,7 +57,9 @@ export function LoginPage(props: { setPage(page: string): void }) {
     ionUsername,
     ionPassword,
   ]);
-
+  const setPageRegister = useCallback(() => {
+    props.setPage((state: string) => (state = "register"));
+  }, [props.setPage]);
   return (
     <IonPage>
       <IonHeader>
@@ -110,7 +115,7 @@ export function LoginPage(props: { setPage(page: string): void }) {
             className="ion-margin"
             color={"dark"}
             // routerLink={routes.signup}
-            onClick={() => props.setPage("register")}
+            onClick={setPageRegister}
           >
             Create An Account
           </IonButton>

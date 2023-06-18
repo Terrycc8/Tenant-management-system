@@ -36,6 +36,7 @@ export class UserService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Incorrect password');
     }
+
     return { id, role };
   }
   async signUp(sigUpInput: SignUpInputWithPasswordDto): Promise<JWTPayload> {
@@ -185,6 +186,15 @@ export class UserService {
       await txn('user').where({ id: jwtPayLoad.id }).del();
     });
 
+    return {};
+  }
+  async getTenants(jwtPayLoad: JWTPayload) {
+    if (jwtPayLoad.role == userRole.tenant) {
+      throw new BadRequestException('This api is only for landlord');
+    }
+    const result = await this.knex('property')
+      .select('id', 'tenant_id')
+      .where({ landlord_id: jwtPayLoad.id });
     return {};
   }
 }

@@ -40,7 +40,7 @@ export class UserController {
     let jwtPayload = await this.userService.signUp(signUpInput);
 
     let token = this.jwtService.encode(jwtPayload);
-    console.log(token);
+
     return { token, role: jwtPayload.role };
   }
   @Delete()
@@ -56,6 +56,12 @@ export class UserController {
     const jwtPayLoad = this.jwtService.decode(req);
 
     return await this.userService.getProfile(jwtPayLoad);
+  }
+  @Get('tenants')
+  async getTenants(@Request() req) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.getTenants(jwtPayLoad);
   }
   @Get('account')
   async account(

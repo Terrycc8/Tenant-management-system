@@ -30,7 +30,9 @@ import { RootState } from "../RTKstore";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
 
-export function SignUpPage(props: { setPage(page: string): void }) {
+export function SignUpPage(props: {
+  setPage(cb: (state: string) => string): void;
+}) {
   const token = useSelector((state: RootState) => state.auth.token);
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
@@ -80,7 +82,9 @@ export function SignUpPage(props: { setPage(page: string): void }) {
       router.push(routes.home, "forward", "replace");
     }
   }, [token]);
-
+  const setPageLogin = useCallback(() => {
+    props.setPage((state: string) => (state = "login"));
+  }, [props.setPage]);
   return (
     <IonPage>
       <IonContent>
@@ -202,7 +206,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
           routerDirection="back"
           lines="none"
           className="ion-text-center"
-          onClick={() => props.setPage("login")}
+          onClick={setPageLogin}
         >
           back to login
         </IonItem>

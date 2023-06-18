@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { routes } from "../routes";
 import { jojoAPI } from "../api/jojoAPI";
+import storage from "redux-persist/es/storage";
 
 export interface AuthState {
   token: null | string;
@@ -23,7 +24,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.role = null;
-
+      storage.removeItem("persist:root");
       window.location.href = routes.home;
     },
   },
