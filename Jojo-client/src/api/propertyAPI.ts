@@ -51,14 +51,14 @@ export const propertyApi = jojoAPI.injectEndpoints({
         method: "PATCH",
         body: arg.body,
       }),
-      invalidatesTags: ["property", "user", "event"],
+      invalidatesTags: ["property", "user", "event", "home"],
     }),
     deleteProperty: builder.mutation({
       query: (arg: { id: number }) => ({
         url: apiRoutes.property + `/${arg.id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["property", "user", "event"],
+      invalidatesTags: ["property", "user", "event", "home"],
     }),
   }),
 });

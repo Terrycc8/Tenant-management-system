@@ -61,7 +61,6 @@ export function PropertyDetailPage() {
   const [editable, setEditable] = useState(true);
   const editMode = useCallback(() => {
     setEditable((state) => {
-      console.log(state);
       return (state = !state);
     });
   }, [setEditable]);

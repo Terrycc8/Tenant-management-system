@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Header,
   Post,
@@ -42,13 +43,25 @@ export class UserController {
 
     return { token, role: jwtPayload.role };
   }
+  @Delete()
+  async deleteAccount(@Request() req) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.deleteAccount(jwtPayLoad);
+  }
   // @Post('signup')
   // async getUsers() {}
   @Get('profile')
-  getProfile(@Request() headers) {
-    // let token = this.jwtService.decode();
-    // let token = authorization.match(/Bearer (.*)+$/)?.[1];
-    return { headers };
+  async getProfile(@Request() req) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.getProfile(jwtPayLoad);
+  }
+  @Get('tenants')
+  async getTenants(@Request() req) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.getTenants(jwtPayLoad);
   }
   @Get('account')
   async account(

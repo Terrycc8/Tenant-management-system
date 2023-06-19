@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonCol,
   IonContent,
@@ -26,11 +27,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { formToJson } from "../helper";
 import { RootState } from "../RTKstore";
-
+import "../theme/signup.modules.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
 
-export function SignUpPage(props: { setPage(page: string): void }) {
+export function SignUpPage(props: {
+  setPage(cb: (state: string) => string): void;
+}) {
   const token = useSelector((state: RootState) => state.auth.token);
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
@@ -47,28 +50,27 @@ export function SignUpPage(props: { setPage(page: string): void }) {
       );
       return;
     }
-    const json = await signUp(
-      formToJson(form, [
-        "first_name",
-        "last_name",
-        "email",
-        "password",
-        "user_type",
-      ]) as SignUpInput
-    );
-    // const json = await signUp({
-    //   first_name: "alice" + Math.floor(Math.random() * 50),
-    //   last_name: "wong",
-    //   email: Date.now() + "@gmail.com",
-    //   password: "Aa!11234",
-    //   user_type: "landlord",
-    // });
+    // const json = await signUp(
+    //   formToJson(form, [
+    //     "first_name",
+    //     "last_name",
+    //     "email",
+    //     "password",
+    //     "user_type",
+    //   ]) as SignUpInput
+    // );
+    const json = await signUp({
+      first_name: "alice" + Math.floor(Math.random() * 50),
+      last_name: "wong",
+      email: Date.now() + "@gmail.com",
+      password: "Aa!11234",
+      user_type: "landlord",
+    });
     if ("error" in json) {
       setErrors(
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
-      console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
     }
@@ -81,33 +83,35 @@ export function SignUpPage(props: { setPage(page: string): void }) {
       router.push(routes.home, "forward", "replace");
     }
   }, [token]);
-
+  const setPageLogin = useCallback(() => {
+    props.setPage((state: string) => (state = "login"));
+  }, [props.setPage]);
   return (
     <IonPage>
-      <IonContent>
+      <IonContent className="signup-form">
         {/* {token ? <Redirect to={routes.home} /> : null} */}
 
         <form onSubmit={signUpOnSubmit}>
-          <IonItem lines="none">
-            <IonLabel>
-              Congratulations <br /> on verifying the email belongs to you
-            </IonLabel>
-          </IonItem>
-          <IonItem lines="none">
+          <div className="signup-signup-label">
             <IonLabel>Sign Up</IonLabel>
-          </IonItem>
+          </div>
+          <div className="signup-more-label">
+            <IonLabel>we need something more</IonLabel>
+          </div>
           <IonList>
-            <IonGrid className="ion-padding">
+            <IonGrid>
               <IonRow>
-                <IonCol>
+                <IonCol className="signup-col">
                   <IonInput
                     fill="solid"
                     placeholder="First Name"
                     name="first_name"
+                    className="signup-input"
                   ></IonInput>
                 </IonCol>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Last Name"
                     name="last_name"
@@ -117,6 +121,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="please enter your email address"
                     name="email"
@@ -126,6 +131,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Password"
                     name="password"
@@ -139,6 +145,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
               <IonRow>
                 <IonCol>
                   <IonInput
+                    className="signup-input"
                     fill="solid"
                     placeholder="Confirmed password"
                     name="confirm_password"
@@ -147,13 +154,15 @@ export function SignUpPage(props: { setPage(page: string): void }) {
                   ></IonInput>
                 </IonCol>
               </IonRow>
-              <IonCheckbox
-                checked={checked}
-                color="primary"
-                onIonChange={checkBoxOnClick}
-              >
-                Show Password
-              </IonCheckbox>
+              <IonButtons>
+                <IonCheckbox
+                  checked={checked}
+                  color="primary"
+                  onIonChange={checkBoxOnClick}
+                ></IonCheckbox>
+                <IonLabel>Show Password</IonLabel>
+              </IonButtons>
+
               {errors.length > 0 ? (
                 errors.map((error: string, idx: number) => (
                   <div key={idx + 1}>{error}</div>
@@ -189,7 +198,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
             type="submit"
             size="large"
             expand="block"
-            className="ion-padding"
+            className="signup-submit-btn"
             onSubmit={signUpOnSubmit}
           >
             Submit
@@ -203,7 +212,7 @@ export function SignUpPage(props: { setPage(page: string): void }) {
           routerDirection="back"
           lines="none"
           className="ion-text-center"
-          onClick={() => props.setPage("login")}
+          onClick={setPageLogin}
         >
           back to login
         </IonItem>

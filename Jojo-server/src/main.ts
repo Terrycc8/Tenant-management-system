@@ -14,7 +14,10 @@ async function bootstrap() {
 
   expressApp.use(cors());
   expressApp.use(express.static('upload'));
+<<<<<<< HEAD
 
+=======
+>>>>>>> f8bee8ac974399c036683262669a3e4ab1be0440
   const nestApp = await NestFactory.create(
     AppModule,
     new ExpressAdapter(expressApp),

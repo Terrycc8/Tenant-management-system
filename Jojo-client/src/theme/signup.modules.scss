@@ -1,0 +1,31 @@
+ion-input.signup-input {
+  --padding-start: 1rem;
+  margin-top: 1rem;
+  background: #f2f3f3;
+  border-radius: 9px;
+  font-size: 1rem;
+}
+
+ion-content.signup-form,
+ion-footer {
+  --padding-start: 8%;
+  --padding-end: 8%;
+  --padding-top: 7vh;
+  --padding-bottom: 0rem;
+}
+div.signup-signup-label {
+  color: #22215b;
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-align: center;
+}
+div.signup-more-label {
+  color: #22215b;
+  margin-top: 1vh;
+  text-align: center;
+  font-size: 1.3rem;
+}
+ion-button.signup-submit-btn {
+  --background: #315ee7;
+  height: 2.5rem;
+}

@@ -19,13 +19,6 @@ export const profileApi = jojoAPI.injectEndpoints({
       }),
       invalidatesTags: ["profile"],
     }),
-    deleteProperty: builder.mutation({
-      query: () => ({
-        url: apiRoutes.profile,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["property"],
-    }),
   }),
 });
 

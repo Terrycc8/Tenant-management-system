@@ -20,5 +20,6 @@ export const apiRoutes = {
   user: "/user",
   chatroom: "/chatroom",
   index: "/",
-  profile: "/profile",
+  profile: "/user/profile",
+  tenant: "/user/tenant",
 };

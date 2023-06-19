@@ -22,7 +22,8 @@ import { Capacitor } from "@capacitor/core";
 import { isIphone } from "../platform";
 import { sleep } from "../async";
 import { ProfileModal } from "./ProfileModal";
-
+import "../theme/menu.modules.scss";
+import { jojoAPI } from "../api/jojoAPI";
 export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
   const [modal, setModal] = useState("");
   const setDelayModal = useCallback(async () => {
@@ -36,11 +37,15 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
     () => setModal("to:profile"),
     [setModal]
   );
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const setModalEmpty = useCallback(() => setModal(""), [setModal]);
   const logOutOnClick = useCallback(() => {
-    dispath(logout());
-  }, [dispath]);
+    dispatch(logout());
+    dispatch(jojoAPI.util.resetApiState());
+  }, [dispatch, logout, jojoAPI]);
+  const toggleDarkModeHandler = useCallback(() => {
+    document.body.classList.toggle("dark");
+  }, []);
   return (
     <>
       <IonHeader>
@@ -64,7 +69,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
       >
         <IonHeader>
           <IonToolbar>
-            <IonButtons slot="end">
+            <IonButtons slot="start">
               <IonButton onClick={setModalEmpty}>
                 <IonIcon icon={closeOutline}></IonIcon>
               </IonButton>
@@ -72,11 +77,22 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
+          <IonItem className="menu">
+            <IonIcon icon={personCircle}></IonIcon>
+          </IonItem>
           <IonList>
-            <IonItem button lines="none" onClick={setModalToProfile}>
+            <IonItem lines="none" onClick={setModalToProfile}>
               Profile
             </IonItem>
-            <IonItem lines="none" button={true} onClick={logOutOnClick}>
+            <IonItem lines="none">
+              Switch Light / Dark Mode
+              <IonToggle
+                slot="end"
+                name="darkMode"
+                onIonChange={toggleDarkModeHandler}
+              />
+            </IonItem>
+            <IonItem lines="none" onClick={logOutOnClick}>
               Logout
             </IonItem>
           </IonList>

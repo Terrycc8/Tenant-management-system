@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
   IonHeader,
@@ -19,13 +20,15 @@ import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginMutation";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-
+import "../theme/login.modules.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 import companyLogo from "../assets/companyLogo.jpg";
 import "./LoginPage.css";
 
-export function LoginPage(props: { setPage(page: string): void }) {
+export function LoginPage(props: {
+  setPage(cb: (state: string) => string): void;
+}) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -48,7 +51,6 @@ export function LoginPage(props: { setPage(page: string): void }) {
         (state) => (state = Array((json.error as FetchError).data.message))
       );
     } else {
-      console.log(json.data);
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
     }
@@ -60,70 +62,82 @@ export function LoginPage(props: { setPage(page: string): void }) {
     ionUsername,
     ionPassword,
   ]);
-
+  const setPageRegister = useCallback(() => {
+    props.setPage((state: string) => (state = "register"));
+  }, [props.setPage]);
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle size="large">Sign In</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
+<<<<<<< HEAD
         <IonItem className="logo">
           <IonImg className="logo-image" src={companyLogo} alt="companyLogo" />
         </IonItem>
         <IonList>
           <IonItem>
+=======
+        <div className="login-form">
+          <div className="login-app-name">E-Housing</div>
+          <div className="login-signin-label">Sign in</div>
+          <IonList>
+>>>>>>> f8bee8ac974399c036683262669a3e4ab1be0440
             <IonInput
+              className="login-input"
               label="Your Username/ Email"
               labelPlacement="stacked"
               fill="solid"
-              placeholder="Enter text"
+              placeholder=""
               ref={ionUsername}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  loginOnClick();
+                }
+              }}
             ></IonInput>
-          </IonItem>
-          <IonItem>
+
             <IonInput
+              className="login-input"
               label="Password"
               labelPlacement="stacked"
               type={!checked ? "password" : "text"}
               fill="solid"
               ref={ionPassword}
-              placeholder="Enter text"
+              placeholder=""
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  loginOnClick();
+                }
+              }}
             ></IonInput>
-          </IonItem>
-          {errors.length > 0
-            ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
-            : null}
-          <IonCheckbox
-            checked={checked}
-            color="primary"
-            onIonChange={checkBoxOnClick}
-          >
-            Show Password
-          </IonCheckbox>
-          <IonButton
-            expand="block"
-            className="ion-margin"
-            color={"danger"}
-            onClick={loginOnClick}
-          >
-            Login
-          </IonButton>
-          <IonLabel className="ion-text-center">
-            Don't have an account?
-          </IonLabel>
 
-          <IonButton
-            expand="block"
-            className="ion-margin"
-            color={"dark"}
-            // routerLink={routes.signup}
-            onClick={() => props.setPage("register")}
-          >
-            Create An Account
-          </IonButton>
-        </IonList>
+            {errors.length > 0
+              ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+              : null}
+            <div className="login-show-pw-label">
+              <IonButtons slot="start">
+                <IonCheckbox
+                  checked={checked}
+                  color="primary"
+                  onIonChange={checkBoxOnClick}
+                ></IonCheckbox>
+
+                <IonLabel> Show Password</IonLabel>
+              </IonButtons>
+            </div>
+            <IonButton className="login-btn" onClick={loginOnClick}>
+              Login
+            </IonButton>
+            <div className="login-account-label">
+              <IonLabel>Don't have an account?</IonLabel>
+            </div>
+            <IonButton
+              className="login-signup-btn"
+              // routerLink={routes.signup}
+              onClick={setPageRegister}
+            >
+              Create An Account
+            </IonButton>
+          </IonList>
+        </div>
       </IonContent>
     </IonPage>
   );

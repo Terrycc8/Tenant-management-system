@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-
+import scrollReducer from "./slices/scrollSlice";
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -13,10 +13,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { loginApi } from "./api/loginMutation";
-import { chatroomApi } from "./api/chatroomAPI";
-import { propertyApi } from "./api/propertyAPI";
-import { eventApi } from "./api/eventAPI";
+
 import { jojoAPI } from "./api/jojoAPI";
 const persistConfig = {
   key: "root",
@@ -25,6 +22,7 @@ const persistConfig = {
 };
 export const rootReducers = combineReducers({
   auth: authReducer,
+  scroll: scrollReducer,
   [jojoAPI.reducerPath]: jojoAPI.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducers);

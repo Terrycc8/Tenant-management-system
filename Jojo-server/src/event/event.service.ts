@@ -12,28 +12,28 @@ export class EventService {
     eventInput: EventInputDto,
     images: Express.Multer.File[],
   ) {
-    if (payload.role !== userRole.tenant) {
-      throw new BadRequestException(
-        'Invalid request, only tenant can create new event',
-      );
-    }
+    // if (payload.role !== userRole.tenant) {
+    //   throw new BadRequestException(
+    //     'Invalid request, only tenant can create new event',
+    //   );
+    // }
     let id = eventInput.property_id;
-    const { handled_by_id } = await this.knex('property')
-      .select('landlord_id as handled_by_id')
+    const { tenant_id, landlord_id } = await this.knex('property')
+      .select('tenant_id', 'landlord_id')
       .where({ id })
       .first();
 
-    if (handled_by_id == null) {
-      throw new BadRequestException(
-        'No tenant is associated with this property yet',
-      );
-    }
+    // if (tenant_id !== payload.id) {
+    //   throw new BadRequestException(
+    //     'You are not allowed to create event of this property',
+    //   );
+    // }
 
     await this.knex.transaction(async (txn) => {
       const [{ event_id }] = await txn('event')
         .insert({
           ...eventInput,
-          handled_by_id,
+          handled_by_id: landlord_id,
           status: 'pending',
           created_by_id: payload.id,
           created_at: new Date(),
@@ -59,8 +59,8 @@ export class EventService {
     return {};
   }
 
-  async eventList(payload: JWTPayload) {
-    let query = this.knex('event')
+  async eventList(payload: JWTPayload, offset: number, page: number) {
+    let query = await this.knex('event')
       .select(
         'event.id as id',
         'title',
@@ -73,8 +73,16 @@ export class EventService {
       .innerJoin('user', 'handled_by_id', 'user.id')
       .groupBy('event.id', 'title', 'type', 'priority', 'event.status')
       .where({ created_by_id: payload.id })
-      .orWhere({ handled_by_id: payload.id });
+      .orWhere({ handled_by_id: payload.id })
+      .orderBy('event.created_at')
+      .limit(offset)
+      .offset(offset * (page - 1));
+    let total = await this.knex('event')
+      .count('id')
+      .where({ created_by_id: payload.id })
+      .orWhere({ handled_by_id: payload.id })
+      .first();
 
-    return await query;
+    return { result: query, totalItem: +total.count || 1 };
   }
 }

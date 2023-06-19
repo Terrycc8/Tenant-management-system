@@ -239,7 +239,7 @@ export class PropertyService {
       await transaction('propertyAttachments').where({ property_id: id }).del();
       await transaction('property').where({ id }).del();
     });
-
+    console.log('del');
     return {};
   }
 }
