@@ -11,6 +11,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonImg,
+  IonGrid,
+  IonCard,
 } from "@ionic/react";
 import { memo, useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
@@ -21,6 +24,8 @@ import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 import { Style } from "@capacitor/status-bar";
+import companyLogo from "../assets/companyLogo.jpg";
+import "./LoginPage.css";
 
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
@@ -64,11 +69,28 @@ export function LoginPage(props: {
   return (
     <IonPage>
       <IonContent className={style.login_form}>
-        <div className={style.login_app_name}>E-Housing</div>
+        <IonItem className="logo">
+          <IonImg className="logo-image" src={companyLogo} alt="companyLogo" />
+        </IonItem>
+        {/* <div className={style.login_app_name}>E-Housing</div> */}
         <div className={style.login_signin_label}>Sign in</div>
         <IonList>
           <IonInput
             className={style.login_input}
+            label="Your Username/ Email"
+            labelPlacement="stacked"
+            fill="solid"
+            placeholder=""
+            ref={ionUsername}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                loginOnClick();
+              }
+            }}
+          ></IonInput>
+
+          <IonInput
+            className="login-input"
             label="Your Username/ Email"
             labelPlacement="stacked"
             fill="solid"
