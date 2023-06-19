@@ -48,13 +48,12 @@ export function Home_T_Page() {
           </IonRow>
           <IonRow>
             <IonCol>
-              {/* <IonCard routerLink={routes.property}> */}
               <IonCardContent>Payment Remainder</IonCardContent>
-              {/* </IonCard> */}
             </IonCol>
 
             <IonCol>
               <IonCard>
+                {/* <IonCard routerLink={routes.property}> */}
                 <IonCardContent>Payment Record</IonCardContent>
               </IonCard>
             </IonCol>

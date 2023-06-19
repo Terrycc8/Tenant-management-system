@@ -1,4 +1,4 @@
-import { ValidationArguments } from 'class-validator';
+import { ValidationArguments } from "class-validator";
 
 export type JWTPayload = {
   id: number;
@@ -169,16 +169,16 @@ export type User = {
 };
 
 export enum EventTypes {
-  'maintenance',
-  'notices',
-  'reimbursement',
-  'complaint',
+  "maintenance",
+  "notices",
+  "reimbursement",
+  "complaint",
 }
 
 export enum EventPriority {
-  'high',
-  'medium',
-  'low',
+  "high",
+  "medium",
+  "low",
 }
 
 export const eventTypesEnumMsg = {
@@ -190,30 +190,30 @@ export const eventPriorityEnumMsg = {
 };
 
 export enum PropertyArea {
-  'hong_kong',
-  'kowloon',
-  'new_territories',
-  'island',
+  "hong_kong",
+  "kowloon",
+  "new_territories",
+  "island",
 }
 export enum PropertyDistrict {
-  'central_west',
-  'eastern',
-  'southern',
-  'wan_chai',
-  'kowloon_city',
-  'kwun_tong',
-  'sham_shui_po',
-  'wong_tai_sin',
-  'yau_tsim_mong',
-  'island',
-  'kwai_tsing',
-  'north',
-  'sai_kung',
-  'sha_tin',
-  'tai_po',
-  'tsuen_wan',
-  'tuen_mun',
-  'yuen_long',
+  "central_west",
+  "eastern",
+  "southern",
+  "wan_chai",
+  "kowloon_city",
+  "kwun_tong",
+  "sham_shui_po",
+  "wong_tai_sin",
+  "yau_tsim_mong",
+  "island",
+  "kwai_tsing",
+  "north",
+  "sai_kung",
+  "sha_tin",
+  "tai_po",
+  "tsuen_wan",
+  "tuen_mun",
+  "yuen_long",
 }
 export const propertyAreaEnumMsg = {
   message: `Please select the property's area`,
@@ -224,5 +224,18 @@ export const propertyDistrictEnumMsg = {
 
 export type ClientPayload = {
   token: string;
-  role: 'admin' | 'landlord' | 'tenant' | null;
+  role: "admin" | "landlord" | "tenant" | null;
+};
+
+export type PaymentListOutput = {
+  id: string;
+  property_id: string;
+  payer_id: number;
+  status: "confirmed" | "pending";
+  amount: number;
+  billing_period_from: string;
+  billing_period_to: string;
+  attachments: string[];
+  confirmed_at: string;
+  first_name: string;
 };
