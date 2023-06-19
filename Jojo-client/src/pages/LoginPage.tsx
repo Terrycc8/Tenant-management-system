@@ -10,6 +10,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonImg,
+  IonGrid,
+  IonCard,
 } from "@ionic/react";
 import { memo, useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
@@ -19,6 +22,8 @@ import { setCredentials } from "../slices/authSlice";
 
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
+import companyLogo from "../assets/companyLogo.jpg";
+import "./LoginPage.css";
 
 export function LoginPage(props: { setPage(page: string): void }) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
@@ -64,6 +69,9 @@ export function LoginPage(props: { setPage(page: string): void }) {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonItem className="logo">
+          <IonImg className="logo-image" src={companyLogo} alt="companyLogo" />
+        </IonItem>
         <IonList>
           <IonItem>
             <IonInput

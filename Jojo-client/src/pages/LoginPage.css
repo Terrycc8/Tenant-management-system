@@ -1,0 +1,15 @@
+.logo{
+    /* display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center; */
+    .logo-image{
+        display: flex !important;
+        justify-content: center !important;
+        align-content: center!important;
+        align-items: center !important;
+        /* width: 5rem !important;
+        height: 5rem !important; */
+ }
+}
