@@ -15,7 +15,7 @@ import { useCallback, useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { closeOutline } from "ionicons/icons";
-import { UserListOutput, PropertyListOutput } from "../types";
+import { UserListOutput } from "../types";
 import { routes } from "../routes";
 import serverURL from "../ServerDomain";
 

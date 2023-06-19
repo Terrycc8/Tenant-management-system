@@ -39,4 +39,6 @@ export class ChatService {
   getHello(): string {
     return 'Hello World!';
   }
+
+  async createChatroom(user: JWTPayload) {}
 }

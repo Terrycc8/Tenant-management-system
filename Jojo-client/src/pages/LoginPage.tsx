@@ -20,7 +20,7 @@ import { routes } from "../routes";
 import { usePostUserLoginMutation } from "../api/loginMutation";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-import "../theme/login.modules.scss";
+import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 import companyLogo1 from "../assets/companyLogo.jpg";
@@ -28,8 +28,7 @@ import "./LoginPage.css";
 
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
-}) 
-{
+}) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -68,76 +67,71 @@ export function LoginPage(props: {
   }, [props.setPage]);
   return (
     <IonPage>
-      <IonContent>
+      <IonContent className={style.login_form}>
         <IonItem className="logo">
           <IonImg className="logo-image" src={companyLogo1} alt="companyLogo" />
         </IonItem>
+        {/* <div className={style.login_app_name}>E-Housing</div> */}
+        <div className={style.login_signin_label}>Sign in</div>
         <IonList>
-          <IonItem>
-        <div className="login-form">
-          <div className="login-app-name">E-Housing</div>
-          <div className="login-signin-label">Sign in</div>
-          <IonList>
-            <IonInput
-              className="login-input"
-              label="Your Username/ Email"
-              labelPlacement="stacked"
-              fill="solid"
-              placeholder=""
-              ref={ionUsername}
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  loginOnClick();
-                }
-              }}
-            ></IonInput>
+          <IonInput
+            className={style.login_input}
+            label="Your Username/ Email"
+            labelPlacement="stacked"
+            fill="solid"
+            placeholder=""
+            ref={ionUsername}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                loginOnClick();
+              }
+            }}
+          ></IonInput>
 
-            <IonInput
-              className="login-input"
-              label="Password"
-              labelPlacement="stacked"
-              type={!checked ? "password" : "text"}
-              fill="solid"
-              ref={ionPassword}
-              placeholder=""
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  loginOnClick();
-                }
-              }}
-            ></IonInput>
+          <IonInput
+            className={style.login_input}
+            label="Password"
+            labelPlacement="stacked"
+            type={!checked ? "password" : "text"}
+            fill="solid"
+            ref={ionPassword}
+            placeholder=""
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                loginOnClick();
+              }
+            }}
+          ></IonInput>
 
-            {errors.length > 0
-              ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
-              : null}
-            <div className="login-show-pw-label">
-              <IonButtons slot="start">
-                <IonCheckbox
-                  checked={checked}
-                  color="primary"
-                  onIonChange={checkBoxOnClick}
-                ></IonCheckbox>
+          {errors.length > 0
+            ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+            : null}
+          <div className={style.login_show_pw_label}>
+            <IonButtons slot="start">
+              <IonCheckbox
+                checked={checked}
+                color="primary"
+                onIonChange={checkBoxOnClick}
+              ></IonCheckbox>
 
-                <IonLabel> Show Password</IonLabel>
-              </IonButtons>
-            </div>
-            <IonButton className="login-btn" onClick={loginOnClick}>
-              Login
-            </IonButton>
-            <div className="login-account-label">
-              <IonLabel>Don't have an account?</IonLabel>
-            </div>
-            <IonButton
-              className="login-signup-btn"
-              // routerLink={routes.signup}
-              onClick={setPageRegister}
-            >
-              Create An Account
-            </IonButton>
-          </IonList>
-        </div>
+              <IonLabel> Show Password</IonLabel>
+            </IonButtons>
+          </div>
+          <IonButton className={style.login_btn} onClick={loginOnClick}>
+            Login
+          </IonButton>
+          <div className={style.login_account_label}>
+            <IonLabel>Don't have an account?</IonLabel>
+          </div>
+          <IonButton
+            className={style.login_signup_btn}
+            // routerLink={routes.signup}
+            onClick={setPageRegister}
+          >
+            Create An Account
+          </IonButton>
+        </IonList>
       </IonContent>
     </IonPage>
   );
 }
-

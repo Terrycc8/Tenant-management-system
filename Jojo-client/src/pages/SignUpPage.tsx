@@ -27,10 +27,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import { formToJson } from "../helper";
 import { RootState } from "../RTKstore";
-import "../theme/signup.modules.scss";
+
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
-
+import style from "../theme/signup.module.scss";
 export function SignUpPage(props: {
   setPage(cb: (state: string) => string): void;
 }) {
@@ -88,30 +88,30 @@ export function SignUpPage(props: {
   }, [props.setPage]);
   return (
     <IonPage>
-      <IonContent className="signup-form">
+      <IonContent className={style.signup_form}>
         {/* {token ? <Redirect to={routes.home} /> : null} */}
 
         <form onSubmit={signUpOnSubmit}>
-          <div className="signup-signup-label">
+          <div className={style.signup_label}>
             <IonLabel>Sign Up</IonLabel>
           </div>
-          <div className="signup-more-label">
+          <div className={style.more_label}>
             <IonLabel>we need something more</IonLabel>
           </div>
           <IonList>
             <IonGrid>
-              <IonRow>
-                <IonCol className="signup-col">
+              <IonRow className={style.signup_row}>
+                <IonCol>
                   <IonInput
                     fill="solid"
                     placeholder="First Name"
                     name="first_name"
-                    className="signup-input"
+                    className={style.signup_input}
                   ></IonInput>
                 </IonCol>
                 <IonCol>
                   <IonInput
-                    className="signup-input"
+                    className={style.signup_input}
                     fill="solid"
                     placeholder="Last Name"
                     name="last_name"
@@ -121,7 +121,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
-                    className="signup-input"
+                    className={style.signup_input}
                     fill="solid"
                     placeholder="please enter your email address"
                     name="email"
@@ -131,7 +131,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
-                    className="signup-input"
+                    className={style.signup_input}
                     fill="solid"
                     placeholder="Password"
                     name="password"
@@ -145,7 +145,7 @@ export function SignUpPage(props: {
               <IonRow>
                 <IonCol>
                   <IonInput
-                    className="signup-input"
+                    className={style.signup_input}
                     fill="solid"
                     placeholder="Confirmed password"
                     name="confirm_password"
@@ -156,11 +156,14 @@ export function SignUpPage(props: {
               </IonRow>
               <IonButtons>
                 <IonCheckbox
+                  className={style.show_pw_cb}
                   checked={checked}
                   color="primary"
                   onIonChange={checkBoxOnClick}
                 ></IonCheckbox>
-                <IonLabel>Show Password</IonLabel>
+                <IonLabel className={style.show_pw_label}>
+                  Show Password
+                </IonLabel>
               </IonButtons>
 
               {errors.length > 0 ? (
@@ -172,24 +175,23 @@ export function SignUpPage(props: {
               )}
               <IonRow>
                 <IonCol>
-                  <IonLabel>Type of User</IonLabel>
+                  <IonLabel className={style.user_type_label}>
+                    Type of User
+                  </IonLabel>
                 </IonCol>
               </IonRow>
               <IonRow>
-                <IonCol>
-                  <IonItem lines="none">
-                    <IonSelect
-                      aria-label="UserType"
-                      interface="popover"
-                      placeholder="Select Your User Type"
-                      name="user_type"
-                    >
-                      <IonSelectOption value="landlord">
-                        LandLord
-                      </IonSelectOption>
-                      <IonSelectOption value="tenant">Tenant</IonSelectOption>
-                    </IonSelect>
-                  </IonItem>
+                <IonCol className={style.select_col}>
+                  <IonSelect
+                    className={style.signup_select}
+                    aria-label="UserType"
+                    interface="popover"
+                    placeholder="Select Your User Type"
+                    name="user_type"
+                  >
+                    <IonSelectOption value="landlord">LandLord</IonSelectOption>
+                    <IonSelectOption value="tenant">Tenant</IonSelectOption>
+                  </IonSelect>
                 </IonCol>
               </IonRow>
             </IonGrid>
@@ -198,7 +200,7 @@ export function SignUpPage(props: {
             type="submit"
             size="large"
             expand="block"
-            className="signup-submit-btn"
+            className={style.submit_btn}
             onSubmit={signUpOnSubmit}
           >
             Submit
@@ -207,15 +209,15 @@ export function SignUpPage(props: {
       </IonContent>
 
       <IonFooter>
-        <IonItem
+        <IonButton
+          expand="block"
           // routerLink={routes.login}
           routerDirection="back"
-          lines="none"
-          className="ion-text-center"
           onClick={setPageLogin}
+          className={style.back_btn}
         >
           back to login
-        </IonItem>
+        </IonButton>
       </IonFooter>
     </IonPage>
   );
