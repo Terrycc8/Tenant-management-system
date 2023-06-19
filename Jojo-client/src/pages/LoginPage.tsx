@@ -28,7 +28,8 @@ import "./LoginPage.css";
 
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
-}) {
+}) 
+{
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -68,18 +69,15 @@ export function LoginPage(props: {
   return (
     <IonPage>
       <IonContent>
-<<<<<<< HEAD
         <IonItem className="logo">
           <IonImg className="logo-image" src={companyLogo} alt="companyLogo" />
         </IonItem>
         <IonList>
           <IonItem>
-=======
         <div className="login-form">
           <div className="login-app-name">E-Housing</div>
           <div className="login-signin-label">Sign in</div>
           <IonList>
->>>>>>> f8bee8ac974399c036683262669a3e4ab1be0440
             <IonInput
               className="login-input"
               label="Your Username/ Email"
@@ -142,3 +140,4 @@ export function LoginPage(props: {
     </IonPage>
   );
 }
+
