@@ -1,31 +1,51 @@
-ion-input.signup-input {
+.signup_input,
+.signup_select {
   --padding-start: 1rem;
   margin-top: 1rem;
   background: #f2f3f3;
   border-radius: 9px;
   font-size: 1rem;
+  height: 2rem;
+}
+.signup_select {
+  margin-top: 0;
 }
 
-ion-content.signup-form,
+.signup_form,
 ion-footer {
   --padding-start: 8%;
   --padding-end: 8%;
   --padding-top: 7vh;
   --padding-bottom: 0rem;
 }
-div.signup-signup-label {
+.signup_label {
   color: #22215b;
   font-weight: bold;
   font-size: 2.5rem;
   text-align: center;
 }
-div.signup-more-label {
+.more_label {
   color: #22215b;
   margin-top: 1vh;
   text-align: center;
   font-size: 1.3rem;
 }
-ion-button.signup-submit-btn {
+.submit_btn {
   --background: #315ee7;
   height: 2.5rem;
+}
+.back_btn {
+  --background: #ffffff;
+  --color: #000000;
+}
+
+.user_type_label {
+  color: #888888;
+}
+.show_pw_label {
+  display: block;
+  margin: 0.5rem;
+}
+.show_pw_cb {
+  margin-left: 0.5rem;
 }

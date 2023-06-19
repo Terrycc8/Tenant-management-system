@@ -25,20 +25,18 @@ ion-col.home-col {
     text-align: center;
     display: flex;
     justify-content: center;
-
-
   }
 }
 
 ion-card.stats {
   margin: 0.5rem 0;
-  
+
   ion-card-header {
     padding: 0.2rem;
     font-size: 1.2rem;
   }
-  ion-card-content{
-    height: 45vh
+  ion-card-content {
+    height: 45vh;
   }
 }
 
@@ -47,9 +45,8 @@ ion-label.welcomeMsg {
   font-size: 1.4rem;
 }
 
-ion-card-content.d-chart{
+ion-card-content.d-chart {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
