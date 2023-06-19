@@ -90,20 +90,6 @@ export function LoginPage(props: {
           ></IonInput>
 
           <IonInput
-            className="login-input"
-            label="Your Username/ Email"
-            labelPlacement="stacked"
-            fill="solid"
-            placeholder=""
-            ref={ionUsername}
-            onKeyDown={(e) => {
-              if (e.key == "Enter") {
-                loginOnClick();
-              }
-            }}
-          ></IonInput>
-
-          <IonInput
             className={style.login_input}
             label="Password"
             labelPlacement="stacked"
