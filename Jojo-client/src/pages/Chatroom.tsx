@@ -13,7 +13,7 @@ import {
   IonCard,
   IonButton,
 } from "@ionic/react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { routes } from "../routes";
 import { addOutline, send } from "ionicons/icons";
 import "./Chatroom.css";
@@ -21,6 +21,9 @@ import { useSocket } from "../useHook/use-socket";
 import { useValue } from "../useHook/use-value";
 import { useParams } from "react-router";
 import { chatService } from "../api";
+import serverURL from "../ServerDomain";
+import { useSelector } from "react-redux";
+import { RootState } from "../RTKstore";
 
 type Message = {
   id: number;
@@ -29,6 +32,7 @@ type Message = {
 
 export function ChatroomPage() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const token = useSelector((state: RootState) => state.auth.token);
 
   const handleNewMessage = useCallback((event: { data: string }) => {
     console.log("new message from ws:", event);
@@ -41,6 +45,23 @@ export function ChatroomPage() {
       socket.off("new-message", handleNewMessage);
     };
   });
+
+  async function getMessageList() {
+    const res = await fetch(`${serverURL}/user/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await res.json();
+    console.log(result);
+
+    setMessages(result);
+  }
+
+  useEffect(() => {
+    token && getMessageList();
+  }, [token]);
 
   return (
     <IonPage>
@@ -68,8 +89,11 @@ function Footer() {
   const room_id = params.id;
   const input = useValue("");
   function addAttachment() {}
+
   function submitNewMessage() {
     // chatService.sendMessage(room_id, input.value);
+    // if (message !== "") {
+    // }
     fetch(`http://localhost:8100/chat/rooms/${room_id}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

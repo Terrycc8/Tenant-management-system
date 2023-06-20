@@ -51,7 +51,7 @@ export class ChatService {
     .where (creator_id, receiver_id)
     .first();
     if (chatroom) {
-      routerLink={routes.chatroom(chatroom.id)
+      // routerLink={routes.chatroom(chatroom.id)
     }
     let newChatroom = await this.knex('chatroom')
     .insert({

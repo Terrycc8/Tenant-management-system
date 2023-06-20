@@ -156,12 +156,12 @@ export class PaymentService {
 
     return {};
   }
-  async propertyEdit(
+  async paymentEdit(
     payload: JWTPayload,
-    propertyInput: PropertyInputDto,
+    paymentInput: PaymentInputDto,
     id: number,
   ) {
-    if (propertyInput.rental_start_at > propertyInput.rental_end_at) {
+    if (paymentInput.billing_period_from > paymentInput.billing_period_to) {
       throw new BadRequestException(
         'Invalid rental period, rental end date must be earlier than or equal to the start date',
       );
