@@ -23,4 +23,5 @@ export const apiRoutes = {
   profile: "/user/profile",
   tenant: "/user/tenant",
   payment: "/payment",
+  message: "/messages",
 };

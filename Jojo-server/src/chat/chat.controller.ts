@@ -12,6 +12,7 @@ import { RoomDetail, RoomListItem } from './chat.dto';
 import { ChatService } from './chat.service';
 import { JWTPayload, uploadDir } from 'src/types';
 import * as socketIO from 'socket.io';
+import { Request } from '@nestjs/common';
 @Controller('/chat')
 export class ChatController {
   static io: socketIO.Server;
@@ -54,10 +55,10 @@ export class ChatController {
   //   };
   // }
 
-  @Get('/rooms/:id')
-  getHello(): string {
-    return this.chatService.getHello();
-  }
+  // @Get('/rooms/:id')
+  // getHello(): string {
+  //   return this.chatService.getHello();
+  // }
 
   @Post('/rooms/:id/message')
   sendMessage(@Param('id') room_id: string, @Body('message') message: string) {
@@ -68,8 +69,17 @@ export class ChatController {
     return { id: 123 };
   }
 
-  // @Post('createChatroom')
-  // async signUp(
+  @Get('/messages/id')
+  getMessages(@Param('id') room_id: string) {
+    // let payLoad: JWTPayload = this.jwtService.decode(req);
+    return this.chatService.messageById(room_id);
+  }
+
+  @Post('/rooms/:id/')
+  createChatroom(@Request() req, @Param('id') receiver_id: number) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+    return this.chatService.createChatroom(payLoad, receiver_id);
+  }
   //   @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
   // ) {
   //   let payload = await this.userService.signUp(signUpInput);

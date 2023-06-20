@@ -31,6 +31,7 @@ type Message = {
 };
 
 export function ChatroomPage() {
+  const { id } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const token = useSelector((state: RootState) => state.auth.token);
 
@@ -47,14 +48,16 @@ export function ChatroomPage() {
   });
 
   async function getMessageList() {
-    const res = await fetch(`${serverURL}/user/`, {
+    console.log({ id });
+
+    const res = await fetch(`${serverURL}/messages/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
     const result = await res.json();
-    console.log(result);
+    console.log("message list:", { result });
 
     setMessages(result);
   }
@@ -74,9 +77,10 @@ export function ChatroomPage() {
         </IonToolbar>
       </IonHeader>
       <IonContent id="main-chat-content">
-        {messages.map((message) => (
-          <IonCard key={message.id}>{message.content}</IonCard>
-        ))}
+        {messages.length > 0 &&
+          messages.map((message) => (
+            <IonCard key={message.id}>{message.content}</IonCard>
+          ))}
       </IonContent>
 
       <Footer />

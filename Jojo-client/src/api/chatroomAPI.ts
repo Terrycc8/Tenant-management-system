@@ -49,6 +49,23 @@ export function useChatroomList(token: string | null) {
   };
 }
 
+export function getMessages(id: string) {
+  const query = useQuery({
+    queryKey: ["/messages/:id"],
+    retry: false,
+    queryFn: () => chatService.getMessageList(id),
+  });
+  // console.log('chat room list query:', query)
+  const error = (query.error as any)?.response?.data?.error;
+  const data = query.data;
+  return {
+    error,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    data,
+  };
+}
+
 // export function usePostChatroomMutation(token: string | null) {
 //   const query = useQuery({
 //     queryKey: ['/chat/rooms'],
@@ -61,5 +78,3 @@ export function useChatroomList(token: string | null) {
 //   const data = query.data
 //   return { error, isLoading: query.isLoading, isFetching: query.isFetching, data }
 // }
-
-
