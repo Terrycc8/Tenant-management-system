@@ -53,4 +53,9 @@ export class ChatService {
   sendMessage(@Param("id") room_id: string, @Body("message") message: string) {
     throw new Error("stub");
   }
+
+  @Get("/message/:id")
+  getMessageList(@Param("id") room_id: string) {
+    throw new Error("stub");
+  }
 }

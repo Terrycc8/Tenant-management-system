@@ -1,3 +1,5 @@
+
+
 export type JWTPayload = {
   id: number;
   role: "admin" | "landlord" | "tenant";
@@ -223,4 +225,20 @@ export const propertyDistrictEnumMsg = {
 export type ClientPayload = {
   token: string;
   role: "admin" | "landlord" | "tenant" | null;
+<<<<<<< HEAD
+=======
+};
+
+export type PaymentListOutput = {
+  id: string;
+  property_id: string;
+  payer_id: number;
+  status: "confirmed" | "pending";
+  amount: number;
+  billing_period_from: string;
+  billing_period_to: string;
+  attachments: string[];
+  confirmed_at: string;
+  first_name: string;
+>>>>>>> 7a9fe617e619ff7eaf4e40e1508239319ec312c4
 };

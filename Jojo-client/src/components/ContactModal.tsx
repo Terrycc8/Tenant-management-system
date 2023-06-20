@@ -15,14 +15,16 @@ import { useCallback, useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 import { closeOutline } from "ionicons/icons";
-import { UserListOutput, PropertyListOutput } from "../types";
+import { UserListOutput } from "../types";
 import { routes } from "../routes";
 import serverURL from "../ServerDomain";
+import { Room } from "../../../Jojo-server/dist/src/proxy";
+import { useHistory } from "react-router-dom";
 
 export function ContactModal(props: { trigger: string }) {
   const contactModal = useRef<HTMLIonModalElement>(null);
   const token = useSelector((state: RootState) => state.auth.token);
-
+  const history = useHistory();
   const [data, setData] = useState([]);
 
   const dismissContact = useCallback(() => {
@@ -45,6 +47,21 @@ export function ContactModal(props: { trigger: string }) {
   useEffect(() => {
     token && getUserList();
   }, [token]);
+
+  async function getChatroom(user_id: number) {
+    // console.log({ user_id });
+    const res = await fetch(`${serverURL}/chat/rooms/${user_id}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const chatroomId = await res.json();
+    if (chatroomId) {
+      history.push(`/chat/${chatroomId}`);
+    }
+  }
 
   return (
     <IonModal
@@ -70,7 +87,11 @@ export function ContactModal(props: { trigger: string }) {
           <>no contact yet, please add contact</>
         ) : (
           data.map((user: UserListOutput) => (
-            <IonCard key={user.id} routerLink={routes.chatroom(user.id)}>
+            <IonCard
+              key={user.id}
+              // routerLink={routes.chatroom(user.id)}
+              onClick={() => getChatroom(user.id)}
+            >
               <IonCardHeader>
                 <IonCardTitle>
                   {user.avatar + user.first_name + " " + user.last_name}

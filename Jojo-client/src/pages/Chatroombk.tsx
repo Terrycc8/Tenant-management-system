@@ -41,7 +41,7 @@ import {
   starOutline,
   trashOutline,
 } from "ionicons/icons";
-import { chatroom, MessageOutput } from "../../../Jojo-server/dist/src/types";
+// import { chatroom, MessageOutput } from "../../../Jojo-server/dist/src/types";
 import serverURL from "../ServerDomain";
 import "./Chatroom.css";
 

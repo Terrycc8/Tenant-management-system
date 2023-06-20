@@ -23,8 +23,7 @@ import { setCredentials } from "../slices/authSlice";
 import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
-import { Style } from "@capacitor/status-bar";
-import companyLogo from "../assets/companyLogo.jpg";
+import companyLogo1 from "../assets/companyLogo.jpg";
 import "./LoginPage.css";
 
 export function LoginPage(props: {
@@ -70,7 +69,7 @@ export function LoginPage(props: {
     <IonPage>
       <IonContent className={style.login_form}>
         <IonItem className="logo">
-          <IonImg className="logo-image" src={companyLogo} alt="companyLogo" />
+          <IonImg className="logo-image" src={companyLogo1} alt="companyLogo" />
         </IonItem>
         {/* <div className={style.login_app_name}>E-Housing</div> */}
         <div className={style.login_signin_label}>Sign in</div>

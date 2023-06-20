@@ -10,7 +10,7 @@ import { shapesOutline } from "ionicons/icons";
 import { useCallback, useRef } from "react";
 
 import { EventsModal } from "./EventsModal";
-
+// import { PaymentsModal } from "./PaymentsModal";
 import { CommonModalHeader } from "./CommonModalHeader";
 import { PropertyModal } from "./propertyModal";
 
