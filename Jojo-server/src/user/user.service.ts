@@ -4,8 +4,11 @@ import {
   NotImplementedException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
+import { IDParamDto } from 'src/dto/IDParams';
+import { PatchUserInputDto } from 'src/dto/patch-user.dto';
 import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { comparePassword, hashPassword } from 'src/hash';
@@ -21,8 +24,13 @@ export class UserService {
   ) {}
 
   async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
-    let { id, hash, role } = await this.knex('user')
-      .select({ id: 'id', hash: 'password_hash', role: 'user_type' })
+    let { id, hash, role, verified } = await this.knex('user')
+      .select({
+        id: 'id',
+        hash: 'password_hash',
+        role: 'user_type',
+        verified: 'verified',
+      })
       .where({ email })
       .first();
 
@@ -36,8 +44,42 @@ export class UserService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Incorrect password');
     }
+    if (!verified) {
+      throw new UnauthorizedException('You have not activated your account');
+    }
 
     return { id, role };
+  }
+  async patchUser(
+    jwtPayLoad: JWTPayload,
+    patchUserInput: PatchUserInputDto,
+    params: string,
+    image: Express.Multer.File[],
+  ) {
+    if (jwtPayLoad.id !== parseInt(params)) {
+      throw new BadRequestException(
+        'You are not allowed to edit profile of this user',
+      );
+    }
+    let filename: string | null;
+    console.log(image);
+    if (image.length == 1) {
+      filename = image[0].filename;
+    } else filename = null;
+
+    await this.knex('user')
+      .update({
+        last_name: patchUserInput.last_name,
+        first_name: patchUserInput.first_name,
+        avatar: filename,
+      })
+      .where({ id: params });
+    const result = await this.knex('user')
+      .select('*')
+      .where({ id: params })
+      .first();
+
+    return {};
   }
   async signUp(sigUpInput: SignUpInputWithPasswordDto): Promise<JWTPayload> {
     let user = await this.knex('user')
@@ -50,13 +92,8 @@ export class UserService {
         'Invalid email, this email has been registered',
       );
     }
-    // await this.mailService.sendOPT(
-    //   {
-    //     email: sigUpInput.email,
-    //     name: sigUpInput.first_name + sigUpInput.last_name,
-    //   },
-    //   '1',
-    // );
+
+    let token = randomUUID().replace('-', '');
 
     let userID: number = await this.knex('user')
       .insert({
@@ -69,10 +106,19 @@ export class UserService {
         last_login_time: new Date(),
         status: 'Online',
         status_update_time: new Date(),
-        avatar: '',
+        avatar: null,
+        token,
+        verified: false,
+        issued_at: new Date(),
       })
       .returning('id');
-
+    await this.mailService.sendOPT(
+      {
+        email: sigUpInput.email,
+        name: sigUpInput.first_name + sigUpInput.last_name,
+      },
+      { token, id: userID[0].id },
+    );
     return { id: userID[0].id, role: sigUpInput.user_type };
   }
 
@@ -132,6 +178,7 @@ export class UserService {
   async getProfile(jwtPayLoad: JWTPayload) {
     const profile = await this.knex('user')
       .select(
+        'id',
         'email',
         'last_name',
         'first_name',
@@ -207,5 +254,25 @@ export class UserService {
       .orderBy('event.created_at')
       .limit(5);
     return events;
+  }
+  async activate(token: string, id: number) {
+    let user = await this.knex('user')
+      .select('token', 'verified', 'issued_at', 'user_type')
+      .where({ id })
+      .first();
+    if (!user) {
+      throw new BadRequestException('This user does not exist');
+    }
+    if (user.token !== token) {
+      throw new BadRequestException('Invalid token');
+    }
+    console.log(typeof user.issued_at);
+    let valid_time_5_mins_in_ms = 5 * 60 * 1000;
+    let time_diff = new Date().getTime() - user.issued_at.getTime;
+    if (time_diff > valid_time_5_mins_in_ms) {
+      throw new BadRequestException('Token expired');
+    }
+    await this.knex('user').update({ verified: true }).where({ id });
+    return { id, role: user.user_type };
   }
 }

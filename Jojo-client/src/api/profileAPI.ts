@@ -9,19 +9,11 @@ export const profileApi = jojoAPI.injectEndpoints({
         url: apiRoutes.profile,
       }),
 
-      providesTags: ["profile"],
-    }),
-
-    patchProfile: builder.mutation({
-      query: () => ({
-        url: apiRoutes.profile,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["profile"],
+      providesTags: ["user"],
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { usePatchProfileMutation, useGetProfileQuery } = profileApi;
+export const { useGetProfileQuery } = profileApi;

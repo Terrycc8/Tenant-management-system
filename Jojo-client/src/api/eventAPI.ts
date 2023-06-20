@@ -9,33 +9,53 @@ import { prepareHeaders } from "./prepareHeaders";
 import { jojoAPI } from "./jojoAPI";
 import { useDispatch } from "react-redux";
 import { setScroll } from "../slices/scrollSlice";
+import { EventListOutput } from "../types";
 // Define a service using a base URL and expected endpoints
+
+type GetEventResult = {
+  result: EventListOutput[];
+  totalItem: number;
+};
+
 export const eventApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getEvent: builder.query({
-      query: (arg: { page: number; itemsPerPage: number }) => ({
+    getEvent: builder.query<
+      GetEventResult,
+      { page: number; itemsPerPage: number }
+    >({
+      query: (arg) => ({
         url: apiRoutes.event + `/?offset=${arg.itemsPerPage}&page=${arg.page}`,
       }),
       serializeQueryArgs: ({ endpointName }) => {
         return endpointName;
       },
-      // Always merge incoming data to the cache entry
-      merge: (currentCache, newItems) => {
-        const currentCacheSet = new Set(
-          currentCache.result.map((item: Record<string, number | string>) => {
-            return item.id;
-          })
-        );
 
-        currentCache.result.push(
-          ...newItems.result.filter((item: Record<string, number | string>) => {
-            return !currentCacheSet.has(item.id);
-          })
-        );
-      },
+      // Always merge incoming data to the cache entry
+      // merge: (currentCache, newItems) => {
+      //   const currentCacheSet = new Set(
+      //     currentCache.result.map((item: Record<string, number | string>) => {
+      //       return item.id;
+      //     })
+      //   );
+
+      //   currentCache.result.push(
+      //     ...newItems.result.filter((item: Record<string, number | string>) => {
+      //       return !currentCacheSet.has(item.id);
+      //     })
+      //   );
+      // },
       // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
+      forceRefetch({ currentArg, previousArg, state }) {
+        const rootState: RootState = state as any;
+        const data: GetEventResult = rootState.jojoAPI.queries.getEvent
+          ?.data as any;
+        const result = data?.result;
+
+        return (
+          !result ||
+          currentArg?.page != previousArg?.page ||
+          currentArg?.itemsPerPage != previousArg?.itemsPerPage
+        );
       },
       providesTags: ["event"],
     }),

@@ -12,19 +12,31 @@ import {
   IonToggle,
   IonLabel,
   IonBackButton,
+  IonAvatar,
 } from "@ionic/react";
 import { closeOutline, personCircle } from "ionicons/icons";
 import { FC, memo, useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { routes } from "../routes";
 import { Capacitor } from "@capacitor/core";
 import { isIphone } from "../platform";
 import { sleep } from "../async";
 import { ProfileModal } from "./ProfileModal";
-import "../theme/menu.modules.scss";
+import style from "../theme/menu.module.scss";
 import { jojoAPI } from "../api/jojoAPI";
+import { RootState } from "../RTKstore";
+import serverURL from "../ServerDomain";
+import { useGetProfileQuery } from "../api/profileAPI";
+import {
+  UseIonHeaderCollapse,
+  useIonHeaderCollapse,
+} from "./useHeaderCollapse";
 export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
+  const { data, isFetching, isLoading, error, isError } = useGetProfileQuery(
+    {}
+  );
+
   const [modal, setModal] = useState("");
   const setDelayModal = useCallback(async () => {
     if (!isIphone) {
@@ -46,9 +58,10 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
   const toggleDarkModeHandler = useCallback(() => {
     document.body.classList.toggle("dark");
   }, []);
+  const { ref } = useIonHeaderCollapse({} as UseIonHeaderCollapse);
   return (
     <>
-      <IonHeader>
+      <IonHeader ref={ref}>
         <IonToolbar>
           <IonTitle>{props.title}</IonTitle>
           <IonButtons slot="start">
@@ -58,7 +71,21 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
           </IonButtons>
           <IonButtons slot="end">
             <IonButton onClick={setModalMenu}>
-              <IonIcon slot="icon-only" icon={personCircle}></IonIcon>
+              {data.avatar.length > 0 ? (
+                <IonAvatar className={style.profilePicTopRight}>
+                  <img
+                    className={style.test11}
+                    src={serverURL + "/" + data.avatar}
+                    alt=""
+                  />
+                </IonAvatar>
+              ) : (
+                <IonIcon
+                  className={style.profilePicTopRight}
+                  slot="icon-only"
+                  icon={personCircle}
+                ></IonIcon>
+              )}
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -76,10 +103,23 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
+        {data.avatar.length > 0 ? (
+          <IonAvatar className={style.profilePicMenu}>
+            <img
+              className={style.test11}
+              src={serverURL + "/" + data.avatar}
+              alt=""
+            />{" "}
+          </IonAvatar>
+        ) : (
+          <IonIcon
+            className={style.profilePicMenu}
+            slot="icon-only"
+            icon={personCircle}
+          ></IonIcon>
+        )}
         <IonContent>
-          <IonItem className="menu">
-            <IonIcon icon={personCircle}></IonIcon>
-          </IonItem>
+          <IonItem></IonItem>
           <IonList>
             <IonItem lines="none" onClick={setModalToProfile}>
               Profile

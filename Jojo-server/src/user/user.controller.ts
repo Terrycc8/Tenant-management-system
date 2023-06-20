@@ -4,8 +4,17 @@ import {
   Delete,
   Get,
   Header,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
+  Query,
+  Redirect,
+  Res,
+  Response,
   UnauthorizedException,
+  UploadedFiles,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -14,6 +23,11 @@ import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { JWTPayload, uploadDir } from 'src/types';
+import { filesInterceptorConfig } from 'src/helper';
+import { IDParamDto } from 'src/dto/IDParams';
+import { PropertyInputDto } from 'src/dto/post-property.dto';
+import { PatchUserInputDto } from 'src/dto/patch-user.dto';
+import { env } from 'src/env';
 
 @Controller('user')
 export class UserController {
@@ -33,15 +47,47 @@ export class UserController {
 
     return { token, role: jwtPayload.role };
   }
+  @Patch('/:id')
+  @UseInterceptors(filesInterceptorConfig(1))
+  async patchUser(
+    @UploadedFiles()
+    image: Express.Multer.File[],
+    @Request() req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+    @Body(new ValidationPipe()) patchUserInput: PatchUserInputDto,
+  ) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.patchUser(
+      jwtPayLoad,
+      patchUserInput,
+      params.id.toString(),
+      image,
+    );
+  }
   @Post('signup')
   async signUp(
     @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
   ) {
     let jwtPayload = await this.userService.signUp(signUpInput);
 
-    let token = this.jwtService.encode(jwtPayload);
+    return {};
+  }
+  @Get('activate')
+  async activate(
+    @Query('token') activate_token: string,
+    @Query('id', ParseIntPipe) id: number,
+    @Response() res,
+  ) {
+    try {
+      console.log(`${env.CLIENT_DOMAIN}${env.CLIENT_PORT}/tab/home`);
+      let jwtPayload = await this.userService.activate(activate_token, id);
+      let token = this.jwtService.encode(jwtPayload);
 
-    return { token, role: jwtPayload.role };
+      res.redirect(`${env.SERVER_DOMAIN}${env.CLIENT_PORT}/tab/home`);
+    } catch (error) {
+      res.json({ error });
+    }
   }
   @Delete()
   async deleteAccount(@Request() req) {
@@ -57,6 +103,7 @@ export class UserController {
 
     return await this.userService.getProfile(jwtPayLoad);
   }
+
   @Get('tenants')
   async getTenants(@Request() req) {
     const jwtPayLoad = this.jwtService.decode(req);

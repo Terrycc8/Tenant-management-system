@@ -11,6 +11,9 @@ status_update_time timestamp not null
 user_type enum('landlord','tenant','admin')
 last_login_time timestamp  not null
 registered_at timestamp  not null
+verified boolean
+token char text not null
+issued_at timestamp 
 
 property
 -----

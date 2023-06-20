@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../RTKstore";
+
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -40,20 +40,46 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import serverURL from "../ServerDomain";
 import { EventListOutput, userRole } from "../types";
+import { RootState } from "../RTKstore";
 
 export function EventsPage() {
   const [page, setPage] = useState(1);
   const role = useSelector((state: RootState) => state.auth.role);
-
+  const [items, setItems] = useState<EventListOutput[]>([]);
   const itemsPerPage = 3;
-  const { data, isFetching, isLoading, isError } = useGetEventQuery({
+  const { data, isFetching, isLoading, error } = useGetEventQuery({
     page,
     itemsPerPage,
   });
 
+  useEffect(() => {
+    let KEY = "events";
+    let newItems = data?.result;
+    let storedItemsStr = localStorage.getItem(KEY);
+    let storedItems: EventListOutput[] = JSON.parse(storedItemsStr || "[]");
+
+    let itemMap = new Map<number, EventListOutput>();
+    for (let item of storedItems) {
+      itemMap.set(item.id, item);
+    }
+    if (newItems) {
+      for (let item of newItems) {
+        itemMap.set(item.id, item);
+      }
+    }
+    let allItems = Array.from(itemMap.values());
+    allItems.sort((a, b) => a.id - b.id);
+    localStorage.setItem(KEY, JSON.stringify(allItems));
+
+    const maxItemCount = page * itemsPerPage;
+
+    setItems(allItems.slice(0, maxItemCount));
+  }, [data?.result, error, page]);
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
   const searchNext = (e: CustomEvent) => {
-    setPage((page) => page + 1);
+    if (data && items.length < data.totalItem) {
+      setPage((page) => page + 1);
+    }
     (e.target as HTMLIonInfiniteScrollElement).complete();
   };
 
@@ -62,20 +88,16 @@ export function EventsPage() {
       <CommonHeader title="Event list" />
 
       <IonContent>
-        {isError ? (
-          <>error</>
+        {error && items.length === 0 ? (
+          <>{JSON.stringify(error)}</>
         ) : isLoading ? (
           <>loading</>
-        ) : isFetching ? (
-          <>Fetching</>
-        ) : !data ? (
+        ) : items.length === 0 ? (
           <>no data?</>
-        ) : data.length == 0 ? (
-          <>no event</>
-        ) : data && data.result.length > 0 ? (
+        ) : (
           <>
             <IonAccordionGroup ref={accordionGroup} multiple={true}>
-              {data.result.map((event: EventListOutput) => (
+              {items.map((event: EventListOutput) => (
                 <IonCard
                   key={event.id}
                   routerLink={routes.events + "/" + event.id}
@@ -100,7 +122,7 @@ export function EventsPage() {
                       ))}
                     </Swiper>
                   </IonCardContent>
-                  <IonAccordion value={event.id}>
+                  <IonAccordion value={event.id.toString()}>
                     <IonItem slot="header" color="light">
                       <IonLabel>Description</IonLabel>
                     </IonItem>
@@ -135,8 +157,6 @@ export function EventsPage() {
               ></IonInfiniteScrollContent>
             </IonInfiniteScroll>
           </>
-        ) : (
-          <></>
         )}
       </IonContent>
     </IonPage>

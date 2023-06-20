@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
@@ -34,9 +34,8 @@ import {
 } from "../api/propertyAPI";
 import { Redirect, useParams } from "react-router";
 import CommonHeader from "../components/CommonHeader";
-import { Autoplay } from "swiper";
+import { Autoplay, Navigation, Pagination, Scrollbar } from "swiper";
 
-import "swiper/css";
 import "swiper/css/autoplay";
 import "@ionic/react/css/ionic-swiper.css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -49,42 +48,98 @@ import "swiper/css/scrollbar";
 import serverURL from "../ServerDomain";
 import { showResponseMessage } from "../helper";
 import { CustomSelector } from "../components/CustomSelector";
-import { district, area } from "../types";
+import { district, area, PropertyListOutput } from "../types";
 import RentDate from "../components/RentDate";
 import { routes } from "../routes";
 import { format, parseISO } from "date-fns";
+
+function noop() {}
 
 export function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data, isFetching, isLoading, isError } =
     useGetPropertyDetailQuery(id);
   const [editable, setEditable] = useState(true);
-  const editMode = useCallback(() => {
-    setEditable((state) => {
-      return (state = !state);
-    });
-  }, [setEditable]);
+  const [originalData, setOriginalData] = useState({});
+  const editMode = useCallback(
+    (event: MouseEvent) => {
+      setOriginalData(data);
+      setEditable((state) => {
+        return (state = !state);
+      });
+    },
+    [setEditable]
+  );
   const [presentAlert] = useIonAlert();
   const [updateProperty] = usePatchPropertyMutation();
   const [deleteProperty] = useDeletePropertyMutation();
   const saveEditing = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
-      const form = event.target as HTMLFormElement;
-      const edited_at = form.getElementsByClassName("edited_at")[0];
-      edited_at.parentNode?.removeChild(edited_at);
 
-      console.log(form);
-      let formData = new FormData(form);
+      const form = (event.nativeEvent.target as HTMLElement).closest(
+        "form"
+      ) as HTMLFormElement;
+      console.log({ event, form });
+
+      // console.log("check if changed:", {
+      //   originalData,
+      //   form,
+      // });
+
+      const fields = [
+        "title",
+        "area",
+        "district",
+        "location",
+        "street",
+        "building",
+        "block",
+        "floor",
+        "room",
+        "rent",
+        "tenant_id",
+        "rental_start_at",
+        "rental_end_at",
+      ];
+
+      let formData = new FormData();
+      formData.set("id", id);
+
+      let newData = {};
+
+      let hasChanged = false;
+      for (let field of fields) {
+        const oldValue = (originalData as any)[field];
+        const newValue = form[field].value;
+        console.log(field, newValue);
+        formData.set(field, newValue);
+        Object.assign(newData, { [field]: newValue });
+        if (form[field].value != oldValue) {
+          hasChanged = true;
+          console.log("changed:", {
+            oldValue,
+            newValue,
+          });
+        }
+      }
+      if (!hasChanged) {
+        console.log("same, skip");
+        return;
+      }
+      console.log("not same, submit");
 
       const json = await updateProperty({
         body: formData,
         id: data.id as number,
       });
+      // setOriginalData(newData);
+      Object.assign(originalData, newData);
+      console.log("set original data:", newData);
       showResponseMessage(json, presentAlert);
-      setEditable((state) => (state = true));
+      setEditable(true);
     },
-    [updateProperty, setEditable, presentAlert, showResponseMessage, data]
+    [updateProperty, presentAlert, showResponseMessage, data, originalData]
   );
 
   useIonViewDidLeave(() => {
@@ -116,22 +171,20 @@ export function PropertyDetailPage() {
           <Redirect to={routes.property}></Redirect>
         ) : isLoading ? (
           <>isLoading</>
-        ) : isFetching ? (
-          <>loading</>
         ) : data ? (
-          <form onSubmit={saveEditing}>
+          <form>
             <IonCard key={data.id}>
               <IonToolbar color="light">
                 {editable ? (
                   <>
                     <IonButtons slot="start">
-                      <IonButton onClick={showAlert} color="primary">
+                      <IonButton onClick={showAlert} color="danger">
                         Delete
                       </IonButton>
                     </IonButtons>
                     <IonButtons slot="end">
                       <IonButton onClick={editMode} color="primary">
-                        Edit
+                        Edit xxx
                       </IonButton>
                     </IonButtons>
                   </>
@@ -144,8 +197,8 @@ export function PropertyDetailPage() {
                     </IonButtons>
 
                     <IonButtons slot="end">
-                      <IonButton type="submit" color="primary">
-                        Modify
+                      <IonButton onClick={saveEditing} color="primary">
+                        Update
                       </IonButton>
                     </IonButtons>
                   </>
@@ -319,9 +372,11 @@ export function PropertyDetailPage() {
                 </IonGrid>
               </IonCardContent>
               <Swiper
-                modules={[Autoplay]}
-                autoplay={false}
-                scrollbar={{ draggable: false }}
+                modules={[Navigation, Pagination, Scrollbar]}
+                navigation
+                loop={false}
+                scrollbar={{ draggable: true }}
+                pagination={{ clickable: true }}
               >
                 {data.attachments.map((image: string, idx: number) => (
                   <SwiperSlide key={idx + 1}>

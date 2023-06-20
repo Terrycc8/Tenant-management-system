@@ -49,6 +49,14 @@ export const loginApi = jojoAPI.injectEndpoints({
       }),
       invalidatesTags: ["user", "property", "event", "profile"],
     }),
+    patchUser: builder.mutation({
+      query: (arg: { id: number; body: FormData }) => ({
+        url: apiRoutes.user + `/${arg.id}`,
+        method: "PATCH",
+        body: arg.body,
+      }),
+      invalidatesTags: ["user", "property", "event", "profile"],
+    }),
   }),
 });
 
@@ -59,5 +67,6 @@ export const {
   useGetUsersQuery,
   usePostUserSignUpMutation,
   useGetTenantsQuery,
+  usePatchUserMutation,
   useDeleteUserMutation,
 } = loginApi;
