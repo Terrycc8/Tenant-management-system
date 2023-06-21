@@ -52,6 +52,7 @@ import { district, area, PropertyListOutput } from "../types";
 import RentDate from "../components/RentDate";
 import { routes } from "../routes";
 import { format, parseISO } from "date-fns";
+import { Loading } from "../components/Loading";
 
 function noop() {}
 
@@ -165,12 +166,16 @@ export function PropertyDetailPage() {
   }, [deleteProperty, data]);
   return (
     <IonPage>
-      <CommonHeader title="Property Details" backUrl={routes.property} />
-      <IonContent>
+      <CommonHeader
+        title="Property Details"
+        backUrl={routes.property}
+        hideHeader={true}
+      />
+      <IonContent fullscreen>
         {isError ? (
           <Redirect to={routes.property}></Redirect>
         ) : isLoading ? (
-          <>isLoading</>
+          <Loading />
         ) : data ? (
           <form>
             <IonCard key={data.id}>
@@ -184,7 +189,7 @@ export function PropertyDetailPage() {
                     </IonButtons>
                     <IonButtons slot="end">
                       <IonButton onClick={editMode} color="primary">
-                        Edit xxx
+                        Edit
                       </IonButton>
                     </IonButtons>
                   </>

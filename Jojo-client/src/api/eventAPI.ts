@@ -19,6 +19,18 @@ type GetEventResult = {
 
 export const eventApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
+    patchEvent: builder.mutation({
+      query: (arg: {
+        action: { type: string; comment: string };
+        id: number;
+      }) => ({
+        headers: { "Content-Type": "application/json" },
+        url: apiRoutes.event + `/${arg.id}`,
+        method: "PATCH",
+        body: JSON.stringify(arg.action),
+      }),
+      invalidatesTags: ["property", "user", "event", "home"],
+    }),
     getEvent: builder.query<
       GetEventResult,
       { page: number; itemsPerPage: number }
@@ -26,25 +38,10 @@ export const eventApi = jojoAPI.injectEndpoints({
       query: (arg) => ({
         url: apiRoutes.event + `/?offset=${arg.itemsPerPage}&page=${arg.page}`,
       }),
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
-      },
-
-      // Always merge incoming data to the cache entry
-      // merge: (currentCache, newItems) => {
-      //   const currentCacheSet = new Set(
-      //     currentCache.result.map((item: Record<string, number | string>) => {
-      //       return item.id;
-      //     })
-      //   );
-
-      //   currentCache.result.push(
-      //     ...newItems.result.filter((item: Record<string, number | string>) => {
-      //       return !currentCacheSet.has(item.id);
-      //     })
-      //   );
+      // serializeQueryArgs: ({ endpointName }) => {
+      //   return endpointName;
       // },
-      // Refetch when the page arg changes
+
       forceRefetch({ currentArg, previousArg, state }) {
         const rootState: RootState = state as any;
         const data: GetEventResult = rootState.jojoAPI.queries.getEvent
@@ -73,4 +70,5 @@ export const eventApi = jojoAPI.injectEndpoints({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { usePostEventMutation, useGetEventQuery } = eventApi;
+export const { usePatchEventMutation, usePostEventMutation, useGetEventQuery } =
+  eventApi;

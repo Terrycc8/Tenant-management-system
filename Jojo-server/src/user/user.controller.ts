@@ -19,7 +19,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Request } from '@nestjs/common';
-import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
+import {
+  LoginInputWithPasswordDto,
+  LoginInputWithFaceBookDto,
+} from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { JWTPayload, uploadDir } from 'src/types';
@@ -45,6 +48,14 @@ export class UserController {
 
     let token = this.jwtService.encode(jwtPayload);
 
+    return { token, role: jwtPayload.role };
+  }
+  @Post('login/facebook')
+  async loginWithFaceBook(
+    @Body(new ValidationPipe()) loginFBInput: LoginInputWithFaceBookDto,
+  ) {
+    let jwtPayload = await this.userService.loginWithFaceBook(loginFBInput);
+    let token = this.jwtService.encode(jwtPayload);
     return { token, role: jwtPayload.role };
   }
   @Patch('/:id')

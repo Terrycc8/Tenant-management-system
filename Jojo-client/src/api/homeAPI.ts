@@ -14,6 +14,13 @@ export const homeApi = jojoAPI.injectEndpoints({
       query: () => ({
         url: apiRoutes.index,
       }),
+      forceRefetch({ currentArg, previousArg, state }) {
+        const rootState: RootState = state as any;
+        const data = rootState.jojoAPI.queries.getHome?.data as any;
+        const result = data?.result;
+
+        return !result;
+      },
       providesTags: ["home"],
     }),
   }),

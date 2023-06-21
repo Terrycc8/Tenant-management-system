@@ -32,7 +32,12 @@ import {
   UseIonHeaderCollapse,
   useIonHeaderCollapse,
 } from "./useHeaderCollapse";
-export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
+
+export let CommonHeader: FC<{
+  title: string;
+  backUrl?: string;
+  hideHeader: boolean;
+}> = (props) => {
   const { data, isFetching, isLoading, error, isError } = useGetProfileQuery(
     {}
   );
@@ -59,9 +64,10 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
     document.body.classList.toggle("dark");
   }, []);
   const { ref } = useIonHeaderCollapse({} as UseIonHeaderCollapse);
+  const logicalRef = props.hideHeader ? ref : null;
   return (
     <>
-      <IonHeader ref={ref}>
+      <IonHeader ref={logicalRef}>
         <IonToolbar>
           <IonTitle>{props.title}</IonTitle>
           <IonButtons slot="start">
@@ -71,7 +77,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
           </IonButtons>
           <IonButtons slot="end">
             <IonButton onClick={setModalMenu}>
-              {data.avatar.length > 0 ? (
+              {data && data.avatar.length > 0 ? (
                 <IonAvatar className={style.profilePicTopRight}>
                   <img
                     className={style.test11}
@@ -103,7 +109,7 @@ export let CommonHeader: FC<{ title: string; backUrl?: string }> = (props) => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        {data.avatar.length > 0 ? (
+        {data && data.avatar.length > 0 ? (
           <IonAvatar className={style.profilePicMenu}>
             <img
               className={style.test11}

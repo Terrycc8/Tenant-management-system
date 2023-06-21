@@ -20,7 +20,14 @@ import {
 import { Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { routes } from "../routes";
 import { CustomIonColInput } from "../components/CustomIonColInput";
 import { RouteComponentProps } from "react-router";
@@ -34,19 +41,33 @@ import { Chart, registerables } from "chart.js";
 import { useGetHomeQuery } from "../api/homeAPI";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import React from "react";
+import { Loading } from "../components/Loading";
+import { Autoplay, Pagination, Scrollbar } from "swiper";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import style from "../theme/home.module.scss";
+
 Chart.register(...registerables);
 Chart.register(ChartDataLabels);
 
-let props_history: RouteComponentProps[] = [];
-
-Object.assign(window, { props_history });
+let startTime = Date.now();
+// let CDInterval = 1;
 
 export function HomePage() {
   const { data, isFetching, isLoading, error, isError } = useGetHomeQuery({});
 
+  const [isDOMReady, setIsDOMReady] = useState(false);
+  useLayoutEffect(() => {
+    setIsDOMReady(true);
+  }, []);
   return (
     <IonPage>
-      <CommonHeader title="Home" />
+      <CommonHeader title="Home" hideHeader={false} />
 
       <IonContent fullscreen>
         <IonGrid className="homeButtons">
@@ -103,41 +124,96 @@ export function HomePage() {
                   {isError ? (
                     <>{String(error)};</>
                   ) : isLoading ? (
-                    <></>
+                    <Loading />
                   ) : isFetching ? (
-                    <></>
+                    <Loading />
                   ) : !data ? (
-                    <>data??</>
-                  ) : data.label.length == 0 ? (
-                    <IonLabel>No new event</IonLabel>
-                  ) : data.label.length > 0 ? (
-                    <Doughnut
-                      width="100%"
-                      options={{
-                        maintainAspectRatio: false,
-                        plugins: {
-                          datalabels: {
-                            color: "black",
-                            font: {
-                              size: 16,
-                              weight: "bold",
-                            },
-                          },
-                        },
-                      }}
-                      data={{
-                        labels: data.label,
-                        datasets: [
-                          {
-                            label: "No.s of events",
-                            data: data.data,
-                            borderWidth: 2,
-                          },
-                        ],
-                      }}
-                      redraw
-                    />
-                  ) : null}
+                    <>Data not Found</>
+                  ) : (
+                    <Swiper
+                      className={style.swiperChart}
+                      modules={[Pagination]}
+                      pagination={true}
+                    >
+                      <SwiperSlide>
+                        {data.totalChart.label.length == 0 ? (
+                          <IonLabel>No new event</IonLabel>
+                        ) : (
+                          <>
+                            {!isDOMReady ? (
+                              <>Loading Doughnut Chart...</>
+                            ) : (
+                              <Doughnut
+                                width="100%"
+                                plugins={[]}
+                                options={{
+                                  maintainAspectRatio: false,
+                                  plugins: {
+                                    datalabels: {
+                                      color: "black",
+                                      font: {
+                                        size: 16,
+                                        weight: "bold",
+                                      },
+                                    },
+                                  },
+                                }}
+                                data={{
+                                  labels: data.totalChart.label,
+                                  datasets: [
+                                    {
+                                      label: "No.s of events",
+                                      data: data.totalChart.data,
+                                      borderWidth: 2,
+                                    },
+                                  ],
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        {data.totalChart.label.length == 0 ? (
+                          <IonLabel>No new event</IonLabel>
+                        ) : (
+                          <>
+                            {" "}
+                            {!isDOMReady ? (
+                              <>Loading Doughnut Chart...</>
+                            ) : (
+                              <Doughnut
+                                width="100%"
+                                options={{
+                                  maintainAspectRatio: false,
+                                  plugins: {
+                                    datalabels: {
+                                      color: "black",
+                                      font: {
+                                        size: 16,
+                                        weight: "bold",
+                                      },
+                                    },
+                                  },
+                                }}
+                                data={{
+                                  labels: data.typeChart.label,
+                                  datasets: [
+                                    {
+                                      label: "No.s of events",
+                                      data: data.typeChart.data,
+                                      borderWidth: 2,
+                                    },
+                                  ],
+                                }}
+                                redraw
+                              />
+                            )}
+                          </>
+                        )}
+                      </SwiperSlide>
+                    </Swiper>
+                  )}
                 </IonCardContent>
               </IonCard>
             </IonCol>

@@ -12,6 +12,8 @@ export const env = {
   CLIENT_PORT: 5173,
   NODE_ENV: 'development',
   JWT_SECRET: '',
+  FACEBOOK_APP_ID: '',
+  FACEBOOK_APP_SECRET: '',
 };
 
 populateEnv(env, { mode: 'halt' });

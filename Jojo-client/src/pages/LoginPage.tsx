@@ -14,27 +14,36 @@ import {
   IonImg,
   IonGrid,
   IonCard,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import { memo, useCallback, useRef, useState } from "react";
 import { routes } from "../routes";
-import { usePostUserLoginMutation } from "../api/loginMutation";
+import {
+  usePostUserLoginFBMutation,
+  usePostUserLoginMutation,
+} from "../api/loginMutation";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
-import companyLogo1 from "../assets/companyLogo.jpg";
-import "./LoginPage.css";
-
+import companyLogo1 from "../assets/companyLogo1.jpg";
+import FacebookLogin, {
+  ReactFacebookFailureResponse,
+  ReactFacebookLoginInfo,
+} from "react-facebook-login";
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
 }) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
+  const [loginFBFetch] = usePostUserLoginFBMutation();
   const dispatch = useDispatch();
   const { checked, checkBoxOnClick } = useCheckBox();
   const [errors, setErrors] = useState<string[]>([]);
+  const [selectorValue, setSelectorValue] = useState(null);
   const loginOnClick = useCallback(async () => {
     let json: any;
     try {
@@ -43,16 +52,14 @@ export function LoginPage(props: {
         password: ionPassword.current?.value?.toString(),
       });
     } catch (error) {
-      setErrors((state) => (state = ["Fetch Failed"]));
+      setErrors(["Fetch Failed"]);
     }
 
     if ("error" in json) {
-      setErrors(
-        (state) => (state = Array((json.error as FetchError).data.message))
-      );
+      setErrors(Array((json.error as FetchError).data.message));
     } else {
       dispatch(setCredentials(json.data));
-      setErrors((state) => (state = []));
+      setErrors([]);
     }
   }, [
     loginFetch,
@@ -65,12 +72,40 @@ export function LoginPage(props: {
   const setPageRegister = useCallback(() => {
     props.setPage((state: string) => (state = "register"));
   }, [props.setPage]);
+
+  const loginFBOnClick = async (
+    info: ReactFacebookLoginInfo | ReactFacebookFailureResponse
+  ) => {
+    if (selectorValue == null) {
+      setErrors(["Please select your user type before login"]);
+      return;
+    }
+
+    if ("accessToken" in info) {
+      let json: any;
+      try {
+        json = await loginFBFetch({
+          accessToken: info.accessToken,
+          user_type: "landlord",
+        });
+      } catch (error) {
+        setErrors(["Fetch Failed"]);
+      }
+
+      if ("error" in json) {
+        setErrors(Array((json.error as FetchError).data.message));
+      } else {
+        dispatch(setCredentials(json.data));
+        setErrors([]);
+      }
+    }
+  };
+
   return (
     <IonPage>
       <IonContent className={style.login_form}>
-        <IonItem className="logo">
-          <IonImg className="logo-image" src={companyLogo1} alt="companyLogo" />
-        </IonItem>
+        <IonImg className={style.logo} src={companyLogo1} alt="companyLogo" />
+
         {/* <div className={style.login_app_name}>E-Housing</div> */}
         <div className={style.login_signin_label}>Sign in</div>
         <IonList>
@@ -120,6 +155,27 @@ export function LoginPage(props: {
           <IonButton className={style.login_btn} onClick={loginOnClick}>
             Login
           </IonButton>
+          <div className={style.or}>or</div>
+
+          <IonSelect
+            className={style.login_select}
+            aria-label="UserType"
+            interface="popover"
+            placeholder="Select Your User Type"
+            name="user_type"
+            onIonChange={(e) => {
+              console.log(e.detail.value);
+              return setSelectorValue(e.detail.value);
+            }}
+          >
+            <IonSelectOption value="landlord">LandLord</IonSelectOption>
+            <IonSelectOption value="tenant">Tenant</IonSelectOption>
+          </IonSelect>
+
+          <div className={style.dividerLines}>
+            <FacebookLogin appId="6459538797461405" callback={loginFBOnClick} />
+          </div>
+
           <div className={style.login_account_label}>
             <IonLabel>Don't have an account?</IonLabel>
           </div>

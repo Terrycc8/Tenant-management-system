@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   BadRequestException,
   Injectable,
   NotImplementedException,
@@ -9,12 +10,16 @@ import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { IDParamDto } from 'src/dto/IDParams';
 import { PatchUserInputDto } from 'src/dto/patch-user.dto';
-import { LoginInputWithPasswordDto } from 'src/dto/post-login.dto';
+import {
+  LoginInputWithFaceBookDto,
+  LoginInputWithPasswordDto,
+} from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
+import { env } from 'src/env';
 import { comparePassword, hashPassword } from 'src/hash';
 import { MailModule } from 'src/mail/mail.module';
 import { MailService } from 'src/mail/mail.service';
-import { JWTPayload, UserListOutput, userRole } from 'src/types';
+import { JWTPayload, LoginFBInput, UserListOutput, userRole } from 'src/types';
 
 @Injectable()
 export class UserService {
@@ -62,7 +67,7 @@ export class UserService {
       );
     }
     let filename: string | null;
-    console.log(image);
+
     if (image.length == 1) {
       filename = image[0].filename;
     } else filename = null;
@@ -240,19 +245,19 @@ export class UserService {
       throw new BadRequestException('This api is only for landlord');
     }
     const result = await this.knex('property')
-      .select('id')
+      .select('tenant_id')
       .where({ landlord_id: jwtPayLoad.id });
     if (result.length <= 0) {
       return [];
     }
     result.map((property) => {
-      return property.id;
+      return property.tenant_id;
     });
-    const events = await this.knex('event')
-      .select('id')
-      .whereIn('property_id', result)
-      .orderBy('event.created_at')
-      .limit(5);
+    const events = await this.knex('user')
+      .select('first_name', 'last_name', 'email')
+      .whereIn('id', result)
+      .orderBy('first_name')
+      .limit(10);
     return events;
   }
   async activate(token: string, id: number) {
@@ -266,7 +271,7 @@ export class UserService {
     if (user.token !== token) {
       throw new BadRequestException('Invalid token');
     }
-    console.log(typeof user.issued_at);
+
     let valid_time_5_mins_in_ms = 5 * 60 * 1000;
     let time_diff = new Date().getTime() - user.issued_at.getTime;
     if (time_diff > valid_time_5_mins_in_ms) {
@@ -274,5 +279,47 @@ export class UserService {
     }
     await this.knex('user').update({ verified: true }).where({ id });
     return { id, role: user.user_type };
+  }
+  async loginWithFaceBook(loginFBInput: LoginInputWithFaceBookDto) {
+    let params = new URLSearchParams({
+      fields: 'email,first_name,last_name',
+      access_token: loginFBInput.accessToken,
+    });
+
+    let res = await fetch('http://graph.facebook.com/me?' + params);
+    let json = await res.json();
+    let email = json.email;
+
+    if (typeof email !== 'string' || !email) {
+      throw new BadGatewayException('Failed to get user email');
+    }
+
+    let user = await this.knex('user')
+      .select('id', 'user_type')
+      .where({ email })
+      .first();
+
+    if (!user) {
+      let token = randomUUID().replace('-', '');
+      user = await this.knex('user')
+        .insert({
+          first_name: json.first_name,
+          last_name: json.last_name,
+          email,
+          user_type: loginFBInput.user_type,
+          password_hash: await hashPassword(token),
+          registered_at: new Date(),
+          last_login_time: new Date(),
+          status: 'Online',
+          status_update_time: new Date(),
+          avatar: null,
+          token,
+          verified: true,
+          issued_at: new Date(),
+        })
+        .returning('id');
+    }
+
+    return { id: user.id, role: user.user_type || loginFBInput.user_type };
   }
 }

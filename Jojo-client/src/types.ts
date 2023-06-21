@@ -1,8 +1,6 @@
-
-
 export type JWTPayload = {
   id: number;
-  role: "admin" | "landlord" | "tenant";
+  role: "landlord" | "tenant";
 };
 
 export type FetchError = {
@@ -13,6 +11,10 @@ export type FetchError = {
 export type LoginInput = {
   email: string | null | undefined;
   password: string | null | undefined;
+};
+export type LoginFBInput = {
+  accessToken: string;
+  user_type: "landlord" | "tenant";
 };
 export type SignUpInput = {
   first_name: string;
@@ -34,18 +36,21 @@ export type PropertyListOutput = {
 };
 export type EventListOutput = {
   id: number;
-  title: string;
+  event_title: string;
   type: string;
   priority: string;
   status: string;
   attachments: string[];
   handled_by_id: number;
-  reason: string;
-  created_by_id: number;
+  comment: string;
   description: string;
+  property_title: string;
 };
 
-export type UserType = "landlord" | "tenant";
+export enum UserType {
+  "landlord",
+  "tenant",
+}
 export const uploadDir = "./upload";
 export const userRole = { landlord: "landlord", tenant: "tenant" };
 
@@ -120,6 +125,7 @@ export const event_status: string[][] = [
   ["resolved", "Resolved"],
   ["pending", "Pending"],
   ["rejected", "Rejected"],
+  ["cancelled", "Cancelled"],
 ];
 export type ChatroomListOutput = {
   id: number;
@@ -218,6 +224,9 @@ export enum PropertyDistrict {
 export const propertyAreaEnumMsg = {
   message: `Please select the property's area`,
 };
+export const userTypeEnumMsg = {
+  message: `Invalid user type`,
+};
 export const propertyDistrictEnumMsg = {
   message: `Please select the property's district`,
 };
@@ -225,20 +234,19 @@ export const propertyDistrictEnumMsg = {
 export type ClientPayload = {
   token: string;
   role: "admin" | "landlord" | "tenant" | null;
-<<<<<<< HEAD
-=======
 };
 
-export type PaymentListOutput = {
-  id: string;
-  property_id: string;
-  payer_id: number;
-  status: "confirmed" | "pending";
-  amount: number;
-  billing_period_from: string;
-  billing_period_to: string;
-  attachments: string[];
-  confirmed_at: string;
-  first_name: string;
->>>>>>> 7a9fe617e619ff7eaf4e40e1508239319ec312c4
+export type PatchEventInput = {
+  type: "resolve" | "reject" | "cancel";
+  comment: string;
+};
+
+export enum PatchEventActionType {
+  "resolve",
+  "reject",
+  "cancel",
+}
+
+export const patchEventActionTypeEnumMsg = {
+  message: `Invalid action type`,
 };

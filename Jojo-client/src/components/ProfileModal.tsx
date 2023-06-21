@@ -197,7 +197,7 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
                   )}
                 </IonToolbar>
                 <div className={style.profilePicEditDiv}>
-                  {data.avatar.length > 0 ? (
+                  {data && data.avatar.length > 0 ? (
                     <IonAvatar className={style.profilePicEdit}>
                       <img
                         className={style.test11}
