@@ -236,6 +236,32 @@ export type ClientPayload = {
   role: "admin" | "landlord" | "tenant" | null;
 };
 
+export type PaymentListOutput = {
+  id: string;
+  property_id: string;
+  payer_id: number;
+  status: "confirmed" | "pending";
+  amount: number;
+  billing_period_from: string;
+  billing_period_to: string;
+  attachments: string[];
+  confirmed_at: string;
+  first_name: string;
+  last_name: string;
+};
+
+export type ChatRecord = {
+  receiver_id: number;
+  chatroom_id: number;
+};
+
+export type existingRecord = {
+  room_id: number;
+  otherUser: string;
+  senderName: string;
+  content: string;
+};
+
 export type PatchEventInput = {
   type: "resolve" | "reject" | "cancel";
   comment: string;

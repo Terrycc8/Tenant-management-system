@@ -10,7 +10,7 @@ import { addOutline, shapesOutline } from "ionicons/icons";
 import { useCallback, useRef } from "react";
 
 import { EventsModal } from "./EventsModal";
-// import { PaymentsModal } from "./PaymentsModal";
+import { PaymentsModal } from "./PaymentsModal";
 import { CommonModalHeader } from "./CommonModalHeader";
 import { PropertyModal } from "./propertyModal";
 import style from "../theme/createModal.module.scss";
@@ -75,11 +75,11 @@ export function CreateModal() {
             </IonItem>
           ) : null}
 
-          {/* <IonItem button={true} detail={false} id="open-payments-modal">
+          <IonItem button={true} detail={false} id="open-payments-modal">
             <IonIcon icon={shapesOutline}></IonIcon>
             <IonLabel>Create new payment</IonLabel>
-            <PaymentsModal />
-          </IonItem> */}
+            <PaymentsModal createModalHandler={dismiss} />
+          </IonItem>
         </IonList>
       </IonContent>
     </IonModal>

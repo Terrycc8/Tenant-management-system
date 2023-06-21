@@ -40,7 +40,7 @@ export function PaymentRecord() {
 
   return (
     <IonPage>
-      <CommonHeader title="Payment Record" backUrl={routes.home} />
+      {/* <CommonHeader title="Payment Record" backUrl={routes.home} /> */}
       <IonContent>
         {isError ? (
           <>error: {String(error)}</>
@@ -53,45 +53,45 @@ export function PaymentRecord() {
         ) : data.length == 0 ? (
           <>no property yet</>
         ) : data.length > 0 ? (
-          data.map((property: PaymentListOutput) => (
+          data.map((payment: PaymentListOutput) => (
             <IonCard key={payment.id}>
               <IonCardHeader>
                 <IonRow>
-                  <IonCol className="propertyListTitle">
-                    Tenant:{" "}
-                    {property.first_name && property.last_name
-                      ? property.first_name + " " + property.last_name
+                  <IonCol>
+                    Property:{" "}
+                    {payment.first_name && payment.last_name
+                      ? payment.first_name + " " + payment.last_name
                       : " No tenant yet"}
                   </IonCol>
                 </IonRow>
                 <IonRow>
                   <IonCol>
-                    <IonLabel>Title: {property.title}</IonLabel>
+                    <IonLabel>Title: {payment.status}</IonLabel>
                   </IonCol>
                   <IonCol>
-                    <IonLabel>Monthly rent: {property.rent}</IonLabel>
+                    <IonLabel>Monthly rent: {payment.amount}</IonLabel>
                   </IonCol>
                 </IonRow>
               </IonCardHeader>
 
               <IonCardContent>
-                <Swiper
+                {/* <Swiper
                   modules={[Autoplay]}
                   autoplay={false}
                   scrollbar={{ draggable: false }}
-                >
-                  {property.attachments.map((image, idx) => (
-                    <SwiperSlide key={idx + 1}>
-                      <img src={serverURL + "/" + image} alt="" />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                > */}
+                {/* {property.attachments.map((image, idx) => (
+                  <SwiperSlide key={idx + 1}>
+                    <img src={serverURL + "/" + image} alt="" /> */}
+                {/* </SwiperSlide>
+                ))} */}
+                {/* </Swiper> */}
+                {payment.billing_period_from +
+                  " to " +
+                  payment.billing_period_to}
               </IonCardContent>
-              <IonButton
-                fill="clear"
-                routerLink={routes.property + "/" + property.id}
-              >
-                View more Info
+              <IonButton fill="clear" routerLink={routes.chatroom(payment.id)}>
+                View more detail
               </IonButton>
             </IonCard>
           ))

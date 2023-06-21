@@ -5,5 +5,9 @@ export function useValue<T>(initialValue: T) {
   function onIonChange(e: { detail: { value?: any } }) {
     update(e.detail.value);
   }
-  return { value, update, onIonChange };
+
+  function clear() {
+    update("" as any);
+  }
+  return { value, update, onIonChange, clear };
 }

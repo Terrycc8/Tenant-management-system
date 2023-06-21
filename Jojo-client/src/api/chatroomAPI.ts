@@ -8,10 +8,26 @@ import { jojoAPI } from "./jojoAPI";
 
 export const chatroomApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getChat: builder.query({
-      query: (token: string | null) => ({
+    // getChat: builder.query({
+    //   query: (token: string | null) => ({
+    //     url: apiRoutes.chatroom,
+    //     headers: genHeader(token),
+    //   }),
+
+    //   providesTags: (result, error, arg) =>
+    //     result
+    //       ? [
+    //           ...result.map((item: { id: number }) => ({
+    //             type: "chatroom" as const,
+    //             id: item.id,
+    //           })),
+    //           "chatroom",
+    //         ]
+    //       : ["chatroom"],
+    // }),
+    getChatroom: builder.query({
+      query: () => ({
         url: apiRoutes.chatroom,
-        headers: genHeader(token),
       }),
 
       providesTags: (result, error, arg) =>
@@ -28,13 +44,11 @@ export const chatroomApi = jojoAPI.injectEndpoints({
   }),
 });
 
-// export const {
-//   // useGetChatQuery,
-// } = chatroomApi;
+export const { useGetChatroomQuery } = chatroomApi;
 
 export function useChatroomList(token: string | null) {
   const query = useQuery({
-    queryKey: ["/chat/rooms"],
+    queryKey: ["chatlist"], // todo does mean link, just reference
     retry: false,
     queryFn: () => chatService.getRooms(),
   });
@@ -65,6 +79,8 @@ export function getMessages(id: string) {
     data,
   };
 }
+
+// export function sendMessage(id: string) {
 
 // export function usePostChatroomMutation(token: string | null) {
 //   const query = useQuery({

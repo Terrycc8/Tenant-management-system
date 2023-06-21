@@ -27,7 +27,7 @@ import { RootState } from "../RTKstore";
 
 type Message = {
   id: number;
-  content: string;
+  message: string;
 };
 
 export function ChatroomPage() {
@@ -35,10 +35,18 @@ export function ChatroomPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const token = useSelector((state: RootState) => state.auth.token);
 
-  const handleNewMessage = useCallback((event: { data: string }) => {
-    console.log("new message from ws:", event);
-    // setMessages((messages) => [...messages, event.data]);
-  }, []);
+  const handleNewMessage = useCallback(
+    (event: { id: number; message: string }) => {
+      console.log("new message from ws:", event);
+      setMessages((msg) => {
+        console.log("msg", msg);
+        console.log("e", event);
+        return [...msg, event];
+        // setMessages([]);
+      });
+    },
+    []
+  );
 
   useSocket((socket) => {
     socket.on("new-message", handleNewMessage);
@@ -59,7 +67,7 @@ export function ChatroomPage() {
     const result = await res.json();
     console.log("message list:", { result });
 
-    setMessages(result);
+    // setMessages(result);
   }
 
   useEffect(() => {
@@ -79,7 +87,7 @@ export function ChatroomPage() {
       <IonContent id="main-chat-content">
         {messages.length > 0 &&
           messages.map((message) => (
-            <IonCard key={message.id}>{message.content}</IonCard>
+            <IonCard key={message.id}>{message.message}</IonCard>
           ))}
       </IonContent>
 
@@ -92,17 +100,24 @@ function Footer() {
   const params = useParams<{ id: string }>();
   const room_id = params.id;
   const input = useValue("");
+  const token = useSelector((state: RootState) => state.auth.token);
+
   function addAttachment() {}
 
   function submitNewMessage() {
     // chatService.sendMessage(room_id, input.value);
     // if (message !== "") {
     // }
-    fetch(`http://localhost:8100/chat/rooms/${room_id}/message`, {
+    fetch(`${serverURL}/chat/rooms/${room_id}/message`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ message: input.value }),
     });
+
+    input.clear();
   }
 
   return (

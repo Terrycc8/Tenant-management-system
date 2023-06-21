@@ -11,6 +11,7 @@ export const routes = {
   payments: prefix + "/payments",
   property: prefix + "/property",
   propertyDetail: prefix + "/property/:id",
+  chatDetail: prefix + "/chat/:id",
 };
 
 export const apiRoutes = {
@@ -20,7 +21,7 @@ export const apiRoutes = {
   property: "/property",
   event: "/event",
   user: "/user",
-  chatroom: "/chatroom",
+  chatroom: "/chat",
   index: "/",
   profile: "/user/profile",
   tenants: "/user/tenants",

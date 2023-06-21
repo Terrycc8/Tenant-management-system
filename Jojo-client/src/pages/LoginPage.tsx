@@ -29,12 +29,14 @@ import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
 import companyLogo1 from "../assets/companyLogo1.jpg";
+import "./LoginPage.css";
 import FacebookLogin, {
   ReactFacebookFailureResponse,
   ReactFacebookLoginInfo,
 } from "react-facebook-login";
 import { RootState } from "../RTKstore";
 import { formatError } from "../components/formatError";
+
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
 }) {
