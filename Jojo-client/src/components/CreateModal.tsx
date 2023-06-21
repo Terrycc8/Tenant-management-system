@@ -63,23 +63,24 @@ export function CreateModal() {
             </>
           ) : null}
           {role == userRole.tenant ? (
-            <IonItem
-              button={true}
-              detail={false}
-              id="open-events-modal"
-              className={style.createItem}
-            >
-              <IonIcon icon={addOutline}></IonIcon>
-              <IonLabel className="ion-padding">Create new event</IonLabel>
-              <EventsModal createModalHandler={dismiss} />
-            </IonItem>
+            <>
+              <IonItem
+                button={true}
+                detail={false}
+                id="open-events-modal"
+                className={style.createItem}
+              >
+                <IonIcon icon={addOutline}></IonIcon>
+                <IonLabel className="ion-padding">Create new event</IonLabel>
+                <EventsModal createModalHandler={dismiss} />
+              </IonItem>{" "}
+              <IonItem button={true} detail={false} id="open-payments-modal">
+                <IonIcon icon={shapesOutline}></IonIcon>
+                <IonLabel>Create new payment</IonLabel>
+                <PaymentsModal createModalHandler={dismiss} />
+              </IonItem>
+            </>
           ) : null}
-
-          <IonItem button={true} detail={false} id="open-payments-modal">
-            <IonIcon icon={shapesOutline}></IonIcon>
-            <IonLabel>Create new payment</IonLabel>
-            <PaymentsModal createModalHandler={dismiss} />
-          </IonItem>
         </IonList>
       </IonContent>
     </IonModal>

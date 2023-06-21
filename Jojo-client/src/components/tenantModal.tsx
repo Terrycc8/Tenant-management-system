@@ -68,7 +68,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
     },
     [presentAlert, dismissAll, showResponseMessage]
   );
-  console.log(dataTenant, dataProperty);
+
   return (
     <IonModal
       ref={tenantModal}

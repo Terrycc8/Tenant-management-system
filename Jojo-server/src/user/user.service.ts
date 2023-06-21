@@ -265,15 +265,15 @@ export class UserService {
   }
   async getAllTenants(jwtPayLoad: JWTPayload) {
     if (jwtPayLoad.role == userRole.tenant) {
-      console.log(2);
       throw new BadRequestException('This api is only for landlord');
     }
-    console.log(3);
-    const tenants = await this.knex('property')
-      .select('tenant_id', 'first_name', 'last_name')
-      .innerJoin('user', 'property.tenant_id', 'user.id')
-      .where({ landlord_id: jwtPayLoad.id });
-    console.log();
+
+    const tenants = await this.knex('user').select(
+      'id as tenant_id',
+      'first_name',
+      'last_name',
+    );
+
     return tenants;
   }
   async activate(token: string, id: number) {
