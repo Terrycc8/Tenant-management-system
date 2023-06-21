@@ -4,6 +4,7 @@ import {
   IonSearchbar,
   IonSelect,
   IonSelectOption,
+  IonToolbar,
 } from "@ionic/react";
 import { PropertyListOutput, TenantListOutput } from "../types";
 import { useState } from "react";
@@ -98,11 +99,11 @@ export function CustomSelectorOnFetchTenant(props: {
         fill="outline"
         name={name}
       >
-        {" "}
         <IonSearchbar
           debounce={1000}
           onIonInput={(ev) => handleInput(ev)}
         ></IonSearchbar>
+
         {!value || value.length == 0 ? (
           <IonSelectOption disabled={true}>
             <IonLabel>No Associated {props.title}.</IonLabel>
