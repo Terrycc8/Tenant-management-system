@@ -276,3 +276,11 @@ export enum PatchEventActionType {
 export const patchEventActionTypeEnumMsg = {
   message: `Invalid action type`,
 };
+export type TenantListOutput = {
+  tenant_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar: string | null;
+  title: string;
+};

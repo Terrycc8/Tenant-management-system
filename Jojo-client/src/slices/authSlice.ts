@@ -23,12 +23,14 @@ export const authSlice = createSlice({
       state.token = token;
       state.role = role;
       state.avatar = avatar;
+      console.log("token", token);
     },
     logout: (state) => {
       state.token = null;
       state.role = null;
       state.avatar = null;
       storage.removeItem("persist:root");
+      localStorage.clear();
       window.location.href = routes.home;
     },
   },

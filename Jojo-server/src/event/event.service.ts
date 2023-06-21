@@ -90,13 +90,13 @@ export class EventService {
       .orderBy('event.created_at')
       .limit(offset)
       .offset(offset * (page - 1));
-    let total = await this.knex('event')
-      .count('id')
-      .where({ created_by_id: payload.id })
-      .orWhere({ handled_by_id: payload.id })
-      .first();
+    // let total = await this.knex('event')
+    //   .count('id')
+    //   .where({ created_by_id: payload.id })
+    //   .orWhere({ handled_by_id: payload.id })
+    //   .first();
 
-    return { result: query, totalItem: +total.count || 1 };
+    return { result: query, totalItem: +query.length || 0 };
   }
   async patchEvent(
     patchEventInput: PatchEventInput,

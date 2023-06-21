@@ -61,7 +61,18 @@ export let CommonHeader: FC<{
     dispatch(jojoAPI.util.resetApiState());
   }, [dispatch, logout, jojoAPI]);
   const toggleDarkModeHandler = useCallback(() => {
-    document.body.classList.toggle("dark");
+    // console.log(window.matchMedia("(prefers-color-scheme: light)"));
+    console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      console.log(1);
+      document.body.classList.toggle("light");
+    } else {
+      console.log(2);
+      document.body.classList.toggle("dark");
+    }
   }, []);
   const { ref } = useIonHeaderCollapse({} as UseIonHeaderCollapse);
   const logicalRef = props.hideHeader ? ref : null;
@@ -77,7 +88,9 @@ export let CommonHeader: FC<{
           </IonButtons>
           <IonButtons slot="end">
             <IonButton onClick={setModalMenu}>
-              {data && data.avatar.length > 0 ? (
+              {data &&
+              typeof data.avatar == "string" &&
+              data.avatar.length > 0 ? (
                 <IonAvatar className={style.profilePicTopRight}>
                   <img
                     className={style.test11}
@@ -109,7 +122,7 @@ export let CommonHeader: FC<{
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        {data && data.avatar.length > 0 ? (
+        {data && typeof data.avatar == "string" && data.avatar.length > 0 ? (
           <IonAvatar className={style.profilePicMenu}>
             <img
               className={style.test11}

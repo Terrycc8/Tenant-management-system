@@ -3,6 +3,7 @@ export const prefix = "/tab";
 export const routes = {
   // login: "/login",
   // signup: "/signup",
+  tenants: prefix + "/tenants",
   home: prefix + "/home",
   chatlist: prefix + "/chat",
   chatroom: (id: string | number) => "/chat/" + id,
@@ -23,7 +24,8 @@ export const apiRoutes = {
   chatroom: "/chat",
   index: "/",
   profile: "/user/profile",
-  tenant: "/user/tenant",
+  tenants: "/user/tenants",
   payment: "/payment",
   message: "/messages",
+  allTenants: "/user/allTenants",
 };
