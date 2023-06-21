@@ -54,8 +54,8 @@ export function CreateModal() {
             <EventsModal createModalHandler={dismiss} />
           </IonItem>
           <IonItem button={true} detail={false} id="open-payments-modal">
-            <IonIcon icon={shapesOutline}></IonIcon>
-            <IonLabel>Create new payment</IonLabel>
+            <IonIcon icon={addOutline}></IonIcon>
+            <IonLabel className="ion-padding">Create new payment</IonLabel>
             <PaymentsModal createModalHandler={dismiss} />
           </IonItem>
         </IonList>
