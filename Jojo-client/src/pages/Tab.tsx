@@ -28,12 +28,13 @@ import { EventsPage } from "./EventsPage";
 // import { ChatroomList } from "./ChatroomList";
 import { ChatroomList } from "./ChatroomList";
 
+import { TenantsPage } from "./TenantsPage";
+
 export function Tab() {
   return (
     <IonTabs>
       <IonRouterOutlet>
         <Redirect exact from={prefix} to={routes.home} />
-
         <Route exact path={routes.property}>
           <PropertyPage />
         </Route>
@@ -52,7 +53,9 @@ export function Tab() {
         <Route path={routes.chatlist}>
           <ChatroomList />
         </Route>
-
+        <Route path={routes.tenants}>
+          <TenantsPage />
+        </Route>
         <Route>
           <ErrorPage />
         </Route>

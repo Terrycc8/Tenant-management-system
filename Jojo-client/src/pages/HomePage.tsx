@@ -19,7 +19,7 @@ import {
 } from "@ionic/react";
 import { Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../slices/authSlice";
+import { logout, setCredentials } from "../slices/authSlice";
 import {
   memo,
   useCallback,
@@ -55,16 +55,14 @@ import style from "../theme/home.module.scss";
 Chart.register(...registerables);
 Chart.register(ChartDataLabels);
 
-let startTime = Date.now();
-// let CDInterval = 1;
-
 export function HomePage() {
   const { data, isFetching, isLoading, error, isError } = useGetHomeQuery({});
-
+  const role = useSelector((state: RootState) => state.auth.role);
   const [isDOMReady, setIsDOMReady] = useState(false);
   useLayoutEffect(() => {
     setIsDOMReady(true);
   }, []);
+
   return (
     <IonPage>
       <CommonHeader title="Home" hideHeader={false} />
@@ -96,7 +94,10 @@ export function HomePage() {
             </IonCol>
 
             <IonCol className="home-col">
-              <IonCard className="top-right-card top-card">
+              <IonCard
+                routerLink={routes.tenants}
+                className="top-right-card top-card"
+              >
                 <IonCardContent>Total Tenant</IonCardContent>
               </IonCard>
             </IonCol>
@@ -178,7 +179,6 @@ export function HomePage() {
                           <IonLabel>No new event</IonLabel>
                         ) : (
                           <>
-                            {" "}
                             {!isDOMReady ? (
                               <>Loading Doughnut Chart...</>
                             ) : (

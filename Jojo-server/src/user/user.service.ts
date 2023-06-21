@@ -240,25 +240,41 @@ export class UserService {
 
     return {};
   }
-  async getTenants(jwtPayLoad: JWTPayload) {
+  async getTenants(jwtPayLoad: JWTPayload, offset: number, page: number) {
     if (jwtPayLoad.role == userRole.tenant) {
+      console.log(2);
       throw new BadRequestException('This api is only for landlord');
     }
-    const result = await this.knex('property')
-      .select('tenant_id')
-      .where({ landlord_id: jwtPayLoad.id });
-    if (result.length <= 0) {
-      return [];
-    }
-    result.map((property) => {
-      return property.tenant_id;
-    });
-    const events = await this.knex('user')
-      .select('first_name', 'last_name', 'email')
-      .whereIn('id', result)
+    console.log(3);
+    const tenants = await this.knex('property')
+      .select(
+        'tenant_id',
+        'first_name',
+        'last_name',
+        'email',
+        'avatar',
+        'title',
+      )
+      .innerJoin('user', 'property.tenant_id', 'user.id')
+      .where({ landlord_id: jwtPayLoad.id })
       .orderBy('first_name')
-      .limit(10);
-    return events;
+      .limit(offset)
+      .offset(offset * (page - 1));
+    console.log(tenants);
+    return { result: tenants, totalItem: +tenants.length || 0 };
+  }
+  async getAllTenants(jwtPayLoad: JWTPayload) {
+    if (jwtPayLoad.role == userRole.tenant) {
+      console.log(2);
+      throw new BadRequestException('This api is only for landlord');
+    }
+    console.log(3);
+    const tenants = await this.knex('property')
+      .select('tenant_id', 'first_name', 'last_name')
+      .innerJoin('user', 'property.tenant_id', 'user.id')
+      .where({ landlord_id: jwtPayLoad.id });
+    console.log();
+    return tenants;
   }
   async activate(token: string, id: number) {
     let user = await this.knex('user')

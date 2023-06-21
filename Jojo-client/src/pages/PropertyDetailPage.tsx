@@ -64,6 +64,7 @@ export function PropertyDetailPage() {
   const [originalData, setOriginalData] = useState({});
   const editMode = useCallback(
     (event: MouseEvent) => {
+      console.log(data);
       setOriginalData(data);
       setEditable((state) => {
         return (state = !state);
@@ -111,6 +112,7 @@ export function PropertyDetailPage() {
 
       let hasChanged = false;
       for (let field of fields) {
+        console.log(originalData);
         const oldValue = (originalData as any)[field];
         const newValue = form[field].value;
         console.log(field, newValue);
@@ -135,7 +137,7 @@ export function PropertyDetailPage() {
         id: data.id as number,
       });
       // setOriginalData(newData);
-      Object.assign(originalData, newData);
+      setOriginalData(newData);
       console.log("set original data:", newData);
       showResponseMessage(json, presentAlert);
       setEditable(true);

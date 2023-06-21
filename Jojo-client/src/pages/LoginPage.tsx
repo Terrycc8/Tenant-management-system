@@ -17,13 +17,13 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { routes } from "../routes";
 import {
   usePostUserLoginFBMutation,
   usePostUserLoginMutation,
 } from "../api/loginMutation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
@@ -33,6 +33,8 @@ import FacebookLogin, {
   ReactFacebookFailureResponse,
   ReactFacebookLoginInfo,
 } from "react-facebook-login";
+import { RootState } from "../RTKstore";
+import { formatError } from "../components/formatError";
 export function LoginPage(props: {
   setPage(cb: (state: string) => string): void;
 }) {
@@ -44,6 +46,7 @@ export function LoginPage(props: {
   const { checked, checkBoxOnClick } = useCheckBox();
   const [errors, setErrors] = useState<string[]>([]);
   const [selectorValue, setSelectorValue] = useState(null);
+
   const loginOnClick = useCallback(async () => {
     let json: any;
     try {
@@ -56,7 +59,14 @@ export function LoginPage(props: {
     }
 
     if ("error" in json) {
-      setErrors(Array((json.error as FetchError).data.message));
+      let message = (json as any)?.error?.data?.message;
+      setErrors(
+        Array.isArray(message)
+          ? message
+          : typeof message == "string"
+          ? [message]
+          : [String(json.error)]
+      );
     } else {
       dispatch(setCredentials(json.data));
       setErrors([]);
@@ -93,7 +103,14 @@ export function LoginPage(props: {
       }
 
       if ("error" in json) {
-        setErrors(Array((json.error as FetchError).data.message));
+        let message = (json as any)?.error?.data?.message;
+        setErrors(
+          Array.isArray(message)
+            ? message
+            : typeof message == "string"
+            ? [message]
+            : [String(json.error)]
+        );
       } else {
         dispatch(setCredentials(json.data));
         setErrors([]);
@@ -139,7 +156,11 @@ export function LoginPage(props: {
           ></IonInput>
 
           {errors.length > 0
-            ? errors.map((error, idx) => <div key={idx + 1}>{error}</div>)
+            ? errors.map((error, idx) => (
+                <div key={idx + 1} className={style.errorMsg}>
+                  {formatError(error)}
+                </div>
+              ))
             : null}
           <div className={style.login_show_pw_label}>
             <IonButtons slot="start">

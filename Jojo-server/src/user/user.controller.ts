@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Header,
@@ -91,11 +92,12 @@ export class UserController {
     @Response() res,
   ) {
     try {
-      console.log(`${env.CLIENT_DOMAIN}${env.CLIENT_PORT}/tab/home`);
       let jwtPayload = await this.userService.activate(activate_token, id);
       let token = this.jwtService.encode(jwtPayload);
 
-      res.redirect(`${env.SERVER_DOMAIN}${env.CLIENT_PORT}/tab/home`);
+      res.redirect(
+        `${env.CLIENT_DOMAIN}${env.CLIENT_PORT}/tab/home?token=${token}&role=${jwtPayload}`,
+      );
     } catch (error) {
       res.json({ error });
     }
@@ -116,10 +118,20 @@ export class UserController {
   }
 
   @Get('tenants')
-  async getTenants(@Request() req) {
+  async getTenants(
+    @Query('offset', new DefaultValuePipe(10), ParseIntPipe) offset: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Request() req,
+  ) {
     const jwtPayLoad = this.jwtService.decode(req);
 
-    return await this.userService.getTenants(jwtPayLoad);
+    return await this.userService.getTenants(jwtPayLoad, offset, page);
+  }
+  @Get('allTenants')
+  async getAllTenants(@Request() req) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.getAllTenants(jwtPayLoad);
   }
   @Get('account')
   async account(

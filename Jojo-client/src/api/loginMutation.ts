@@ -39,7 +39,7 @@ export const loginApi = jojoAPI.injectEndpoints({
     }),
     getTenants: builder.query({
       query: () => ({
-        url: apiRoutes.tenant,
+        url: apiRoutes.tenants,
       }),
       forceRefetch({ currentArg, previousArg, state }) {
         const rootState: RootState = state as any;

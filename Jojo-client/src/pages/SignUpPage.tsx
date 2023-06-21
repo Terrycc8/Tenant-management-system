@@ -11,6 +11,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonNote,
   IonPage,
   IonRow,
   IonSelect,
@@ -36,6 +37,7 @@ import { RootState } from "../RTKstore";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
 import style from "../theme/signup.module.scss";
+import { formatError } from "../components/formatError";
 export function SignUpPage(props: {
   setPage(cb: (state: string) => string): void;
 }) {
@@ -52,9 +54,7 @@ export function SignUpPage(props: {
     if (SubmitBtnRef.current !== null) SubmitBtnRef.current.disabled = true;
     const form = event.target as HTMLFormElement;
     if (form["confirm_password"].value !== form["password"].value) {
-      setErrors(
-        (state) => (state = ["Those passwords didn’t match. Try again."])
-      );
+      setErrors(["Those passwords didn’t match. Try again."]);
       return;
     }
     const json = await signUp(
@@ -75,12 +75,19 @@ export function SignUpPage(props: {
     //   user_type: "landlord",
     // });
     if ("error" in json) {
+      let message = (json as any)?.error?.data?.message;
+
       setErrors(
-        (state) => (state = Array((json.error as FetchError).data.message))
+        Array.isArray(message)
+          ? message
+          : typeof message == "string"
+          ? [message]
+          : [String(json.error)]
       );
+      if (SubmitBtnRef.current !== null) SubmitBtnRef.current.disabled = false;
     } else {
       dispatch(setCredentials(json.data));
-      setErrors((state) => (state = []));
+      setErrors([]);
       showResponseMessageSignUp(json, presentAlert, () => {
         if (SubmitBtnRef.current !== null)
           SubmitBtnRef.current.disabled = false;
@@ -99,6 +106,18 @@ export function SignUpPage(props: {
     props.setPage((state: string) => (state = "login"));
   }, [props.setPage]);
 
+  function renderFieldError(field: string) {
+    return (
+      <IonNote color="danger">
+        {errors
+          .filter((error) => error.includes(field))
+          .map((error, idx) => (
+            <div key={idx + 1}>{formatError(error)}</div>
+          ))}
+      </IonNote>
+    );
+  }
+  console.log(errors);
   return (
     <IonPage>
       <IonContent className={style.signup_form}>
@@ -131,6 +150,8 @@ export function SignUpPage(props: {
                   ></IonInput>
                 </IonCol>
               </IonRow>
+              {renderFieldError("last_name")}
+              {renderFieldError("first_name")}
               <IonRow>
                 <IonCol>
                   <IonInput
@@ -141,6 +162,7 @@ export function SignUpPage(props: {
                   ></IonInput>
                 </IonCol>
               </IonRow>
+              {renderFieldError("email")}
               <IonRow>
                 <IonCol>
                   <IonInput
@@ -155,6 +177,7 @@ export function SignUpPage(props: {
                   ></IonInput>
                 </IonCol>
               </IonRow>
+
               <IonRow>
                 <IonCol>
                   <IonInput
@@ -167,6 +190,7 @@ export function SignUpPage(props: {
                   ></IonInput>
                 </IonCol>
               </IonRow>
+              {renderFieldError("password")}
               <IonButtons>
                 <IonCheckbox
                   className={style.show_pw_cb}
@@ -179,13 +203,6 @@ export function SignUpPage(props: {
                 </IonLabel>
               </IonButtons>
 
-              {errors.length > 0 ? (
-                errors.map((error: string, idx: number) => (
-                  <div key={idx + 1}>{error}</div>
-                ))
-              ) : (
-                <></>
-              )}
               <IonRow>
                 <IonCol>
                   <IonLabel className={style.user_type_label}>
@@ -207,6 +224,7 @@ export function SignUpPage(props: {
                   </IonSelect>
                 </IonCol>
               </IonRow>
+              {renderFieldError("user type")}
             </IonGrid>
           </IonList>
           <IonButton
