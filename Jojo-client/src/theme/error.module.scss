@@ -1,0 +1,36 @@
+.oops {
+  text-align: center;
+  height: 30vh;
+  padding-top: 15vh;
+  font-size: 4rem;
+  display: block;
+  font-weight: bold;
+}
+
+.label1 {
+  text-align: center;
+  display: block;
+}
+.label2 {
+  text-align: center;
+  display: block;
+}
+.backButtons {
+  width: 50%;
+  background: rgb(0, 53, 227);
+  margin: auto;
+  margin-top: 5vh;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+.backButton {
+  color: aliceblue;
+  font-size: 1rem;
+  height: 2rem;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

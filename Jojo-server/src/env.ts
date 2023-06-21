@@ -7,8 +7,13 @@ export const env = {
   DB_PASSWORD: '',
   PORT: 5432,
   SERVER_PORT: 8100,
+  SERVER_DOMAIN: 'http://localhost:',
+  CLIENT_DOMAIN: 'http://localhost:',
+  CLIENT_PORT: 5173,
   NODE_ENV: 'development',
   JWT_SECRET: '',
+  FACEBOOK_APP_ID: '',
+  FACEBOOK_APP_SECRET: '',
 };
 
 populateEnv(env, { mode: 'halt' });

@@ -1,5 +1,5 @@
 ion-col.home-col {
-  height: 6rem;
+  height: 15vh;
   ion-card.top-left-card {
     --background: linear-gradient(45deg, #3dc8ac, #2db398);
   }
@@ -36,7 +36,7 @@ ion-card.stats {
     font-size: 1.2rem;
   }
   ion-card-content {
-    height: 45vh;
+    height: 40vh;
   }
 }
 

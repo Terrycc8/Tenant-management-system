@@ -9,33 +9,50 @@ import { prepareHeaders } from "./prepareHeaders";
 import { jojoAPI } from "./jojoAPI";
 import { useDispatch } from "react-redux";
 import { setScroll } from "../slices/scrollSlice";
+import { EventListOutput } from "../types";
 // Define a service using a base URL and expected endpoints
+
+type GetEventResult = {
+  result: EventListOutput[];
+  totalItem: number;
+};
+
 export const eventApi = jojoAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getEvent: builder.query({
-      query: (arg: { page: number; itemsPerPage: number }) => ({
+    patchEvent: builder.mutation({
+      query: (arg: {
+        action: { type: string; comment: string };
+        id: number;
+      }) => ({
+        headers: { "Content-Type": "application/json" },
+        url: apiRoutes.event + `/${arg.id}`,
+        method: "PATCH",
+        body: JSON.stringify(arg.action),
+      }),
+      invalidatesTags: ["property", "user", "event", "home"],
+    }),
+    getEvent: builder.query<
+      GetEventResult,
+      { page: number; itemsPerPage: number }
+    >({
+      query: (arg) => ({
         url: apiRoutes.event + `/?offset=${arg.itemsPerPage}&page=${arg.page}`,
       }),
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
-      },
-      // Always merge incoming data to the cache entry
-      merge: (currentCache, newItems) => {
-        const currentCacheSet = new Set(
-          currentCache.result.map((item: Record<string, number | string>) => {
-            return item.id;
-          })
-        );
+      // serializeQueryArgs: ({ endpointName }) => {
+      //   return endpointName;
+      // },
 
-        currentCache.result.push(
-          ...newItems.result.filter((item: Record<string, number | string>) => {
-            return !currentCacheSet.has(item.id);
-          })
+      forceRefetch({ currentArg, previousArg, state }) {
+        const rootState: RootState = state as any;
+        const data: GetEventResult = rootState.jojoAPI.queries.getEvent
+          ?.data as any;
+        const result = data?.result;
+
+        return (
+          !result ||
+          currentArg?.page != previousArg?.page ||
+          currentArg?.itemsPerPage != previousArg?.itemsPerPage
         );
-      },
-      // Refetch when the page arg changes
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
       },
       providesTags: ["event"],
     }),
@@ -53,4 +70,5 @@ export const eventApi = jojoAPI.injectEndpoints({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { usePostEventMutation, useGetEventQuery } = eventApi;
+export const { usePatchEventMutation, usePostEventMutation, useGetEventQuery } =
+  eventApi;

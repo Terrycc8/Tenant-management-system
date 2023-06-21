@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { EventInputDto } from 'src/dto/post-event.dto';
-import { JWTPayload, userRole } from 'src/types';
+import { JWTPayload, PatchEventInput, userRole } from 'src/types';
 
 @Injectable()
 export class EventService {
@@ -63,15 +63,28 @@ export class EventService {
     let query = await this.knex('event')
       .select(
         'event.id as id',
-        'title',
+        'event.title as event_title',
         'type',
         'priority',
         'event.status',
+        'reason as comment',
+        'description',
+        'property.title as property_title',
         this.knex.raw('ARRAY_AGG(attachments) as attachments'),
       )
       .innerJoin('eventAttachments', 'event.id', 'eventAttachments.event_id')
+      .innerJoin('property', 'event.property_id', 'property.id')
       .innerJoin('user', 'handled_by_id', 'user.id')
-      .groupBy('event.id', 'title', 'type', 'priority', 'event.status')
+      .groupBy(
+        'event.id',
+        'event.title',
+        'type',
+        'priority',
+        'event.status',
+        'reason',
+        'description',
+        'property.title',
+      )
       .where({ created_by_id: payload.id })
       .orWhere({ handled_by_id: payload.id })
       .orderBy('event.created_at')
@@ -84,5 +97,48 @@ export class EventService {
       .first();
 
     return { result: query, totalItem: +total.count || 1 };
+  }
+  async patchEvent(
+    patchEventInput: PatchEventInput,
+    jwtPayload: JWTPayload,
+    id: number,
+  ) {
+    const event = await this.knex('event')
+      .select('id', 'handled_by_id', 'created_by_id', 'status')
+      .where({ id })
+      .first();
+
+    if (!event) {
+      throw new BadRequestException('This event id does not exist');
+    }
+    if (event.status !== 'pending') {
+      throw new BadRequestException('This event has been closed');
+    }
+    if (
+      event.handled_by_id !== jwtPayload.id ||
+      event.created_by_id !== jwtPayload.id
+    ) {
+      throw new BadRequestException('You are not allowed to edit this event');
+    }
+    let status: string;
+    if (jwtPayload.role == userRole.landlord) {
+      if (patchEventInput.type == 'resolve') {
+        status = 'resolved';
+      } else if (patchEventInput.type == 'reject') {
+        status = 'rejected';
+      }
+    } else if (jwtPayload.role == userRole.landlord) {
+      if (patchEventInput.type == 'cancel') {
+        status = 'cancelled';
+      }
+    } else {
+      throw new BadRequestException('Invalid request');
+    }
+    const insertResult = await this.knex('event')
+      .update({ status, reason: patchEventInput.comment })
+      .where({ id })
+      .returning('id');
+
+    return {};
   }
 }

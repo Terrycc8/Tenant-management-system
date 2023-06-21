@@ -19,7 +19,6 @@ import {
   propertyAreaEnumMsg,
   propertyDistrictEnumMsg,
 } from 'src/types';
-import { isNull } from 'util';
 
 export class PropertyInputDto {
   @IsString()

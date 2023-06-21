@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-
+import { Carousel } from "@mantine/carousel";
+import { Button } from "@mantine/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
+
 import {
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -24,14 +27,13 @@ import {
 import { useGetPropertyQuery } from "../api/propertyAPI";
 import { routes } from "../routes";
 import CommonHeader from "../components/CommonHeader";
-import { Autoplay } from "swiper";
-import "swiper/css";
-import "swiper/css/autoplay";
+import { Autoplay, Pagination, Scrollbar } from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
+import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
@@ -39,6 +41,8 @@ import "swiper/css/scrollbar";
 import serverURL from "../ServerDomain";
 import { PropertyListOutput } from "../types";
 import { format, parseISO } from "date-fns";
+import { Loading } from "../components/Loading";
+import { NoItem } from "../components/NoItem";
 
 export function PropertyPage() {
   const {
@@ -52,18 +56,22 @@ export function PropertyPage() {
 
   return (
     <IonPage>
-      <CommonHeader title="Property List" backUrl={routes.home} />
-      <IonContent>
+      <CommonHeader
+        title="Property List"
+        backUrl={routes.home}
+        hideHeader={true}
+      />
+      <IonContent fullscreen={true}>
         {isError ? (
           <>error: {String(error)}</>
         ) : isLoading ? (
-          <>loading</>
+          <Loading />
         ) : isFetching ? (
-          <>Fetching</>
+          <Loading />
         ) : !data ? (
           <>no data??</>
         ) : data.length == 0 ? (
-          <>no property yet</>
+          <NoItem name="property" />
         ) : data.length > 0 ? (
           data.map((property: PropertyListOutput) => (
             <IonCard key={property.id}>
@@ -88,11 +96,16 @@ export function PropertyPage() {
 
               <IonCardContent>
                 <Swiper
-                  modules={[Autoplay]}
-                  autoplay={false}
-                  scrollbar={{ draggable: false }}
+                  modules={[Pagination]}
+                  // scrollbar={{ draggable: true }}
+                  pagination={true}
                 >
-                  {property.attachments.map((image, idx) => (
+                  {[
+                    ...property.attachments,
+                    ...property.attachments,
+                    ...property.attachments,
+                    ...property.attachments,
+                  ].map((image, idx) => (
                     <SwiperSlide key={idx + 1}>
                       <img src={serverURL + "/" + image} alt="" />
                     </SwiperSlide>

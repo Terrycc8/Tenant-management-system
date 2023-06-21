@@ -1,8 +1,6 @@
-import { ValidationArguments } from "class-validator";
-
 export type JWTPayload = {
   id: number;
-  role: "admin" | "landlord" | "tenant";
+  role: "landlord" | "tenant";
 };
 
 export type FetchError = {
@@ -13,6 +11,10 @@ export type FetchError = {
 export type LoginInput = {
   email: string | null | undefined;
   password: string | null | undefined;
+};
+export type LoginFBInput = {
+  accessToken: string;
+  user_type: "landlord" | "tenant";
 };
 export type SignUpInput = {
   first_name: string;
@@ -33,19 +35,22 @@ export type PropertyListOutput = {
   first_name: string;
 };
 export type EventListOutput = {
-  id: string;
-  title: string;
+  id: number;
+  event_title: string;
   type: string;
   priority: string;
   status: string;
   attachments: string[];
   handled_by_id: number;
-  reason: string;
-  created_by_id: number;
+  comment: string;
   description: string;
+  property_title: string;
 };
 
-export type UserType = "landlord" | "tenant";
+export enum UserType {
+  "landlord",
+  "tenant",
+}
 export const uploadDir = "./upload";
 export const userRole = { landlord: "landlord", tenant: "tenant" };
 
@@ -120,6 +125,7 @@ export const event_status: string[][] = [
   ["resolved", "Resolved"],
   ["pending", "Pending"],
   ["rejected", "Rejected"],
+  ["cancelled", "Cancelled"],
 ];
 export type ChatroomListOutput = {
   id: number;
@@ -218,6 +224,9 @@ export enum PropertyDistrict {
 export const propertyAreaEnumMsg = {
   message: `Please select the property's area`,
 };
+export const userTypeEnumMsg = {
+  message: `Invalid user type`,
+};
 export const propertyDistrictEnumMsg = {
   message: `Please select the property's district`,
 };
@@ -227,6 +236,7 @@ export type ClientPayload = {
   role: "admin" | "landlord" | "tenant" | null;
 };
 
+<<<<<<< HEAD
 export type PaymentListOutput = {
   id: string;
   property_id: string;
@@ -251,4 +261,19 @@ export type existingRecord = {
   otherUser: string;
   senderName: string;
   content: string;
+=======
+export type PatchEventInput = {
+  type: "resolve" | "reject" | "cancel";
+  comment: string;
+};
+
+export enum PatchEventActionType {
+  "resolve",
+  "reject",
+  "cancel",
+}
+
+export const patchEventActionTypeEnumMsg = {
+  message: `Invalid action type`,
+>>>>>>> a6f135c714890317361216ca9bae7c62ddebcac9
 };

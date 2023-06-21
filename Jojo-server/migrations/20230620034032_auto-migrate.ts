@@ -16,6 +16,9 @@ export async function up(knex: Knex): Promise<void> {
       table.enum('user_type', ['landlord', 'tenant', 'admin']).notNullable()
       table.timestamp('last_login_time').notNullable()
       table.timestamp('registered_at').notNullable()
+      table.boolean('verified').notNullable()
+      table.text('token').notNullable()
+      table.timestamp('issued_at').notNullable()
       table.timestamps(false, true)
     })
   }

@@ -16,6 +16,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
+  useIonAlert,
   useIonRouter,
 } from "@ionic/react";
 import { routes } from "../routes";
@@ -25,7 +26,11 @@ import { usePostUserSignUpMutation } from "../api/loginMutation";
 
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
-import { formToJson } from "../helper";
+import {
+  formToJson,
+  showResponseMessage,
+  showResponseMessageSignUp,
+} from "../helper";
 import { RootState } from "../RTKstore";
 
 import { useCheckBox } from "../useHook/useCheckBox";
@@ -39,10 +44,12 @@ export function SignUpPage(props: {
   const dispatch = useDispatch();
   const [password] = useState("");
   const { checked, checkBoxOnClick } = useCheckBox();
-
+  const [presentAlert] = useIonAlert();
   const [errors, setErrors] = useState<string[]>([]);
+  const SubmitBtnRef = useRef<HTMLIonButtonElement>(null);
   const signUpOnSubmit = useCallback(async (event: FormEvent) => {
     event.preventDefault();
+    if (SubmitBtnRef.current !== null) SubmitBtnRef.current.disabled = true;
     const form = event.target as HTMLFormElement;
     if (form["confirm_password"].value !== form["password"].value) {
       setErrors(
@@ -50,22 +57,23 @@ export function SignUpPage(props: {
       );
       return;
     }
-    // const json = await signUp(
-    //   formToJson(form, [
-    //     "first_name",
-    //     "last_name",
-    //     "email",
-    //     "password",
-    //     "user_type",
-    //   ]) as SignUpInput
-    // );
-    const json = await signUp({
-      first_name: "alice" + Math.floor(Math.random() * 50),
-      last_name: "wong",
-      email: Date.now() + "@gmail.com",
-      password: "Aa!11234",
-      user_type: "landlord",
-    });
+    const json = await signUp(
+      formToJson(form, [
+        "first_name",
+        "last_name",
+        "email",
+        "password",
+        "user_type",
+      ]) as SignUpInput
+    );
+
+    // const json = await signUp({
+    //   first_name: "alice" + Math.floor(Math.random() * 50),
+    //   last_name: "wong",
+    //   email: Date.now() + "@gmail.com",
+    //   password: "Aa!11234",
+    //   user_type: "landlord",
+    // });
     if ("error" in json) {
       setErrors(
         (state) => (state = Array((json.error as FetchError).data.message))
@@ -73,6 +81,10 @@ export function SignUpPage(props: {
     } else {
       dispatch(setCredentials(json.data));
       setErrors((state) => (state = []));
+      showResponseMessageSignUp(json, presentAlert, () => {
+        if (SubmitBtnRef.current !== null)
+          SubmitBtnRef.current.disabled = false;
+      });
     }
   }, []);
 
@@ -86,6 +98,7 @@ export function SignUpPage(props: {
   const setPageLogin = useCallback(() => {
     props.setPage((state: string) => (state = "login"));
   }, [props.setPage]);
+
   return (
     <IonPage>
       <IonContent className={style.signup_form}>
@@ -202,6 +215,8 @@ export function SignUpPage(props: {
             expand="block"
             className={style.submit_btn}
             onSubmit={signUpOnSubmit}
+            ref={SubmitBtnRef}
+            // disabled
           >
             Submit
           </IonButton>

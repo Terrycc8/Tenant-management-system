@@ -22,7 +22,11 @@ export class IndexService {
       .where({ landlord_id: jwtPayload.id });
 
     if (properties.length == 0) {
-      return { name: name.name, label: [], data: [] };
+      return {
+        name: name.name,
+        typeChart: { label: [], data: [] },
+        totalChart: { label: [], data: [] },
+      };
     }
 
     properties = properties.map((item) => {
@@ -40,11 +44,26 @@ export class IndexService {
       ])
       .whereIn('property_id', properties)
       .groupBy('type');
-    const label = info.map(
+    const typeLabel = info.map(
       (item) => item.type[0].toUpperCase() + item.type.slice(1),
     );
-    const data = info.map((item) => item.count);
+    const typeData = info.map((item) => item.count);
+    const result = await this.knex('event')
+      .select('status')
+      .count('status')
+      .whereIn('property_id', properties)
+      .groupBy('status');
+    const totalLabel = result.map((item) => {
+      return item.status[0].toUpperCase() + item.status.slice(1);
+    });
+    const totalResult = result.map((item) => {
+      return item.count;
+    });
 
-    return { name: name.name, label, data };
+    return {
+      name: name.name,
+      typeChart: { label: typeLabel, data: typeData },
+      totalChart: { label: totalLabel, data: totalResult },
+    };
   }
 }

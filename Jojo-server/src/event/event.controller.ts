@@ -10,12 +10,15 @@ import {
   Query,
   DefaultValuePipe,
   ParseIntPipe,
+  Patch,
+  Param,
 } from '@nestjs/common';
 import { EventInputDto } from 'src/dto/post-event.dto';
 import { JwtService } from 'src/jwt/jwt.service';
 import { EventService } from './event.service';
-import { JWTPayload } from 'src/types';
+import { JWTPayload, PatchEventInput } from 'src/types';
 import { filesInterceptorConfig } from 'src/helper';
+import { IDParamDto } from 'src/dto/IDParams';
 
 @Controller('event')
 export class EventController {
@@ -43,5 +46,15 @@ export class EventController {
   ) {
     let payload = this.jwtService.decode(req);
     return this.eventService.newEvent(payload, eventInput, images);
+  }
+  @Patch(':id')
+  patchEvent(
+    @Body(new ValidationPipe()) patchEventInput: PatchEventInput,
+    @Request() req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+  ) {
+    let payload = this.jwtService.decode(req);
+    console.log(patchEventInput);
+    return this.eventService.patchEvent(patchEventInput, payload, params.id);
   }
 }

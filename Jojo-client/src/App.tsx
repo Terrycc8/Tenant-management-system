@@ -55,7 +55,7 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { ErrorPage } from "./pages/ErrorPage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./RTKstore";
-
+import { MantineProvider } from "@mantine/core";
 import Home from "./pages/HomePage";
 import { Profiler, useCallback, useRef, useState } from "react";
 import HomePage from "./pages/HomePage";
@@ -65,6 +65,7 @@ import { MemberOnlyRoute } from "./components/MemberOnlyRoute";
 import { Tab } from "./pages/Tab";
 import { GuestOnlyRoute } from "./components/GuestOnlyRoute";
 import { ChatroomPage } from "./pages/Chatroom";
+import { Button } from "@mantine/core";
 
 setupIonicReact();
 

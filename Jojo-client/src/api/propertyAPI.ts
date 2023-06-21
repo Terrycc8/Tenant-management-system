@@ -15,7 +15,13 @@ export const propertyApi = jojoAPI.injectEndpoints({
       query: () => ({
         url: apiRoutes.property,
       }),
+      forceRefetch({ currentArg, previousArg, state }) {
+        const rootState: RootState = state as any;
+        const data = rootState.jojoAPI.queries.getProperty?.data as any;
+        const result = data?.result;
 
+        return !result;
+      },
       providesTags: (result, error, arg) =>
         result
           ? [

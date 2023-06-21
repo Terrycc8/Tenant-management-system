@@ -11,6 +11,9 @@ status_update_time timestamp not null
 user_type enum('landlord','tenant','admin')
 last_login_time timestamp  not null
 registered_at timestamp  not null
+verified boolean
+token char text not null
+issued_at timestamp 
 
 property
 -----
@@ -39,7 +42,7 @@ id integer pk
 title varchar(32)
 type enum('maintenance','notices','reimbursement','complaint')
 priority enum('high','medium','low')
-status enum('resolved','pending','rejected')
+status enum('resolved','pending','rejected','cancelled')
 description varchar(256)
 reason null varchar(256)
 property_id  fk>0- property.id 

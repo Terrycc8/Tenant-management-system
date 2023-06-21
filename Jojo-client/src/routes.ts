@@ -14,6 +14,7 @@ export const routes = {
 };
 
 export const apiRoutes = {
+  loginFB: "/user/login/facebook",
   login: "/user/login",
   signup: "/user/signup",
   property: "/property",

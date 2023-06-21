@@ -43,3 +43,23 @@ export function showResponseMessage(
     });
   }
 }
+
+export function showResponseMessageSignUp(
+  json: any,
+  presentAlert: (input: object) => void,
+  dismissAll?: () => void
+) {
+  if (!("error" in json)) {
+    presentAlert({
+      header:
+        "A confirmation email has been sent to your registered email address",
+      buttons: [
+        {
+          text: "OK",
+          role: "",
+          handler: dismissAll,
+        },
+      ],
+    });
+  }
+}
