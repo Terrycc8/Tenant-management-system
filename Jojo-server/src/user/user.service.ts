@@ -268,11 +268,9 @@ export class UserService {
       throw new BadRequestException('This api is only for landlord');
     }
 
-    const tenants = await this.knex('user').select(
-      'id as tenant_id',
-      'first_name',
-      'last_name',
-    );
+    const tenants = await this.knex('user')
+      .select('id as tenant_id', 'first_name', 'last_name')
+      .where({ user_type: userRole.tenant });
 
     return tenants;
   }
