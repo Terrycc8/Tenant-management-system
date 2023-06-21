@@ -64,7 +64,6 @@ export function PropertyDetailPage() {
   const [originalData, setOriginalData] = useState({});
   const editMode = useCallback(
     (event: MouseEvent) => {
-      console.log(data);
       setOriginalData(data);
       setEditable((state) => {
         return (state = !state);
@@ -82,7 +81,6 @@ export function PropertyDetailPage() {
       const form = (event.nativeEvent.target as HTMLElement).closest(
         "form"
       ) as HTMLFormElement;
-      console.log({ event, form });
 
       // console.log("check if changed:", {
       //   originalData,
@@ -112,25 +110,18 @@ export function PropertyDetailPage() {
 
       let hasChanged = false;
       for (let field of fields) {
-        console.log(originalData);
         const oldValue = (originalData as any)[field];
         const newValue = form[field].value;
-        console.log(field, newValue);
+
         formData.set(field, newValue);
         Object.assign(newData, { [field]: newValue });
         if (form[field].value != oldValue) {
           hasChanged = true;
-          console.log("changed:", {
-            oldValue,
-            newValue,
-          });
         }
       }
       if (!hasChanged) {
-        console.log("same, skip");
         return;
       }
-      console.log("not same, submit");
 
       const json = await updateProperty({
         body: formData,
@@ -138,7 +129,7 @@ export function PropertyDetailPage() {
       });
       // setOriginalData(newData);
       setOriginalData(newData);
-      console.log("set original data:", newData);
+
       showResponseMessage(json, presentAlert);
       setEditable(true);
     },

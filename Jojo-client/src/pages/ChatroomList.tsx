@@ -156,17 +156,18 @@ export function ChatroomList() {
       {/* <IonContent>{result}</IonContent> */}
       <IonContent>
         {isError ? (
-          <>error: {String(error)}</>
+          <>
+            {/* error: {String(error)}  */}
+            Please add contact first
+          </>
         ) : isLoading ? (
           <>loading</>
         ) : isFetching ? (
           <>Fetching</>
         ) : !result ? (
           <>no data??</>
-        ) : // ) : data ? (
-        //   <>no exisiting chatroom</>
-        result.length == 0 ? (
-          <>no chatroom yet</>
+        ) : result.length == 0 ? (
+          <>no existing chatroom</>
         ) : result.length > 0 ? (
           result.map((record: existingRecord) => (
             <IonCard

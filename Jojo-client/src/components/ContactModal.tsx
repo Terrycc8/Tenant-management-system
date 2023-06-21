@@ -84,7 +84,7 @@ export function ContactModal(props: { trigger: string }) {
 
       <IonContent>
         {data.length == 0 ? (
-          <>no contact yet, please add contact</>
+          <>no contact yet, please add contact first</>
         ) : (
           data.map((user: UserListOutput) => (
             <IonCard

@@ -187,7 +187,6 @@ export function LoginPage(props: {
             placeholder="Select Your User Type"
             name="user_type"
             onIonChange={(e) => {
-              console.log(e.detail.value);
               return setSelectorValue(e.detail.value);
             }}
           >
