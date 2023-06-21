@@ -129,6 +129,7 @@ export function LoginPage(props: {
         <div className={style.login_signin_label}>Sign in</div>
         <IonList>
           <IonInput
+            value={"jojoProject43rfew@gmail.com"}
             className={style.login_input}
             label="Your Username/ Email"
             labelPlacement="stacked"
@@ -143,6 +144,7 @@ export function LoginPage(props: {
           ></IonInput>
 
           <IonInput
+            value={"jojoProject43rfew!"}
             className={style.login_input}
             label="Password"
             labelPlacement="stacked"

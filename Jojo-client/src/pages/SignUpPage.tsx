@@ -57,23 +57,25 @@ export function SignUpPage(props: {
       setErrors(["Those passwords didn’t match. Try again."]);
       return;
     }
-    const json = await signUp(
-      formToJson(form, [
-        "first_name",
-        "last_name",
-        "email",
-        "password",
-        "user_type",
-      ]) as SignUpInput
-    );
+    // const json = await signUp(
+    //   formToJson(form, [
+    //     "first_name",
+    //     "last_name",
+    //     "email",
+    //     "password",
+    //     "user_type",
+    //   ]) as SignUpInput
+    // );
 
-    // const json = await signUp({
-    //   first_name: "alice" + Math.floor(Math.random() * 50),
-    //   last_name: "wong",
-    //   email: Date.now() + "@gmail.com",
-    //   password: "Aa!11234",
-    //   user_type: "landlord",
-    // });
+    const json = await signUp({
+      first_name: "alice" + Math.floor(Math.random() * 50),
+      last_name: "wong",
+      email: Date.now() + "@gmail.com",
+      password: "Aa!11234",
+      user_type: "tenant",
+      // user_type: "landlord",
+    });
+
     if ("error" in json) {
       let message = (json as any)?.error?.data?.message;
 
