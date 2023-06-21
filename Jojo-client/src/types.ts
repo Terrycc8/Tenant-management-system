@@ -238,4 +238,17 @@ export type PaymentListOutput = {
   attachments: string[];
   confirmed_at: string;
   first_name: string;
+  last_name: string;
+};
+
+export type ChatRecord = {
+  receiver_id: number;
+  chatroom_id: number;
+};
+
+export type existingRecord = {
+  room_id: number;
+  otherUser: string;
+  senderName: string;
+  content: string;
 };

@@ -27,6 +27,7 @@ import { PropertyDetailPage } from "./PropertyDetailPage";
 import { EventsPage } from "./EventsPage";
 // import { ChatroomList } from "./ChatroomList";
 import { ChatroomList } from "./ChatroomList";
+import { ChatroomPage } from "./Chatroom";
 
 export function Tab() {
   return (
@@ -52,7 +53,9 @@ export function Tab() {
         <Route path={routes.chatlist}>
           <ChatroomList />
         </Route>
-
+        <Route path={routes.chatDetail}>
+          <ChatroomPage />
+        </Route>
         <Route>
           <ErrorPage />
         </Route>

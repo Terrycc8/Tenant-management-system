@@ -6,6 +6,8 @@ import {
   BadRequestException,
   Post,
   Body,
+  Header,
+  Headers,
 } from '@nestjs/common';
 import { JwtService } from '../jwt/jwt.service';
 import { RoomDetail, RoomListItem } from './chat.dto';
@@ -25,21 +27,31 @@ export class ChatController {
     return ChatController.io;
   }
 
-  @Get('/rooms')
-  async getRooms(): Promise<{
-    rooms: RoomListItem[];
-  }> {
+  @Get()
+  async getRooms(
+    @Request() req,
+    @Headers() header, // : Promise<
+  ) {
+    //const token = header.authorization.split(' ')[1];
+    try {
+      let payLoad: JWTPayload = this.jwtService.decode(req);
+      console.log(payLoad);
+      return await this.chatService.getRooms(payLoad);
+    } catch (error) {
+      console.log(error);
+      return { error: 'server error' };
+    }
+    // rooms: RoomListItem[];
+    // }> {
     // throw new BadRequestException('client bad')
     // throw new NotImplementedException('server bad')
 
-    return {
-      rooms: [
-        { id: 1, username: 'alice', last_message: 'hi 1' },
-        { id: 2, username: 'bob', last_message: 'hi 2' },
-      ],
-    };
-    // let payLoad: JWTPayload = this.jwtService.decode(req);
-    // return this.chatService.ChatroomById(payLoad,chatroom);
+    // return {
+    //   rooms: [
+    //     { id: 1, username: 'alice', last_message: 'hi 1' },
+    //     { id: 2, username: 'bob', last_message: 'hi 2' },
+    //   ],
+    // };
   }
 
   // @Get('/rooms/:id')
@@ -61,12 +73,19 @@ export class ChatController {
   // }
 
   @Post('/rooms/:id/message')
-  sendMessage(@Param('id') room_id: string, @Body('message') message: string) {
+  sendMessage(
+    @Param('id') room_id: string,
+    @Request() req,
+    @Body('message') message: string,
+  ) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
     console.log('Send message:', { room_id, message });
-    ChatController.io.emit('new-message', { id: 123, message });
+    ChatController.io.emit('new-message', { id: room_id, message });
     console.log('after emit');
     // console.log('c', ChatController.io.sockets);
-    return { id: 123 };
+    // return { id: 123 };
+    this.chatService.sendMessage(room_id, payLoad, message);
+    return {};
   }
 
   @Get('/messages/id')

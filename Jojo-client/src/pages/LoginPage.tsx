@@ -23,7 +23,7 @@ import { setCredentials } from "../slices/authSlice";
 import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError } from "../types";
-import companyLogo1 from "../assets/companyLogo.jpg";
+import companyLogo1 from "../assets/companyLogo1.jpg";
 import "./LoginPage.css";
 
 export function LoginPage(props: {
