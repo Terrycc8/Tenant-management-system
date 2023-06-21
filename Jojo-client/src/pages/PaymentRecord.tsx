@@ -40,7 +40,7 @@ export function PaymentRecord() {
 
   return (
     <IonPage>
-      <CommonHeader title="Payment Record" backUrl={routes.home} />
+      {/* <CommonHeader title="Payment Record" backUrl={routes.home} /> */}
       <IonContent>
         {isError ? (
           <>error: {String(error)}</>
@@ -66,7 +66,7 @@ export function PaymentRecord() {
                 </IonRow>
                 <IonRow>
                   <IonCol>
-                    <IonLabel>Title: {payment.title}</IonLabel>
+                    <IonLabel>Title: {payment.status}</IonLabel>
                   </IonCol>
                   <IonCol>
                     <IonLabel>Monthly rent: {payment.amount}</IonLabel>

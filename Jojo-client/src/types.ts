@@ -236,7 +236,6 @@ export type ClientPayload = {
   role: "admin" | "landlord" | "tenant" | null;
 };
 
-<<<<<<< HEAD
 export type PaymentListOutput = {
   id: string;
   property_id: string;
@@ -261,7 +260,8 @@ export type existingRecord = {
   otherUser: string;
   senderName: string;
   content: string;
-=======
+};
+
 export type PatchEventInput = {
   type: "resolve" | "reject" | "cancel";
   comment: string;
@@ -275,5 +275,4 @@ export enum PatchEventActionType {
 
 export const patchEventActionTypeEnumMsg = {
   message: `Invalid action type`,
->>>>>>> a6f135c714890317361216ca9bae7c62ddebcac9
 };

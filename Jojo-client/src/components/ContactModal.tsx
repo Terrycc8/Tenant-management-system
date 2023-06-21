@@ -18,7 +18,7 @@ import { closeOutline } from "ionicons/icons";
 import { UserListOutput } from "../types";
 import { routes } from "../routes";
 import serverURL from "../ServerDomain";
-import { Room } from "../../../Jojo-server/dist/src/proxy";
+// import { Room } from "../../../Jojo-server/dist/src/proxy";
 import { useHistory } from "react-router-dom";
 
 export function ContactModal(props: { trigger: string }) {
