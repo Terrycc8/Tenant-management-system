@@ -77,7 +77,7 @@ export function ChatroomList() {
   // const token = useSelector((state: RootState) => state.auth.token);
 
   let { data, isFetching, isLoading, error, isError } = useQuery({
-    queryKey: ["/chat/rooms"], // todo does mean link, just reference
+    queryKey: ["/chat/rooms"], // todo only, not a link, just a reference
     retry: false,
     queryFn: async () => {
       const res = await fetch(serverURL + "/chat", {
@@ -87,16 +87,16 @@ export function ChatroomList() {
       });
 
       const result = await res.json();
-      console.log("result", result);
-      console.log("result", result.data);
-      console.log("result", result.data[0].otherUser);
+      // console.log("result", result);
+      // console.log("result", result.data);
+      // console.log("result", result.data[0].otherUser);
       return result.data;
     },
   });
 
   const [result, setResults] = useState<ChatroomInfo[]>([]);
   useEffect(() => {
-    console.log("change data");
+    // console.log("change data");
     setResults(data);
   }, [data]);
 
@@ -110,10 +110,10 @@ export function ChatroomList() {
     }
     const otherUsers: string[] = [];
     for (let i = 0; i < result.length; i++) {
-      console.log("latest", result);
+      // console.log("latest", result);
       const otherUser = result[i].otherUser;
-      console.log(otherUser);
-      console.log("get", otherUser);
+      // console.log(otherUser);
+      // console.log("get", otherUser);
       if (!otherUsers.includes(otherUser)) {
         otherUsers.push(otherUser);
       }
@@ -121,11 +121,11 @@ export function ChatroomList() {
 
     if (searchTerm !== "") {
       const searchTermLower = searchTerm.toLowerCase();
-      console.log(searchTermLower);
+      // console.log(searchTermLower);
       const newResults = result.filter((chat: any) =>
         chat.otherUser.includes(searchTermLower)
       );
-      console.log("newResults", newResults);
+      // console.log("newResults", newResults);
       setResults(newResults);
     }
   }

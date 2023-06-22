@@ -27,16 +27,36 @@ import CommonHeader from "../components/CommonHeader";
 import serverURL from "../ServerDomain";
 import { PaymentListOutput } from "../types";
 import { format, parseISO } from "date-fns";
+import { token } from "../store/auth";
+import { useQuery } from "@tanstack/react-query";
 
 export function PaymentRecord() {
-  const {
-    data,
-    isFetching,
-    isLoading,
-    error: fetchError,
-    isError,
-  } = useGetPaymentQuery({});
-  const error = fetchError || data?.error;
+  // const {
+  //   data,
+  //   isFetching,
+  //   isLoading,
+  //   error: fetchError,
+  //   isError,
+  // } = useGetPaymentQuery({});
+  // const error = fetchError || data?.error;
+
+  let { data, isFetching, isLoading, error, isError } = useQuery({
+    queryKey: ["/payment/:id"], // todo only, not a link, just a reference
+    retry: false,
+    queryFn: async () => {
+      const res = await fetch(serverURL + "/payment", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await res.json();
+      // console.log("result", result);
+      // console.log("result", result.data);
+      // console.log("result", result.data[0].otherUser);
+      return result.data;
+    },
+  });
 
   return (
     <IonPage>
@@ -61,7 +81,7 @@ export function PaymentRecord() {
                     Property:{" "}
                     {payment.first_name && payment.last_name
                       ? payment.first_name + " " + payment.last_name
-                      : " No tenant yet"}
+                      : " No payment submitted yet"}
                   </IonCol>
                 </IonRow>
                 <IonRow>

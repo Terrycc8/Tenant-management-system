@@ -12,14 +12,23 @@ import {
   isNumberString,
   minLength,
 } from 'class-validator';
-import {
-  PropertyArea,
-  PropertyDistrict,
-  UserType,
-  propertyAreaEnumMsg,
-  propertyDistrictEnumMsg,
-} from 'src/types';
+
 import { isNull } from 'util';
+
+export class PaymentInputDto_id {
+  @IsString()
+  @Length(1, 16)
+  title: number;
+  @IsNumberString()
+  rent: number;
+  @IsDateString()
+  billing_period_from: Date;
+  @IsDateString()
+  billing_period_to: Date;
+  // @IsOptional()
+  // @IsString()
+  // payer_id: string;
+}
 
 export class PaymentInputDto {
   @IsString()
@@ -31,7 +40,7 @@ export class PaymentInputDto {
   billing_period_from: Date;
   @IsDateString()
   billing_period_to: Date;
-  @IsOptional()
-  @IsString()
-  payer_id: string;
+  // @IsOptional()
+  // @IsString()
+  // payer_id: string;
 }

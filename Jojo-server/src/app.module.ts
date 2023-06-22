@@ -15,6 +15,7 @@ import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { IndexModule } from './index/index.module';
 import { JwtModule } from './jwt/jwt.module';
+import { PaymentModule } from './payment/payment.module';
 const config = require('../knexfile');
 
 @Module({
@@ -35,6 +36,7 @@ const config = require('../knexfile');
     }),
     IndexModule,
     JwtModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],

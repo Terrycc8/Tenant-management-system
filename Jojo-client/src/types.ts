@@ -242,8 +242,8 @@ export type PaymentListOutput = {
   payer_id: number;
   status: "confirmed" | "pending";
   amount: number;
-  billing_period_from: string;
-  billing_period_to: string;
+  billing_period_from: Date;
+  billing_period_to: Date;
   attachments: string[];
   confirmed_at: string;
   first_name: string;

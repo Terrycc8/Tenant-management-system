@@ -15,12 +15,26 @@ import {
 import { showResponseMessage } from "../helper";
 import { closeOutline } from "ionicons/icons";
 import { FormEvent, useCallback, useRef, useState } from "react";
+import {
+  CustomSelector,
+  CustomSelectorOnFetch,
+  CustomSelectorOnFetchTenant,
+} from "./CustomSelector";
+import {
+  useGetPropertyQuery,
+  useGetPropertyDetailQuery,
+} from "../api/propertyAPI";
 import { usePostPaymentMutation } from "../api/paymentAPI";
 import { CommonModalHeader } from "./CommonModalHeader";
 import { CustomIonColInput } from "./CustomIonColInput";
 import { fileToBase64String, selectImage } from "@beenotung/tslib/file";
 import { dataURItoFile, resizeBase64WithRatio } from "@beenotung/tslib/image";
 import RentDate from "./RentDate";
+import { useQuery } from "@tanstack/react-query";
+import serverURL from "../ServerDomain";
+import { useSelector } from "react-redux";
+import { RootState } from "../RTKstore";
+import { PropertyListOutput } from "../types";
 
 export function PaymentsModal(props: { createModalHandler: () => void }) {
   const [images, setImages] = useState<File[]>([]);
@@ -37,6 +51,8 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
     paymentsModal.current?.dismiss();
   }, [paymentsModal]);
   const [newPayment] = usePostPaymentMutation();
+  const { data: dataProperty } = useGetPropertyQuery({});
+  // const { data: dataPropertyList } = useGetPropertyDetailQuery({} as any);
   const pickImages = useCallback(async () => {
     let files = await selectImage({ multiple: true });
 
@@ -74,7 +90,22 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
     [presentAlert, dismissAll, newPayment, showResponseMessage, images]
   );
 
-  // const { data, isFetching, isLoading, error, isError } = useGetHomeQuery({});
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  // let { data, isFetching, isLoading, error, isError } = useQuery({
+  //   queryKey: ["/property"], // todo only, not a link, just a reference
+  //   retry: false,
+  //   queryFn: async () => {
+  //     const res = await fetch(serverURL + "/property", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     const result = await res.json();
+  //     return result.data;
+  //   },
+  // });
 
   return (
     <IonModal
@@ -91,14 +122,29 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
         <form onSubmit={OnSubmit}>
           <IonList>
             <IonGrid className="ion-padding">
-              <IonItem>
-                <IonLabel>Property Title: {}</IonLabel>
-              </IonItem>
               <CustomIonColInput>
-                <IonItem>
-                  <IonLabel>Monthly Rent: {}</IonLabel>
-                </IonItem>
-                {/* <CustomIonColInput> */}
+                <CustomSelectorOnFetch
+                  title="Property"
+                  name="title"
+                  value={dataProperty}
+                />
+              </CustomIonColInput>
+              {/* {data.length == 0 ? (
+                <>no contact yet, please add contact first</>
+              ) : (
+                data.map((property: PropertyListOutput) => ( */}
+              <IonInput
+                label="Rent amount"
+                name="rent"
+                type="number"
+                maxlength={8}
+              >
+                {/* {" "} */}
+              </IonInput>
+              {/* ))
+              )} */}
+
+              {/* <CustomIonColInput>
                 <IonInput
                   label="Term:"
                   labelPlacement="floating"
@@ -106,13 +152,22 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
                   type="number"
                   maxlength={2}
                 ></IonInput>
-              </CustomIonColInput>
+              </CustomIonColInput> */}
+
               {/* <CustomIonColInput>
+                    <CustomSelectorOnFetch
+                      title="Monthly rent"
+                      name="rent"
+                      value={property.rent}
+                    />
+                  </CustomIonColInput> */}
+
+              <CustomIonColInput>
                 <IonLabel>Start date</IonLabel>
                 <RentDate name="billing_period_from" id="dateTimeStart" />
                 <IonLabel>End date </IonLabel>
                 <RentDate name="billing_period_to" id="dateTimeEnd" />
-              </CustomIonColInput> */}
+              </CustomIonColInput>
 
               <CustomIonColInput>
                 <IonButtons>
