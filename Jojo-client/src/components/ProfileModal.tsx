@@ -214,6 +214,11 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
                         className={style.test11}
                         src={serverURL + "/" + data.avatar}
                         alt=""
+                        onError={({ currentTarget }) => {
+                          currentTarget.onerror = null; // prevents looping
+                          currentTarget.src =
+                            serverURL + "/defaultProfilePic.Png";
+                        }}
                       />
                     </IonAvatar>
                   ) : (
