@@ -52,7 +52,4 @@ export class PropertyInputDto {
   rental_start_at: Date;
   @IsDateString()
   rental_end_at: Date;
-  @IsOptional()
-  @IsString()
-  tenant_id: string;
 }

@@ -38,9 +38,7 @@ import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, SignUpInput } from "../types";
 import style from "../theme/signup.module.scss";
 import { formatError } from "../components/formatError";
-export function SignUpPage(props: {
-  setPage(cb: (state: string) => string): void;
-}) {
+export function SignUpPage(props: { setPage(state: string): void }) {
   const token = useSelector((state: RootState) => state.auth.token);
   const [signUp] = usePostUserSignUpMutation();
   const dispatch = useDispatch();
@@ -57,43 +55,47 @@ export function SignUpPage(props: {
       setErrors(["Those passwords didn’t match. Try again."]);
       return;
     }
-    // const json = await signUp(
-    //   formToJson(form, [
-    //     "first_name",
-    //     "last_name",
-    //     "email",
-    //     "password",
-    //     "user_type",
-    //   ]) as SignUpInput
-    // );
-
-    const json = await signUp({
-      first_name: "alice" + Math.floor(Math.random() * 50),
-      last_name: "wong",
-      email: Date.now() + "@gmail.com",
-      password: "Aa!11234",
-      user_type: "tenant",
-      // user_type: "landlord",
-    });
-
-    if ("error" in json) {
-      let message = (json as any)?.error?.data?.message;
-
-      setErrors(
-        Array.isArray(message)
-          ? message
-          : typeof message == "string"
-          ? [message]
-          : [String(json.error)]
+    let json;
+    try {
+      json = await signUp(
+        formToJson(form, [
+          "first_name",
+          "last_name",
+          "email",
+          "password",
+          "user_type",
+        ]) as SignUpInput
       );
-      if (SubmitBtnRef.current !== null) SubmitBtnRef.current.disabled = false;
-    } else {
-      dispatch(setCredentials(json.data));
-      setErrors([]);
-      showResponseMessageSignUp(json, presentAlert, () => {
+      // const json = await signUp({
+      //   first_name: "alice" + Math.floor(Math.random() * 50),
+      //   last_name: "wong",
+      //   email: Date.now() + "@gmail.com",
+      //   password: "Aa!11234",
+      //   user_type: "tenant",
+      //   // user_type: "landlord",
+      // });
+      if ("error" in json) {
+        let message = (json as any)?.error?.data?.message;
+
+        setErrors(
+          Array.isArray(message)
+            ? message
+            : typeof message == "string"
+            ? [message]
+            : [String(json.error)]
+        );
         if (SubmitBtnRef.current !== null)
           SubmitBtnRef.current.disabled = false;
-      });
+      } else {
+        dispatch(setCredentials(json.data));
+        setErrors([]);
+        showResponseMessageSignUp(json, presentAlert, () => {
+          if (SubmitBtnRef.current !== null)
+            SubmitBtnRef.current.disabled = false;
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, []);
 
@@ -105,12 +107,12 @@ export function SignUpPage(props: {
     }
   }, [token]);
   const setPageLogin = useCallback(() => {
-    props.setPage((state: string) => (state = "login"));
+    props.setPage("login");
   }, [props.setPage]);
 
   function renderFieldError(field: string) {
     return (
-      <IonNote color="danger">
+      <IonNote className={style.errorMsg}>
         {errors
           .filter((error) => error.includes(field))
           .map((error, idx) => (

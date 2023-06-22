@@ -19,7 +19,7 @@ import { useGetProfileQuery } from "../api/profileAPI";
 import { CustomIonColInput } from "./CustomIonColInput";
 import { closeOutline, image, personCircle } from "ionicons/icons";
 import serverURL from "../ServerDomain";
-import "../theme/menu.module.scss";
+
 import { useState, useCallback, FormEvent } from "react";
 import { format, parseISO } from "date-fns";
 import { useDispatch } from "react-redux";
@@ -41,10 +41,8 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
   const [deleteUser] = useDeleteUserMutation();
   const [editable, setEditable] = useState(true);
   const editMode = useCallback(() => {
-    setEditable((state) => {
-      return (state = !state);
-    });
-  }, [setEditable]);
+    setEditable((state) => !state);
+  }, []);
   const dispatch = useDispatch();
   const [errors, setErrors] = useState<string[]>([]);
   const [presentAlert] = useIonAlert();
@@ -61,29 +59,37 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
           text: "OK",
           role: "confirm",
           handler: async () => {
-            const json = await deleteUser({});
+            let json;
+            try {
+              json = await deleteUser({});
+            } catch (error) {
+              console.log(error);
+            }
             dispatch(logout());
             dispatch(jojoAPI.util.resetApiState());
           },
         },
       ],
     });
-  }, [deleteUser, dispatch, logout, presentAlert, jojoAPI]);
+  }, [logout, jojoAPI]);
   const [images, setImages] = useState<File>();
   const pickImages = useCallback(async () => {
-    let file = await selectImage({ multiple: false });
+    let compressedFile;
+    try {
+      let file = await selectImage({ multiple: false });
 
-    let dataUrl = await fileToBase64String(file[0]);
-    dataUrl = await resizeBase64WithRatio(
-      dataUrl,
-      { width: 460, height: 900 },
-      "with_in"
-    );
-    let compressedFile = dataURItoFile(dataUrl, file[0]);
+      let dataUrl = await fileToBase64String(file[0]);
+      dataUrl = await resizeBase64WithRatio(
+        dataUrl,
+        { width: 460, height: 900 },
+        "with_in"
+      );
+      compressedFile = dataURItoFile(dataUrl, file[0]);
+    } catch (error) {
+      console.log(error);
+    }
 
-    setImages((images) => {
-      return (images = compressedFile);
-    });
+    setImages(compressedFile);
   }, [
     selectImage,
     fileToBase64String,
@@ -99,9 +105,7 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
       const form = event.target as HTMLFormElement;
 
       if (form["confirm_password"].value !== form["password"].value) {
-        setErrors(
-          (state) => (state = ["Those passwords didn’t match. Try again."])
-        );
+        setErrors(["Those passwords didn’t match. Try again."]);
         return;
       }
       let fields = ["first_name", "last_name", "password"];
@@ -132,7 +136,12 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
       if (images !== undefined) {
         formData.append("image", images);
       }
-      const json = await patchUser({ body: formData, id: data.id });
+      let json;
+      try {
+        json = await patchUser({ body: formData, id: data.id });
+      } catch (error) {
+        console.log(error);
+      }
       setOriginalData(newData);
       showResponseMessage(json, presentAlert);
       setEditable(true);
@@ -205,6 +214,11 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
                         className={style.test11}
                         src={serverURL + "/" + data.avatar}
                         alt=""
+                        onError={({ currentTarget }) => {
+                          currentTarget.onerror = null; // prevents looping
+                          currentTarget.src =
+                            serverURL + "/defaultProfilePic.Png";
+                        }}
                       />
                     </IonAvatar>
                   ) : (

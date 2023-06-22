@@ -20,7 +20,9 @@ export function showResponseMessage(
     let errorMessages = (json.error as FetchError).data.message;
     errorMessages = Array.isArray(errorMessages)
       ? errorMessages[0]
-      : errorMessages;
+      : typeof errorMessages == "string"
+      ? errorMessages
+      : JSON.stringify(errorMessages);
     presentAlert({
       header: errorMessages,
       buttons: [

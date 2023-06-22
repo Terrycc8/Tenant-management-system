@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../slices/authSlice";
 import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
-import { FetchError } from "../types";
+import { FetchError, UserType, userRole } from "../types";
 import companyLogo1 from "../assets/companyLogo1.jpg";
 import "./LoginPage.css";
 import FacebookLogin, {
@@ -36,10 +36,9 @@ import FacebookLogin, {
 } from "react-facebook-login";
 import { RootState } from "../RTKstore";
 import { formatError } from "../components/formatError";
+import localStorage from "redux-persist/es/storage";
 
-export function LoginPage(props: {
-  setPage(cb: (state: string) => string): void;
-}) {
+export function LoginPage(props: { setPage(string: string): void }) {
   const ionPassword = useRef<HTMLIonInputElement | null>(null);
   const ionUsername = useRef<HTMLIonInputElement | null>(null);
   const [loginFetch] = usePostUserLoginMutation();
@@ -47,7 +46,6 @@ export function LoginPage(props: {
   const dispatch = useDispatch();
   const { checked, checkBoxOnClick } = useCheckBox();
   const [errors, setErrors] = useState<string[]>([]);
-  const [selectorValue, setSelectorValue] = useState(null);
 
   const loginOnClick = useCallback(async () => {
     let json: any;
@@ -73,32 +71,33 @@ export function LoginPage(props: {
       dispatch(setCredentials(json.data));
       setErrors([]);
     }
-  }, [
-    loginFetch,
-    setCredentials,
-    setErrors,
-    dispatch,
-    ionUsername,
-    ionPassword,
-  ]);
+  }, [setCredentials, ionUsername, ionPassword]);
   const setPageRegister = useCallback(() => {
-    props.setPage((state: string) => (state = "register"));
-  }, [props.setPage]);
+    props.setPage("register");
+  }, []);
 
   const loginFBOnClick = async (
     info: ReactFacebookLoginInfo | ReactFacebookFailureResponse
   ) => {
+    let selectorValue = await localStorage.getItem("type");
+
     if (selectorValue == null) {
       setErrors(["Please select your user type before login"]);
       return;
     }
-
+    if (
+      selectorValue !== userRole.landlord ||
+      selectorValue! == userRole.tenant
+    ) {
+      setErrors(["Incorrect user type"]);
+      return;
+    }
     if ("accessToken" in info) {
       let json: any;
       try {
         json = await loginFBFetch({
           accessToken: info.accessToken,
-          user_type: "landlord",
+          user_type: selectorValue as "landlord" | "tenant",
         });
       } catch (error) {
         setErrors(["Fetch Failed"]);
@@ -129,7 +128,6 @@ export function LoginPage(props: {
         <div className={style.login_signin_label}>Sign in</div>
         <IonList>
           <IonInput
-            value={"jojoProject43rfew@gmail.com"}
             className={style.login_input}
             label="Your Username/ Email"
             labelPlacement="stacked"
@@ -144,7 +142,6 @@ export function LoginPage(props: {
           ></IonInput>
 
           <IonInput
-            value={"jojoProject43rfew!"}
             className={style.login_input}
             label="Password"
             labelPlacement="stacked"
@@ -184,13 +181,13 @@ export function LoginPage(props: {
 
           <IonSelect
             className={style.login_select}
+            label="User Type : "
             aria-label="UserType"
             interface="popover"
-            placeholder="Select Your User Type"
+            justify="space-between"
+            placeholder="Click here to select"
             name="user_type"
-            onIonChange={(e) => {
-              return setSelectorValue(e.detail.value);
-            }}
+            onIonChange={(e) => localStorage.setItem("type", e.detail.value)}
           >
             <IonSelectOption value="landlord">LandLord</IonSelectOption>
             <IonSelectOption value="tenant">Tenant</IonSelectOption>
@@ -205,7 +202,6 @@ export function LoginPage(props: {
           </div>
           <IonButton
             className={style.login_signup_btn}
-            // routerLink={routes.signup}
             onClick={setPageRegister}
           >
             Create An Account

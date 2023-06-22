@@ -9,6 +9,7 @@ import { randomUUID } from 'crypto';
 import { Knex } from 'knex';
 import { InjectModel } from 'nest-knexjs';
 import { IDParamDto } from 'src/dto/IDParams';
+import { AddTenantInputDto } from 'src/dto/patch-tenant.dto';
 import { PatchUserInputDto } from 'src/dto/patch-user.dto';
 import {
   LoginInputWithFaceBookDto,
@@ -29,7 +30,7 @@ export class UserService {
   ) {}
 
   async loginWithPassword({ email, password }: LoginInputWithPasswordDto) {
-    let { id, hash, role, verified } = await this.knex('user')
+    let result = await this.knex('user')
       .select({
         id: 'id',
         hash: 'password_hash',
@@ -39,21 +40,21 @@ export class UserService {
       .where({ email })
       .first();
 
-    if (!id) {
+    if (!result) {
       throw new BadRequestException('Invalid email, this user does not exit');
     }
     let isCorrectPassword = await comparePassword({
       password,
-      hash,
+      hash: result.hash,
     });
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Incorrect password');
     }
-    if (!verified) {
+    if (!result.verified) {
       throw new UnauthorizedException('You have not activated your account');
     }
 
-    return { id, role };
+    return { id: result.id, role: result.role, verified: result.verified };
   }
   async patchUser(
     jwtPayLoad: JWTPayload,
@@ -64,6 +65,11 @@ export class UserService {
     if (jwtPayLoad.id !== parseInt(params)) {
       throw new BadRequestException(
         'You are not allowed to edit profile of this user',
+      );
+    }
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
       );
     }
     let filename: string | null;
@@ -124,7 +130,7 @@ export class UserService {
       },
       { token, id: userID[0].id },
     );
-    return { id: userID[0].id, role: sigUpInput.user_type };
+    return { id: userID[0].id, role: sigUpInput.user_type, verified: false };
   }
 
   async users(payload: JWTPayload) {
@@ -181,6 +187,11 @@ export class UserService {
     return { contacts };
   }
   async getProfile(jwtPayLoad: JWTPayload) {
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
+    }
     const profile = await this.knex('user')
       .select(
         'id',
@@ -241,11 +252,15 @@ export class UserService {
     return {};
   }
   async getTenants(jwtPayLoad: JWTPayload, offset: number, page: number) {
-    if (jwtPayLoad.role == userRole.tenant) {
-      console.log(2);
-      throw new BadRequestException('This api is only for landlord');
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
     }
-    console.log(3);
+    if (jwtPayLoad.role == userRole.tenant) {
+      throw new UnauthorizedException('This api is only for landlord');
+    }
+
     const tenants = await this.knex('property')
       .select(
         'tenant_id',
@@ -260,17 +275,26 @@ export class UserService {
       .orderBy('first_name')
       .limit(offset)
       .offset(offset * (page - 1));
-    console.log(tenants);
+
     return { result: tenants, totalItem: +tenants.length || 0 };
   }
-  async getAllTenants(jwtPayLoad: JWTPayload) {
+  async getAllTenants(jwtPayLoad: JWTPayload, searchText: string) {
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
+    }
     if (jwtPayLoad.role == userRole.tenant) {
-      throw new BadRequestException('This api is only for landlord');
+      throw new UnauthorizedException('This api is only for landlord');
     }
 
     const tenants = await this.knex('user')
-      .select('id as tenant_id', 'first_name', 'last_name')
-      .where({ user_type: userRole.tenant });
+      .select('id as tenant_id', 'avatar', 'first_name', 'last_name')
+      .where({ user_type: userRole.tenant })
+      .where({ verified: true })
+      .andWhereLike('first_name', `%${searchText}%`)
+      .orWhereLike('last_name', `%${searchText}%`)
+      .orWhereLike('email', `%${searchText}%`);
 
     return tenants;
   }
@@ -282,6 +306,9 @@ export class UserService {
     if (!user) {
       throw new BadRequestException('This user does not exist');
     }
+    if (this.statusVerified(id)) {
+      throw new BadRequestException('Your account has been verified.');
+    }
     if (user.token !== token) {
       throw new BadRequestException('Invalid token');
     }
@@ -292,7 +319,7 @@ export class UserService {
       throw new BadRequestException('Token expired');
     }
     await this.knex('user').update({ verified: true }).where({ id });
-    return { id, role: user.user_type };
+    return { id, role: user.user_type, verified: true };
   }
   async loginWithFaceBook(loginFBInput: LoginInputWithFaceBookDto) {
     let params = new URLSearchParams({
@@ -309,10 +336,14 @@ export class UserService {
     }
 
     let user = await this.knex('user')
-      .select('id', 'user_type')
+      .select('id', 'verified', 'user_type')
       .where({ email })
       .first();
-
+    if (!('verified' in user)) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
+    }
     if (!user) {
       let token = randomUUID().replace('-', '');
       user = await this.knex('user')
@@ -334,6 +365,38 @@ export class UserService {
         .returning('id');
     }
 
-    return { id: user.id, role: user.user_type || loginFBInput.user_type };
+    return {
+      id: user.id,
+      role: user.user_type || loginFBInput.user_type,
+      verified: true,
+    };
+  }
+  async statusVerified(id: number) {
+    return await this.knex('user').select('verified').where({ id }).first();
+  }
+
+  async addTenant(jwtPayLoad: JWTPayload, input: AddTenantInputDto) {
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
+    }
+    const result = await this.knex('property')
+      .select('tenant_id', 'landlord_id')
+      .where({ id: input.property_id })
+      .first();
+    if (!result) {
+      throw new BadRequestException('This property does not exist');
+    }
+    if (result.landlord_id !== jwtPayLoad.id) {
+      throw new UnauthorizedException(
+        'You are not allowed to add tenant to this property',
+      );
+    }
+    await this.knex('property')
+      .update({ tenant_id: input.tenant_id })
+      .where({ id: input.property_id });
+
+    return {};
   }
 }

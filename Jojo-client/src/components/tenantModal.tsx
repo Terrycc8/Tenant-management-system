@@ -42,10 +42,11 @@ import { CustomIonColInput } from "./CustomIonColInput";
 import { fileToBase64String, selectImage } from "@beenotung/tslib/file";
 import { dataURItoFile, resizeBase64WithRatio } from "@beenotung/tslib/image";
 import { area, district } from "../types";
-import { useGetTenantNoPaginationQuery } from "../api/tenantAPI";
+import { useAddTenantMutation } from "../api/tenantAPI";
 
 export function TenantModal(props: { createModalHandler: () => void }) {
   const [presentAlert] = useIonAlert();
+  const [tenantId, setTenantId] = useState<null | number>(null);
   const tenantModal = useRef<HTMLIonModalElement>(null);
   const dismissAll = useCallback(() => {
     tenantModal.current?.dismiss();
@@ -55,15 +56,23 @@ export function TenantModal(props: { createModalHandler: () => void }) {
     tenantModal.current?.dismiss();
   }, [tenantModal]);
   const { data: dataProperty } = useGetPropertyQuery({});
-  const { data: dataTenant } = useGetTenantNoPaginationQuery({});
+  const [newTenant] = useAddTenantMutation();
   const OnSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault();
       const form = event.target as HTMLFormElement;
-      let formData = new FormData(form);
 
-      const json: any = 1;
-      // = await newTenant(formData);
+      let property_id = +form["property_id"].value;
+      if (isNaN(property_id) || tenantId == null) {
+        return;
+      }
+      let json;
+      try {
+        json = await newTenant({ tenant_id: tenantId, property_id });
+      } catch (error) {
+        console.log(error);
+      }
+
       showResponseMessage(json, presentAlert, dismissAll);
     },
     [presentAlert, dismissAll, showResponseMessage]
@@ -78,7 +87,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
     >
       <CommonModalHeader
         handlerOnDismiss={dismissTenant}
-        name="Property"
+        name="Add Tenants"
       ></CommonModalHeader>
       <IonContent>
         <form onSubmit={OnSubmit}>
@@ -93,11 +102,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
               </CustomIonColInput>
 
               <CustomIonColInput>
-                <CustomSelectorOnFetchTenant
-                  title="Tenant"
-                  name="id"
-                  value={dataTenant}
-                />
+                <CustomSelectorOnFetchTenant cb={setTenantId} />
               </CustomIonColInput>
 
               <IonButton type="submit" expand="block">

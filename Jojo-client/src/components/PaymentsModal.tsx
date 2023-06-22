@@ -45,9 +45,7 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
     props.createModalHandler();
   }, [paymentsModal, props]);
   const dismissPayment = useCallback(() => {
-    setImages((images) => {
-      return (images = []);
-    });
+    setImages([]);
     paymentsModal.current?.dismiss();
   }, [paymentsModal]);
   const [newPayment] = usePostPaymentMutation();
@@ -66,9 +64,7 @@ export function PaymentsModal(props: { createModalHandler: () => void }) {
       file = dataURItoFile(dataUrl, file);
     }
 
-    setImages((images) => {
-      return (images = files);
-    });
+    setImages(files);
   }, [
     selectImage,
     fileToBase64String,

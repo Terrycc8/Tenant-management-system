@@ -32,6 +32,7 @@ import { IDParamDto } from 'src/dto/IDParams';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
 import { PatchUserInputDto } from 'src/dto/patch-user.dto';
 import { env } from 'src/env';
+import { AddTenantInputDto } from 'src/dto/patch-tenant.dto';
 
 @Controller('user')
 export class UserController {
@@ -59,24 +60,7 @@ export class UserController {
     let token = this.jwtService.encode(jwtPayload);
     return { token, role: jwtPayload.role };
   }
-  @Patch('/:id')
-  @UseInterceptors(filesInterceptorConfig(1))
-  async patchUser(
-    @UploadedFiles()
-    image: Express.Multer.File[],
-    @Request() req,
-    @Param(new ValidationPipe()) params: IDParamDto,
-    @Body(new ValidationPipe()) patchUserInput: PatchUserInputDto,
-  ) {
-    const jwtPayLoad = this.jwtService.decode(req);
 
-    return await this.userService.patchUser(
-      jwtPayLoad,
-      patchUserInput,
-      params.id.toString(),
-      image,
-    );
-  }
   @Post('signup')
   async signUp(
     @Body(new ValidationPipe()) signUpInput: SignUpInputWithPasswordDto,
@@ -127,11 +111,22 @@ export class UserController {
 
     return await this.userService.getTenants(jwtPayLoad, offset, page);
   }
+  @Patch('tenants')
+  async addTenant(
+    @Body(new ValidationPipe()) addTenantInput: AddTenantInputDto,
+    @Request() req,
+  ) {
+    const jwtPayLoad = this.jwtService.decode(req);
+    return await this.userService.addTenant(jwtPayLoad, addTenantInput);
+  }
   @Get('allTenants')
-  async getAllTenants(@Request() req) {
+  async getAllTenants(
+    @Query('search', new DefaultValuePipe('')) searchText: string,
+    @Request() req,
+  ) {
     const jwtPayLoad = this.jwtService.decode(req);
 
-    return await this.userService.getAllTenants(jwtPayLoad);
+    return await this.userService.getAllTenants(jwtPayLoad, searchText);
   }
   @Get('account')
   async account(
@@ -159,5 +154,23 @@ export class UserController {
   async getContractList(@Request() req) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
     return await this.userService.getContactList(payLoad);
+  }
+  @Patch('/:id')
+  @UseInterceptors(filesInterceptorConfig(1))
+  async patchUser(
+    @UploadedFiles()
+    image: Express.Multer.File[],
+    @Request() req,
+    @Param(new ValidationPipe()) params: IDParamDto,
+    @Body(new ValidationPipe()) patchUserInput: PatchUserInputDto,
+  ) {
+    const jwtPayLoad = this.jwtService.decode(req);
+
+    return await this.userService.patchUser(
+      jwtPayLoad,
+      patchUserInput,
+      params.id.toString(),
+      image,
+    );
   }
 }

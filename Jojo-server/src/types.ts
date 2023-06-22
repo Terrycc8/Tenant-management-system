@@ -3,6 +3,7 @@ import { ValidationArguments } from 'class-validator';
 export type JWTPayload = {
   id: number;
   role: 'landlord' | 'tenant';
+  verified: boolean;
 };
 
 export type FetchError = {
@@ -260,4 +261,12 @@ export type TenantListOutput = {
   email: string;
   avatar: string | null;
   title: string;
+};
+
+export type SearchTenantOutput = {
+  tenant_id: number;
+  first_name: string;
+  last_name: string;
+
+  avatar: string | null;
 };

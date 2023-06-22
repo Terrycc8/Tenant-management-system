@@ -40,29 +40,19 @@ export const tenantApi = jojoAPI.injectEndpoints({
       },
       providesTags: ["tenant"],
     }),
-
-    getTenantNoPagination: builder.query({
-      query: () => ({
-        url: apiRoutes.allTenants,
+    addTenant: builder.mutation({
+      query: (arg: { tenant_id: number; property_id: number }) => ({
+        url: apiRoutes.tenants,
+        headers: { "Content-Type": "application/json" },
+        method: "PATCH",
+        body: JSON.stringify(arg),
       }),
 
-      forceRefetch({ currentArg, previousArg, state }) {
-        const rootState: RootState = state as any;
-        const data: GetTenantResult = rootState.jojoAPI.queries.getTenant
-          ?.data as any;
-        const result = data?.result;
-
-        return (
-          !result ||
-          currentArg?.page != previousArg?.page ||
-          currentArg?.itemsPerPage != previousArg?.itemsPerPage
-        );
-      },
-      providesTags: ["tenant"],
+      invalidatesTags: ["tenant"],
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetTenantNoPaginationQuery, useGetTenantQuery } = tenantApi;
+export const { useGetTenantQuery, useAddTenantMutation } = tenantApi;
