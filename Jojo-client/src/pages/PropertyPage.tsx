@@ -100,12 +100,7 @@ export function PropertyPage() {
                   // scrollbar={{ draggable: true }}
                   pagination={true}
                 >
-                  {[
-                    ...property.attachments,
-                    ...property.attachments,
-                    ...property.attachments,
-                    ...property.attachments,
-                  ].map((image, idx) => (
+                  {property.attachments.map((image, idx) => (
                     <SwiperSlide key={idx + 1}>
                       <img src={serverURL + "/" + image} alt="" />
                     </SwiperSlide>

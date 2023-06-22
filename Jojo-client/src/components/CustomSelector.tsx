@@ -1,9 +1,13 @@
 import {
+  IonAvatar,
   IonButton,
   IonButtons,
   IonCol,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonImg,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
@@ -13,10 +17,26 @@ import {
   IonSelectOption,
   IonTitle,
   IonToolbar,
+  useIonAlert,
 } from "@ionic/react";
-import { PropertyListOutput, TenantListOutput } from "../types";
-import { useState } from "react";
-
+import {
+  PropertyListOutput,
+  SearchTenantOutput,
+  TenantListOutput,
+} from "../types";
+import { useCallback, useEffect, useState } from "react";
+import {
+  closeCircle,
+  closeCircleOutline,
+  closeOutline,
+  personCircle,
+} from "ionicons/icons";
+import { useSelector } from "react-redux";
+import { RootState } from "../RTKstore";
+import { apiRoutes } from "../routes";
+import serverURL from "../ServerDomain";
+import { showResponseMessage } from "../helper";
+import style from "../theme/searchTenant.module.scss";
 export function CustomSelector(props: {
   readonly?: boolean;
   defaultValue?: string;
@@ -55,130 +75,126 @@ export function CustomSelectorOnFetch(props: {
 }) {
   const { value, title, name } = props;
   return (
-    <IonCol>
-      <IonSelect
-        label={title}
-        labelPlacement="floating"
-        fill="outline"
-        name={name}
-      >
-        {!value || value.length == 0 ? (
-          <IonSelectOption disabled={true}>
-            <IonLabel>No Associated {props.title}.</IonLabel>
+    <IonSelect
+      label={title}
+      labelPlacement="floating"
+      fill="outline"
+      name={name}
+    >
+      {!value || value.length == 0 ? (
+        <IonSelectOption disabled={true}>
+          <IonLabel>No Associated {props.title}.</IonLabel>
+        </IonSelectOption>
+      ) : value.length > 0 ? (
+        value.map((item) => (
+          <IonSelectOption value={item.id} key={item.id}>
+            {item.title}
           </IonSelectOption>
-        ) : value.length > 0 ? (
-          value.map((item) => (
-            <IonSelectOption value={item.id} key={item.id}>
-              {item.title}
-            </IonSelectOption>
-          ))
-        ) : (
-          <>Invalid Data: {JSON.stringify(value)}</>
-        )}
-      </IonSelect>
-    </IonCol>
+        ))
+      ) : (
+        <>Invalid Data: {JSON.stringify(value)}</>
+      )}
+    </IonSelect>
   );
 }
 export function CustomSelectorOnFetchTenant(props: {
-  value: TenantListOutput[];
-  title: string;
-  name: string;
+  cb: (id: number) => void;
 }) {
-  let [results, setResults] = useState([...props.value]);
-  const { value, title, name } = props;
-  const handleInput = (ev: Event) => {
-    let query = "";
-    const target = ev.target as HTMLIonSearchbarElement;
-    if (target) query = target.value!.toLowerCase();
-
-    setResults(
-      props.value.filter((d: TenantListOutput) => {
-        if (d.first_name.includes(query) || d.last_name.includes(query)) {
-          return false;
-        } else return true;
-      })
-    );
-  };
-
+  const token = useSelector((state: RootState) => state.auth.token);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchResult, setSearchResult] = useState<SearchTenantOutput[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState(0);
+  const [selectedResult, setSelectedResult] = useState("");
+  const fetchResultOnInput = useCallback(
+    (e: CustomEvent) => {
+      fetch(serverURL + apiRoutes.allTenants + `/?search=${e.detail.value}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then(async (res) => {
+          let json: SearchTenantOutput[] = await res.json();
+          setSearchResult(json);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    [serverURL, apiRoutes, token]
+  );
+  const closeBtnOnlick = useCallback(() => {
+    setSearchText("");
+    setShowSearch(false);
+  }, []);
+  const ionInputOnput = useCallback(() => {
+    setShowSearch(true);
+  }, []);
+  const searchBarOnClear = useCallback(() => {
+    setSearchText("");
+  }, []);
 
   return (
-    <IonCol>
+    <>
+      <IonInput
+        onClick={ionInputOnput}
+        placeholder="Click here to search tenants"
+        value={selectedResult}
+        name="tenant_id"
+      ></IonInput>
       <IonModal isOpen={showSearch}>
         <IonHeader>
           <IonToolbar>
             <IonTitle>Search Tenant</IonTitle>
-            <IonButtons slot="end">
-              <IonButton
-                onClick={() => {
-                  setSearchText("");
-                  setShowSearch(false);
-                }}
-              >
-                Dismiss
+            <IonButtons onClick={closeBtnOnlick} slot="start">
+              <IonButton>
+                <IonIcon icon={closeOutline}></IonIcon>
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonSearchbar
-            value={searchText}
-            onIonInput={(e) => setSearchText(e.detail.value || "")}
-            onIonClear={() => setSearchText("")}
+            onIonInput={fetchResultOnInput}
+            placeholder="Search by tenant's name or email"
+            onIonClear={searchBarOnClear}
           ></IonSearchbar>
 
           <IonList>
-            {results
-              .filter(
-                (result) =>
-                  result.first_name?.includes(searchText) ||
-                  result.last_name?.includes(searchText) ||
-                  result.email?.includes(searchText) ||
-                  result.title?.includes(searchText)
-              )
-              .map((result) => (
-                <IonItem
-                  key={result.tenant_id}
-                  onClick={() => {
-                    setShowSearch(false);
-                    setTenantId(result.tenant_id);
-                  }}
-                >
-                  <IonLabel>
-                    {result.last_name} {result.first_name}
-                  </IonLabel>
+            <IonButtons className={style.contactsBtnGroup}>
+              {searchResult.map((result) => (
+                <IonItem key={result.tenant_id}>
+                  <IonButton
+                    data-id={result.tenant_id}
+                    onClick={() => {
+                      setShowSearch(false);
+                      setSelectedResult(result.first_name + result.last_name);
+
+                      props.cb(result.tenant_id);
+                    }}
+                  >
+                    {typeof result.avatar == "string" &&
+                    result.avatar.length > 0 ? (
+                      <IonAvatar className={style.avatar}>
+                        <IonImg src={serverURL + "/" + result.avatar} alt="" />
+                      </IonAvatar>
+                    ) : (
+                      <IonIcon
+                        slot="icon-only"
+                        icon={personCircle}
+                        className={style.avatar}
+                      ></IonIcon>
+                    )}
+                    <IonLabel className="ion-margin">
+                      {result.first_name} {result.last_name}
+                    </IonLabel>
+                  </IonButton>
                 </IonItem>
               ))}
+            </IonButtons>
           </IonList>
         </IonContent>
       </IonModal>
-      <IonSelect
-        value={tenantId}
-        onClick={(event) => {
-          // alert("123");
-          // event.preventDefault();
-          // event.stopPropagation();
-          // setShowSearch(!showSearch);
-        }}
-        // disabled
-        label={title}
-        labelPlacement="floating"
-        fill="outline"
-        name={name}
-      >
-        <IonSelectOption value={0}>No Associated {props.title}</IonSelectOption>
-        {value.map((item) => (
-          <IonSelectOption value={item.tenant_id} key={item.tenant_id}>
-            {item.first_name} {item.last_name}
-          </IonSelectOption>
-        ))}
-      </IonSelect>
-      <IonSearchbar
-        onClick={() => setShowSearch(!showSearch)}
-        placeholder="Search Tenant by name"
-      ></IonSearchbar>
-    </IonCol>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import {
   IonAccordion,
   IonAccordionGroup,
+  IonAvatar,
   IonButton,
   IonCard,
   IonCardContent,
@@ -14,6 +15,7 @@ import {
   IonCol,
   IonContent,
   IonHeader,
+  IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonInput,
@@ -45,7 +47,8 @@ import { EventListOutput, TenantListOutput, userRole } from "../types";
 import { RootState } from "../RTKstore";
 import { Loading } from "../components/Loading";
 import { useGetTenantQuery } from "../api/tenantAPI";
-
+import { personCircle } from "ionicons/icons";
+import style from "../theme/menu.module.scss";
 export function TenantsPage() {
   const [page, setPage] = useState(1);
   const role = useSelector((state: RootState) => state.auth.role);
@@ -108,7 +111,24 @@ export function TenantsPage() {
               {items.map((tenant: TenantListOutput) => (
                 <IonCard key={tenant.tenant_id}>
                   <IonCardHeader>
-                    <img src={serverURL + "/" + tenant.avatar} alt="" />
+                    <div className={style.profilePicEditDiv}>
+                      {typeof tenant.avatar == "string" &&
+                      tenant.avatar.length > 0 ? (
+                        <IonAvatar className={style.profilePicEdit}>
+                          <img
+                            className={style.test11}
+                            src={serverURL + "/" + tenant.avatar}
+                            alt=""
+                          />
+                        </IonAvatar>
+                      ) : (
+                        <IonIcon
+                          className={style.profilePicEdit}
+                          slot="icon-only"
+                          icon={personCircle}
+                        ></IonIcon>
+                      )}
+                    </div>
                   </IonCardHeader>
 
                   <IonCardContent>

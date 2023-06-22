@@ -284,3 +284,9 @@ export type TenantListOutput = {
   avatar: string | null;
   title: string;
 };
+export type SearchTenantOutput = {
+  tenant_id: number;
+  first_name: string;
+  last_name: string;
+  avatar: string | null;
+};

@@ -90,13 +90,20 @@ export function EventsPage() {
   const rejectOnClick = actionOnClick("reject");
   const cancelOnClick = actionOnClick("cancel");
   function actionOnClick(action: string) {
-    return useCallback((event: MouseEvent) => {
-      let id = +(event.target as HTMLElement).dataset.id!;
-      const comment = (
-        event.nativeEvent.target as HTMLElement
-      ).parentElement?.querySelector("ion-textarea")!.value!;
-      patchEvent({ action: { type: action, comment: "" }, id });
-    }, []);
+    return useCallback(
+      async (event: MouseEvent) => {
+        let id = +(event.target as HTMLElement).dataset.id!;
+        const comment = (
+          event.nativeEvent.target as HTMLElement
+        ).parentElement?.querySelector("ion-textarea")!.value!;
+        try {
+          await patchEvent({ action: { type: action, comment: "" }, id });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      [action]
+    );
   }
 
   return (
@@ -128,13 +135,11 @@ export function EventsPage() {
 
                   <IonCardContent>
                     <Swiper modules={[Pagination]} pagination={true}>
-                      {[...event.attachments, ...event.attachments].map(
-                        (image, idx) => (
-                          <SwiperSlide key={idx + 1}>
-                            <img src={serverURL + "/" + image} alt="" />
-                          </SwiperSlide>
-                        )
-                      )}
+                      {event.attachments.map((image, idx) => (
+                        <SwiperSlide key={idx + 1}>
+                          <img src={serverURL + "/" + image} alt="" />
+                        </SwiperSlide>
+                      ))}
                     </Swiper>
                   </IonCardContent>
                   <IonAccordion value={event.id.toString()}>

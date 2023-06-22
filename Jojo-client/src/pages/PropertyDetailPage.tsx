@@ -62,15 +62,10 @@ export function PropertyDetailPage() {
     useGetPropertyDetailQuery(id);
   const [editable, setEditable] = useState(true);
   const [originalData, setOriginalData] = useState({});
-  const editMode = useCallback(
-    (event: MouseEvent) => {
-      setOriginalData(data);
-      setEditable((state) => {
-        return (state = !state);
-      });
-    },
-    [setEditable]
-  );
+  const editMode = useCallback((event: MouseEvent) => {
+    setOriginalData(data);
+    setEditable((state) => !state);
+  }, []);
   const [presentAlert] = useIonAlert();
   const [updateProperty] = usePatchPropertyMutation();
   const [deleteProperty] = useDeletePropertyMutation();
@@ -98,7 +93,6 @@ export function PropertyDetailPage() {
         "floor",
         "room",
         "rent",
-        "tenant_id",
         "rental_start_at",
         "rental_end_at",
       ];
@@ -122,12 +116,16 @@ export function PropertyDetailPage() {
       if (!hasChanged) {
         return;
       }
+      let json;
+      try {
+        json = await updateProperty({
+          body: formData,
+          id: data.id as number,
+        });
+      } catch (error) {
+        console.log(error);
+      }
 
-      const json = await updateProperty({
-        body: formData,
-        id: data.id as number,
-      });
-      // setOriginalData(newData);
       setOriginalData(newData);
 
       showResponseMessage(json, presentAlert);
@@ -137,7 +135,7 @@ export function PropertyDetailPage() {
   );
 
   useIonViewDidLeave(() => {
-    setEditable((state) => (state = true));
+    setEditable(true);
   });
   const showAlert = useCallback(() => {
     presentAlert({
@@ -151,7 +149,12 @@ export function PropertyDetailPage() {
           text: "OK",
           role: "confirm",
           handler: async () => {
-            const json = await deleteProperty({ id: data.id });
+            let json;
+            try {
+              json = await deleteProperty({ id: data.id });
+            } catch (error) {
+              console.log(error);
+            }
           },
         },
       ],

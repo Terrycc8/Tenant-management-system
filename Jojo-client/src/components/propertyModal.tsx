@@ -44,9 +44,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
     props.createModalHandler();
   }, [propertyModal, props]);
   const dismissProperty = useCallback(() => {
-    setImages((images) => {
-      return (images = []);
-    });
+    setImages([]);
     propertyModal.current?.dismiss();
   }, [propertyModal]);
   const [newProperty] = usePostPropertyMutation();
@@ -63,9 +61,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
       file = dataURItoFile(dataUrl, file);
     }
 
-    setImages((images) => {
-      return (images = files);
-    });
+    setImages(files);
   }, [
     selectImage,
     fileToBase64String,
@@ -81,7 +77,12 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
       for (let image of images) {
         formData.append("image", image);
       }
-      const json = await newProperty(formData);
+      let json;
+      try {
+        json = await newProperty(formData);
+      } catch (error) {
+        console.log(error);
+      }
       showResponseMessage(json, presentAlert, dismissAll);
     },
     [presentAlert, dismissAll, newProperty, showResponseMessage, images]
@@ -112,11 +113,11 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
     >
       <CommonModalHeader
         handlerOnDismiss={dismissProperty}
-        name="Property"
+        name="List New Property"
       ></CommonModalHeader>
       <IonContent>
         <form onSubmit={OnSubmit}>
-          <IonButton onClick={dev}>dev</IonButton>
+          {/* <IonButton onClick={dev}>dev</IonButton> */}
           <IonList>
             <IonGrid className="ion-padding">
               <CustomIonColInput>

@@ -49,7 +49,12 @@ export function EventsModal(props: { createModalHandler: () => void }) {
       for (let image of images) {
         formData.append("image", image);
       }
-      const json = await newEvent(formData);
+      let json;
+      try {
+        json = await newEvent(formData);
+      } catch (error) {
+        console.log(error);
+      }
       showResponseMessage(json, presentAlert, dismissAll);
     },
     [presentAlert, dismissAll, showResponseMessage, newEvent]
@@ -68,16 +73,8 @@ export function EventsModal(props: { createModalHandler: () => void }) {
       file = dataURItoFile(dataUrl, file);
     }
 
-    setImages((images) => {
-      return (images = files);
-    });
-  }, [
-    selectImage,
-    fileToBase64String,
-    resizeBase64WithRatio,
-    dataURItoFile,
-    setImages,
-  ]);
+    setImages(files);
+  }, [selectImage]);
   return (
     <IonModal
       ref={eventsModal}

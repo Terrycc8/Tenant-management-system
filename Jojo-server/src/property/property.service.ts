@@ -182,27 +182,12 @@ export class PropertyService {
       );
     }
 
-    let tenant_id = parseInt(propertyInput.tenant_id);
-
-    if (!tenant_id) {
-      tenant_id = null;
-    }
-    result = await this.knex('user')
-      .select('id')
-      .where({ id: tenant_id })
-      .first();
-    if (!result && propertyInput.tenant_id.length > 0) {
-      throw new BadRequestException(
-        'Invalid request, this user does not exist',
-      );
-    }
     result = await this.knex('property')
-      .update({ ...propertyInput, tenant_id: tenant_id, edited_at: new Date() })
+      .update({ ...propertyInput, edited_at: new Date() })
       .where({ id })
       .returning('id');
-    result = await this.knex('property').select('*').where({ id });
 
-    return { tenant_id: propertyInput.tenant_id };
+    return {};
   }
   async propertyDelete(
     payload: JWTPayload,
