@@ -245,7 +245,7 @@ export type PaymentListOutput = {
   billing_period_from: Date;
   billing_period_to: Date;
   attachments: string[];
-  confirmed_at: string;
+  confirmed_at: Date;
   first_name: string;
   last_name: string;
 };

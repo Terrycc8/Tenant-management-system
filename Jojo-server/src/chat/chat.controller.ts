@@ -76,22 +76,29 @@ export class ChatController {
   sendMessage(
     @Param('id') room_id: string,
     @Request() req,
-    @Body('message') message: string,
+    @Body('id') id: number,
+    @Body('message') content: string,
   ) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
-    console.log('Send message:', { room_id, message });
-    ChatController.io.emit('new-message', { id: room_id, message });
-    console.log('after emit');
+    console.log('Send message:', { room_id, content });
+    ChatController.io.emit('new-message', {
+      id,
+      content,
+      sender_id: payLoad.id,
+      created_at: Date.now(),
+    });
+    // console.log('after emit');
     // console.log('c', ChatController.io.sockets);
     // return { id: 123 };
-    this.chatService.sendMessage(room_id, payLoad, message);
+    this.chatService.sendMessage(room_id, payLoad, content);
     return {};
   }
 
-  @Get('/messages/id')
-  getMessages(@Param('id') room_id: string) {
-    // let payLoad: JWTPayload = this.jwtService.decode(req);
-    return this.chatService.messageById(room_id);
+  @Get('/messages/:id')
+  async getMessages(@Param('id') room_id: string, @Request() req) {
+    let payLoad: JWTPayload = this.jwtService.decode(req);
+    let message = await this.chatService.messageById(room_id);
+    return { message, id: payLoad.id };
   }
 
   @Post('/rooms/:id/')

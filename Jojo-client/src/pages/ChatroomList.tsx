@@ -179,9 +179,7 @@ export function ChatroomList() {
                 <IonCardTitle>{record.otherUser}</IonCardTitle>
                 {/* IonItem */}
                 {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
-                <IonCardContent>
-                  {record.senderName + " : " + record.content}
-                </IonCardContent>
+                <IonCardContent>{record.content}</IonCardContent>
               </IonCardHeader>
               {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
             </IonCard>

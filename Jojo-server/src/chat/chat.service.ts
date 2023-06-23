@@ -77,21 +77,27 @@ export class ChatService {
         room_id,
         sender_id: payload.id,
         content,
-        created_at: new Date(),
+        created_at: new Date(Date.now()),
       });
       // console.log('end', newMessage);
+      return {};
     } catch (error) {
       console.log(error);
+      return { error: 'Server Error' };
     }
-
-    return {};
   }
 
   async messageById(room_id: string) {
     let message = this.knex('message')
       .where('room_id', room_id)
-      .innerJoin('user as sender', 'sender.id', 'message.sender_id')
-      .select('message.sender_id', 'message.content', 'sender.id');
+      //.innerJoin('user as sender', 'sender.id', 'message.sender_id')
+      .select(
+        'message.sender_id',
+        'message.content',
+        'message.id',
+        'message.created_at',
+      )
+      .orderBy('message.id');
     return message;
   }
 
@@ -145,6 +151,7 @@ export class ChatService {
 
     const userNameMap = new Map();
     otherUsers.map((user) => userNameMap.set(user.id, user.first_name));
+    console.log(userNameMap);
 
     const data = lastMessages.map((message) => {
       const { room_id, sender_id, content } = message;
