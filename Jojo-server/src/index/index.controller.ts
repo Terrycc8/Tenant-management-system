@@ -12,6 +12,7 @@ export class IndexController {
   @Get()
   getHomePageInfo(@Request() req) {
     let jwtPayLoad = this.jwtService.decode(req);
+
     if (!jwtPayLoad.verified) {
       throw new BadRequestException(
         'Your account is not activated, please check registered email',

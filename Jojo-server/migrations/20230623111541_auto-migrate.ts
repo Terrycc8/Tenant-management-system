@@ -52,7 +52,7 @@ export async function up(knex: Knex): Promise<void> {
       table.string('title', 32).notNullable()
       table.enum('type', ['maintenance', 'notices', 'reimbursement', 'complaint']).notNullable()
       table.enum('priority', ['high', 'medium', 'low']).notNullable()
-      table.enum('status', ['resolved', 'pending', 'rejected']).notNullable()
+      table.enum('status', ['resolved', 'pending', 'rejected', 'cancelled']).notNullable()
       table.string('description', 256).notNullable()
       table.string('reason', 256).nullable()
       table.integer('property_id').unsigned().notNullable().references('property.id')

@@ -292,9 +292,11 @@ export class UserService {
       .select('id as tenant_id', 'avatar', 'first_name', 'last_name')
       .where({ user_type: userRole.tenant })
       .where({ verified: true })
-      .andWhereLike('first_name', `%${searchText}%`)
-      .orWhereLike('last_name', `%${searchText}%`)
-      .orWhereLike('email', `%${searchText}%`);
+      .andWhere(function () {
+        this.orWhereILike('first_name', `%${searchText}%`)
+          .orWhereILike('last_name', `%${searchText}%`)
+          .orWhereLike('email', `%${searchText}%`);
+      });
 
     return tenants;
   }
@@ -306,7 +308,7 @@ export class UserService {
     if (!user) {
       throw new BadRequestException('This user does not exist');
     }
-    if (this.statusVerified(id)) {
+    if (await this.statusVerified(id)) {
       throw new BadRequestException('Your account has been verified.');
     }
     if (user.token !== token) {
@@ -339,11 +341,7 @@ export class UserService {
       .select('id', 'verified', 'user_type')
       .where({ email })
       .first();
-    if (!('verified' in user)) {
-      throw new UnauthorizedException(
-        'Your account is not activated, please check registered email',
-      );
-    }
+
     if (!user) {
       let token = randomUUID().replace('-', '');
       user = await this.knex('user')
@@ -366,13 +364,21 @@ export class UserService {
     }
 
     return {
-      id: user.id,
+      id: user[0].id,
       role: user.user_type || loginFBInput.user_type,
       verified: true,
     };
   }
   async statusVerified(id: number) {
-    return await this.knex('user').select('verified').where({ id }).first();
+    let result = await this.knex('user')
+      .select('verified')
+      .where({ id })
+      .first();
+    if (!result) {
+      throw new BadRequestException('This user does not exist');
+    }
+    console.log(result.verified);
+    return result.verified;
   }
 
   async addTenant(jwtPayLoad: JWTPayload, input: AddTenantInputDto) {
