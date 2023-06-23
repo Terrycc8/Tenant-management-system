@@ -2,12 +2,14 @@ import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.alterTable('payment', function (table) {
-    table.dropColumn('status');
+    table
+      .enum('status', ['confirmed', 'pending', 'rejected', 'cancelled'])
+      .notNullable();
   });
 }
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.alterTable('payment', function (table) {
-    table.enum('status', ['confirmed', 'pending']).notNullable();
+    table.dropColumn('status');
   });
 }
