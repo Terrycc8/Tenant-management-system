@@ -63,6 +63,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
       const form = event.target as HTMLFormElement;
 
       let property_id = +form["property_id"].value;
+      console.log(isNaN(property_id), tenantId);
       if (isNaN(property_id) || tenantId == null) {
         return;
       }
@@ -75,7 +76,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
 
       showResponseMessage(json, presentAlert, dismissAll);
     },
-    [presentAlert, dismissAll, showResponseMessage]
+    [presentAlert, dismissAll, showResponseMessage, tenantId]
   );
 
   return (

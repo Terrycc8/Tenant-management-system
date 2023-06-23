@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   IonBackButton,
   IonButtons,
@@ -26,7 +25,7 @@ import { chatService } from "../api";
 import serverURL from "../ServerDomain";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { Message } from "../../../Jojo-server/dist/src/proxy";
+// import { Message } from "../../../Jojo-server/dist/src/proxy";
 import { showResponseMessageSignUp } from "../helper";
 import { format_long_short_time } from "@beenotung/tslib/format";
 type Message = {
@@ -167,40 +166,8 @@ function Footer(props: { newID: number }) {
     </IonFooter>
   );
 }
-=======
-import {
-  IonBackButton,
-  IonButtons,
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonPage,
-  IonTextarea,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonButton,
-} from "@ionic/react";
-import { useCallback, useState, useEffect } from "react";
-import { routes } from "../routes";
-import { addOutline, send } from "ionicons/icons";
-import "./Chatroom.css";
-import { useSocket } from "../useHook/use-socket";
-import { useValue } from "../useHook/use-value";
-import { useParams } from "react-router";
-import { chatService } from "../api";
-import serverURL from "../ServerDomain";
-import { useSelector } from "react-redux";
-import { RootState } from "../RTKstore";
 
-type Message = {
-  id: number;
-  message: string;
-};
-
-export function ChatroomPage() {
+/* export function ChatroomPage() {
   const { id } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -311,5 +278,4 @@ function Footer() {
       </IonItem>
     </IonFooter>
   );
-}
->>>>>>> 019f75ca13d4cc2d98bbc225eb3d48b788f2d7a4
+} */

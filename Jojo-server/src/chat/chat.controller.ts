@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Controller,
   Get,
@@ -115,25 +114,8 @@ export class ChatController {
   //   return { token };
   // }
 }
-=======
-import {
-  Controller,
-  Get,
-  Param,
-  NotImplementedException,
-  BadRequestException,
-  Post,
-  Body,
-  Header,
-  Headers,
-} from '@nestjs/common';
-import { JwtService } from '../jwt/jwt.service';
-import { RoomDetail, RoomListItem } from './chat.dto';
-import { ChatService } from './chat.service';
-import { JWTPayload, uploadDir } from 'src/types';
-import * as socketIO from 'socket.io';
-import { Request } from '@nestjs/common';
-@Controller('/chat')
+
+/*@Controller('/chat')
 export class ChatController {
   static io: socketIO.Server;
   constructor(
@@ -224,5 +206,4 @@ export class ChatController {
 
   //   return { token };
   // }
-}
->>>>>>> 019f75ca13d4cc2d98bbc225eb3d48b788f2d7a4
+} */

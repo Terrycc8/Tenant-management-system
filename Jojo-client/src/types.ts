@@ -237,7 +237,7 @@ export type ClientPayload = {
 };
 
 export type PaymentListOutput = {
-  id: string;
+  id: number;
   property_id: string;
   payer_id: number;
   status: "confirmed" | "pending";
