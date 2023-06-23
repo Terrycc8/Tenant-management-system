@@ -115,7 +115,7 @@ export class EventService {
       throw new BadRequestException('This event has been closed');
     }
     if (
-      event.handled_by_id !== jwtPayload.id ||
+      event.handled_by_id !== jwtPayload.id &&
       event.created_by_id !== jwtPayload.id
     ) {
       throw new BadRequestException('You are not allowed to edit this event');

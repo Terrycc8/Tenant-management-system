@@ -29,7 +29,7 @@ import style from "../theme/login.module.scss";
 import { useCheckBox } from "../useHook/useCheckBox";
 import { FetchError, UserType, userRole } from "../types";
 import companyLogo1 from "../assets/companyLogo1.jpg";
-import "./LoginPage.css";
+
 import FacebookLogin, {
   ReactFacebookFailureResponse,
   ReactFacebookLoginInfo,
@@ -86,8 +86,8 @@ export function LoginPage(props: { setPage(string: string): void }) {
       return;
     }
     if (
-      selectorValue !== userRole.landlord ||
-      selectorValue! == userRole.tenant
+      selectorValue !== userRole.landlord &&
+      selectorValue !== userRole.tenant
     ) {
       setErrors(["Incorrect user type"]);
       return;

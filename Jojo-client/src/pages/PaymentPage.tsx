@@ -11,7 +11,7 @@ import { CommonHeader } from "../components/CommonHeader";
 export function PaymentPage() {
   return (
     <IonPage>
-      <CommonHeader title="Monthly Rent" />
+      <CommonHeader title="Monthly Rent" hideHeader={true} />
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>

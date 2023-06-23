@@ -1,7 +1,6 @@
-set e
+set -e
 set -x
 
-image=
-server=terry-chan.com
-
-docker save $image |zstd| ssh $server "unzstd | docker load"
+source ../scripts/config
+docker images $image
+docker save $image|pv |zstd| ssh $server "unzstd | docker load"

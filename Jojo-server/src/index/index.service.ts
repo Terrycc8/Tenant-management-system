@@ -7,6 +7,7 @@ import { JWTPayload, userRole } from 'src/types';
 export class IndexService {
   constructor(@InjectModel() private readonly knex: Knex) {}
   async getHomePageInfo(jwtPayload: JWTPayload) {
+    console.log(jwtPayload);
     const name = await this.knex('user')
       .select('first_name as name')
       .where({ id: jwtPayload.id })

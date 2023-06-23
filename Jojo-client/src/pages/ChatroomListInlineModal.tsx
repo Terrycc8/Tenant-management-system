@@ -43,7 +43,7 @@ export function ChatroomList() {
               <IonIcon size="large" icon={createOutline} />
             </IonButton>
           </IonToolbar>
-          <IonSearchbar onIonChange={(e) => search(e)} />
+          {/* <IonSearchbar onIonChange={(e) => search(e)} /> */}
         </IonHeader>
         <IonContent>
           {error ? (

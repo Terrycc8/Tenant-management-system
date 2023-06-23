@@ -2,10 +2,11 @@ import { config } from 'dotenv';
 import populateEnv from 'populate-env';
 config();
 export const env = {
-  DB_NAME: '',
-  DB_USERNAME: '',
-  DB_PASSWORD: '',
-  PORT: 5432,
+  POSTGRES_DB: '',
+  POSTGRES_USER: '',
+  POSTGRES_PASSWORD: '',
+  POSTGRES_PORT: 5432,
+  POSTGRES_HOST: 'localhost',
   SERVER_PORT: 8100,
   SERVER_DOMAIN: 'http://localhost:',
   CLIENT_DOMAIN: 'http://localhost:',

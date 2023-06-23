@@ -49,7 +49,8 @@
     "sass": "^1.63.4",
     "socket.io": "^4.6.2",
     "socket.io-client": "^4.6.2",
-    "swiper": "^9.4.0"
+    "swiper": "^9.4.0",
+    "terser": "^5.18.1"
   },
   "devDependencies": {
     "@capacitor/cli": "5.0.4",

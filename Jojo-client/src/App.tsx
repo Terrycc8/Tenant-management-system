@@ -63,7 +63,6 @@ import PaymentPage from "./pages/PaymentPage";
 import { MemberOnlyRoute } from "./components/MemberOnlyRoute";
 
 import { Tab } from "./pages/Tab";
-import { GuestOnlyRoute } from "./components/GuestOnlyRoute";
 import { ChatroomPage } from "./pages/Chatroom";
 import { Button } from "@mantine/core";
 
