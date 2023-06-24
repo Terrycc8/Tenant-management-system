@@ -7,7 +7,7 @@ if (
 ) {
   ioServerURL = "wss://jojo.terry-chan.com";
 } else if (window.location.href.includes("localhost")) {
-  ioServerURL = "ws://localhost:8300";
+  ioServerURL = "ws://jojo.terry-chan.com";
 } else {
   throw new Error("Uknown envirment");
 }
