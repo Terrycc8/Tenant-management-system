@@ -21,6 +21,7 @@ export const authSlice = createSlice({
   reducers: {
     setCredentials: (state, { payload: { token, role, avatar } }) => {
       state.token = token;
+      console.log(role);
       state.role = role;
       state.avatar = avatar;
     },

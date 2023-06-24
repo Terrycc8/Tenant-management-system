@@ -2,6 +2,7 @@ import { BadRequestException, Controller, Get } from '@nestjs/common';
 import { IndexService } from './index.service';
 import { JwtService } from 'src/jwt/jwt.service';
 import { Request } from '@nestjs/common';
+import { userRole } from 'src/types';
 
 @Controller('')
 export class IndexController {
@@ -18,6 +19,12 @@ export class IndexController {
         'Your account is not activated, please check registered email',
       );
     }
-    return this.indexService.getHomePageInfo(jwtPayLoad);
+    if (jwtPayLoad.role == userRole.landlord) {
+      return this.indexService.getHomePageInfoLandLord(jwtPayLoad);
+    } else if (jwtPayLoad.role == userRole.tenant) {
+      return this.indexService.getHomePageInfoTenant(jwtPayLoad);
+    } else {
+      throw new BadRequestException('Unknown user type');
+    }
   }
 }

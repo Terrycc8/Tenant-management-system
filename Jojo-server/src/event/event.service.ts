@@ -127,7 +127,7 @@ export class EventService {
       } else if (patchEventInput.type == 'reject') {
         status = 'rejected';
       }
-    } else if (jwtPayload.role == userRole.landlord) {
+    } else if (jwtPayload.role == userRole.tenant) {
       if (patchEventInput.type == 'cancel') {
         status = 'cancelled';
       }

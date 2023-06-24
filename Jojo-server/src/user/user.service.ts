@@ -122,13 +122,14 @@ export class UserService {
         verified: false,
         issued_at: new Date(),
       })
-      .returning('id');
+      .returning(['id', 'user_type']);
+
     await this.mailService.sendOPT(
       {
         email: sigUpInput.email,
         name: sigUpInput.first_name + sigUpInput.last_name,
       },
-      { token, id: userID[0].id },
+      { token, id: userID[0].id, role: userID[0].user_type },
     );
     return { id: userID[0].id, role: sigUpInput.user_type, verified: false };
   }
@@ -301,6 +302,7 @@ export class UserService {
     return tenants;
   }
   async activate(token: string, id: number) {
+    console.log('id', id);
     let user = await this.knex('user')
       .select('token', 'verified', 'issued_at', 'user_type')
       .where({ id })
@@ -339,10 +341,10 @@ export class UserService {
 
     let user = await this.knex('user')
       .select('id', 'verified', 'user_type')
-      .where({ email })
-      .first();
-
-    if (!user) {
+      .where({ email });
+    console.log(user.length);
+    if (user.length !== 1) {
+      console.log('new user');
       let token = randomUUID().replace('-', '');
       user = await this.knex('user')
         .insert({
@@ -360,12 +362,12 @@ export class UserService {
           verified: true,
           issued_at: new Date(),
         })
-        .returning('id');
+        .returning(['id', 'user_type']);
     }
 
     return {
       id: user[0].id,
-      role: user.user_type || loginFBInput.user_type,
+      role: user[0].user_type,
       verified: true,
     };
   }

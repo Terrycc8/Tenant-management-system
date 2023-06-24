@@ -122,9 +122,9 @@ export function LoginPage(props: { setPage(string: string): void }) {
   return (
     <IonPage>
       <IonContent className={style.login_form}>
-        <IonImg className={style.logo} src={companyLogo1} alt="companyLogo" />
+        {/* <IonImg className={style.logo} src={companyLogo1} alt="companyLogo" /> */}
 
-        {/* <div className={style.login_app_name}>E-Housing</div> */}
+        <div className={style.login_app_name}>E-Housing</div>
         <div className={style.login_signin_label}>Sign in</div>
         <IonList>
           <IonInput

@@ -14,6 +14,7 @@ export let MemberOnlyRoute = memo(
     const roleFromActivation = new URLSearchParams(window.location.search).get(
       "role"
     );
+    console.log(roleFromActivation);
     const dispatch = useDispatch();
 
     const { path } = props;

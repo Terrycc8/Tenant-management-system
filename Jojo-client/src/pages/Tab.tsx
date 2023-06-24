@@ -42,9 +42,9 @@ export function Tab() {
         <Route path={routes.propertyDetail}>
           <PropertyDetailPage />
         </Route>
-        <Route path={routes.payments}>
+        {/* <Route path={routes.payments}>
           <PaymentPage />
-        </Route>
+        </Route> */}
         <Route path={routes.events}>
           <EventsPage />
         </Route>
@@ -83,10 +83,10 @@ export function Tab() {
           />
           <CreateModal />
         </IonTabButton>
-        <IonTabButton tab="payment" href={routes.payments}>
+        {/* <IonTabButton tab="payment" href={routes.payments}>
           <IonIcon aria-hidden="true" icon={cashOutline} />
           <IonLabel>Payment</IonLabel>
-        </IonTabButton>
+        </IonTabButton> */}
         <IonTabButton tab="chat" href={routes.chatlist}>
           {true ? (
             <IonIcon

@@ -24,6 +24,7 @@ export function CreateModal() {
     createModal.current?.dismiss();
   }, []);
   const role = useSelector((state: RootState) => state.auth.role);
+  console.log(role);
   return (
     <IonModal
       ref={createModal}
@@ -73,12 +74,12 @@ export function CreateModal() {
                 <IonIcon icon={addOutline}></IonIcon>
                 <IonLabel className="ion-padding">Create new event</IonLabel>
                 <EventsModal createModalHandler={dismiss} />
-              </IonItem>{" "}
-              <IonItem button={true} detail={false} id="open-payments-modal">
+              </IonItem>
+              {/* <IonItem button={true} detail={false} id="open-payments-modal">
                 <IonIcon icon={shapesOutline}></IonIcon>
                 <IonLabel>Create new payment</IonLabel>
                 <PaymentsModal createModalHandler={dismiss} />
-              </IonItem>
+              </IonItem> */}
             </>
           ) : null}
         </IonList>

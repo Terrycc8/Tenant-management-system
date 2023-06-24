@@ -58,7 +58,7 @@ export class UserController {
   ) {
     let jwtPayload = await this.userService.loginWithFaceBook(loginFBInput);
     let token = this.jwtService.encode(jwtPayload);
-
+    console.log('end of fb');
     return { token, role: jwtPayload.role };
   }
 

@@ -176,7 +176,15 @@ export function CustomSelectorOnFetchTenant(props: {
                     {typeof result.avatar == "string" &&
                     result.avatar.length > 0 ? (
                       <IonAvatar className={style.avatar}>
-                        <IonImg src={serverURL + "/" + result.avatar} alt="" />
+                        <img
+                          src={serverURL + "/" + result.avatar}
+                          alt=""
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src =
+                              serverURL + "/defaultProfilePic.Png";
+                          }}
+                        />
                       </IonAvatar>
                     ) : (
                       <IonIcon
