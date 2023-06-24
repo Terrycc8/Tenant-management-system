@@ -5,18 +5,18 @@ services:
     image: jojo-server-image1:latest
     depends_on:
       - database-server
-    ports:
-      - 8300:8300
     environment:
       POSTGRES_HOST: database-server
       POSTGRES_PORT: 5432
     env_file:
       - docker.env
+    ports:
+      - 8300:8300
   database-server:
     image: postgres:15.3-alpine3.18
-    env_file: docker.env
     environment:
       POSTGRES_PORT: 5432
+    env_file: docker.env
     ports:
       - 8432:5432
     volumes:

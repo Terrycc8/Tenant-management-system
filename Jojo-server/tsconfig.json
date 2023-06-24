@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "declaration": true,
+    "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": false,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "es2022",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -18,5 +20,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "sourceRoot": "./src" 
-  }
+  } ,
+  "exclude": ["dist"]
 }

@@ -75,7 +75,7 @@ export function TenantModal(props: { createModalHandler: () => void }) {
 
       showResponseMessage(json, presentAlert, dismissAll);
     },
-    [presentAlert, dismissAll, showResponseMessage]
+    [presentAlert, dismissAll, showResponseMessage, tenantId]
   );
 
   return (

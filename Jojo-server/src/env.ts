@@ -7,14 +7,18 @@ export const env = {
   POSTGRES_PASSWORD: '',
   POSTGRES_PORT: 5432,
   POSTGRES_HOST: 'localhost',
-  SERVER_PORT: 8100,
-  SERVER_DOMAIN: 'http://localhost:',
-  CLIENT_DOMAIN: 'http://localhost:',
-  CLIENT_PORT: 5173,
-  NODE_ENV: 'development',
+  SERVER_PORT: 8300,
+  SERVER_DOMAIN: 'http://localhost:8300',
+  CLIENT_DOMAIN: 'http://localhost:5173',
+  NODE_ENV: '',
   JWT_SECRET: '',
   FACEBOOK_APP_ID: '',
   FACEBOOK_APP_SECRET: '',
 };
+
+if (process.env.NODE_ENV == 'production') {
+  env.SERVER_DOMAIN = 'https://jojo.terry-chan.com';
+  env.CLIENT_DOMAIN = 'https://app.terry-chan.com';
+}
 
 populateEnv(env, { mode: 'halt' });

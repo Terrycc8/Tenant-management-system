@@ -1,7 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { env } from 'src/env';
 import { User } from 'src/types';
 
@@ -12,7 +12,7 @@ export class MailService {
     private config: ConfigService,
   ) {}
   async sendOPT(user: User, src: { token: string; id: number }) {
-    const url = `${env.SERVER_DOMAIN}${env.SERVER_PORT}/user/activate/?token=${src.token}&id=${src.id}`;
+    const url = `${env.SERVER_DOMAIN}/user/activate/?token=${src.token}&id=${src.id}`;
     await this.mailerService.sendMail({
       to: user.email,
       // from: '"Support Team" <support@example.com>', // override default from

@@ -5,7 +5,7 @@ import { env } from './src/env';
 
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: 'pg',
+    client: 'postgresql',
     connection: {
       database: env.POSTGRES_DB,
       user: env.POSTGRES_USER,
@@ -30,16 +30,18 @@ const config: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: 'pg',
+    client: 'postgresql',
     connection: {
       database: env.POSTGRES_DB,
       user: env.POSTGRES_USER,
       password: env.POSTGRES_PASSWORD,
+      host: env.POSTGRES_HOST,
+      port: env.POSTGRES_PORT,
     },
     pool: {
       min: 2,
       max: 10,
-    }, 
+    },
     useNullAsDefault: true,
     migrations: {
       tableName: 'knex_migrations',
