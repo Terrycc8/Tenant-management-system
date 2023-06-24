@@ -5,4 +5,5 @@ RUN apt-get update && apt-get install -y git
 RUN npm i --omit=dev
 COPY ./dist .
 COPY .env .
-CMD npx knex migrate:last && node src/main.js 
+EXPOSE 8300
+CMD npx knex migrate:latest && node src/main.js 

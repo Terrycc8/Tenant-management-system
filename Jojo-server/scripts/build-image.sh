@@ -1,7 +1,7 @@
 set -e
 set -x
 
-npm i |pv
+npm i
 rm -rf dist
-npm run build |pv
-docker build -t jojo-server-image1 . |pv
+npm run build
+docker build -t jojo-server-image1 .

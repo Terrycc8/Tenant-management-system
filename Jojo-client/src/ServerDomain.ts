@@ -7,7 +7,7 @@ if (
 ) {
   serverURL = "https://jojo.terry-chan.com";
 } else if (window.location.href.includes("localhost")) {
-  serverURL = "http://localhost:8100";
+  serverURL = "http://localhost:8300";
 } else {
   throw new Error("Uknown envirment");
 }
