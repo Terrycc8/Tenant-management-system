@@ -79,7 +79,8 @@ export class ChatService {
         content,
         created_at: new Date(Date.now()),
       });
-      // console.log('end', newMessage);
+      // .select(['user.first_name as sender_name']);
+      console.log('end', newMessage);
       return {};
     } catch (error) {
       console.log(error);
@@ -87,18 +88,44 @@ export class ChatService {
     }
   }
 
-  async messageById(room_id: string) {
-    let message = this.knex('message')
+  async messageById(userID: number, room_id: string) {
+    let message = await this.knex('message')
       .where('room_id', room_id)
       //.innerJoin('user as sender', 'sender.id', 'message.sender_id')
+      .innerJoin('user', 'message.sender_id', 'user.id')
       .select(
         'message.sender_id',
         'message.content',
         'message.id',
         'message.created_at',
+        'user.first_name as sender_first_name',
       )
       .orderBy('message.id');
-    return message;
+
+    let roomMemberNameResult = await this.knex('chatroom')
+      .join('user', function () {
+        this.on('chatroom.creator_id', 'user.id');
+        this.orOn('chatroom.receiver_id', 'user.id');
+      })
+      .select('user.id', 'first_name')
+      .where({ 'chatroom.id': room_id });
+
+    let roomMemberName = [];
+    if (roomMemberNameResult[0].id === userID) {
+      roomMemberName = [
+        { ...roomMemberNameResult[0], self: true },
+        { ...roomMemberNameResult[1], self: false },
+      ];
+    } else {
+      roomMemberName = [
+        { ...roomMemberNameResult[1], self: true },
+        { ...roomMemberNameResult[0], self: false },
+      ];
+    }
+    console.log(message);
+    console.log(roomMemberName);
+
+    return { message, roomMemberName };
   }
 
   async getRooms(payload: JWTPayload) {

@@ -9,9 +9,13 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
   ValidationPipe,
+  BadRequestException,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -33,18 +37,27 @@ export class PaymentController {
     private jwtService: JwtService,
   ) {}
   @Get()
-  paymentList(@Request() req) {
-    let payLoad: JWTPayload = this.jwtService.decode(req);
-    return this.paymentService.paymentList(payLoad);
-  }
-  @Get(':id')
-  paymentDetail(
+  paymentList(
     @Request() req,
-    @Param(new ValidationPipe()) params: IDParamDto,
+    // @Query('offset', new DefaultValuePipe(10), ParseIntPipe) offset: number,
+    // @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    let payLoad: JWTPayload = this.jwtService.decode(req);
-    return this.paymentService.paymentDetail(payLoad, params.id);
+    let jwtPayLoad: JWTPayload = this.jwtService.decode(req);
+    if (!jwtPayLoad.verified) {
+      throw new BadRequestException(
+        'Your account is not activated, please check registered email',
+      );
+    }
+    return this.paymentService.paymentList(jwtPayLoad);
   }
+  // @Get(':id')
+  // paymentDetail(
+  //   @Request() req,
+  //   @Param(new ValidationPipe()) params: IDParamDto,
+  // ) {
+  //   let payLoad: JWTPayload = this.jwtService.decode(req);
+  //   return this.paymentService.paymentDetail(payLoad, params.id);
+  // }
   @Post()
   @UseInterceptors(filesInterceptorConfig(20))
   newPayment(

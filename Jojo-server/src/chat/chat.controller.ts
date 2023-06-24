@@ -78,6 +78,7 @@ export class ChatController {
     @Request() req,
     @Body('id') id: number,
     @Body('message') content: string,
+    @Body('senderName') sender_first_name: string,
   ) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
     console.log('Send message:', { room_id, content });
@@ -86,6 +87,7 @@ export class ChatController {
       content,
       sender_id: payLoad.id,
       created_at: Date.now(),
+      sender_first_name,
     });
     // console.log('after emit');
     // console.log('c', ChatController.io.sockets);
@@ -97,8 +99,13 @@ export class ChatController {
   @Get('/messages/:id')
   async getMessages(@Param('id') room_id: string, @Request() req) {
     let payLoad: JWTPayload = this.jwtService.decode(req);
-    let message = await this.chatService.messageById(room_id);
-    return { message, id: payLoad.id };
+    try {
+      let message = await this.chatService.messageById(payLoad.id, room_id);
+      return { ...message, userID: payLoad.id };
+    } catch (error) {
+      console.log(error);
+      return { error: 'Server Error' };
+    }
   }
 
   @Post('/rooms/:id/')

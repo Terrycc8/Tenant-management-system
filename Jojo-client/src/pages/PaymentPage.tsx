@@ -32,16 +32,29 @@ import serverURL from "../ServerDomain";
 import { PaymentListOutput, userRole } from "../types";
 import { RootState } from "../RTKstore";
 import { Loading } from "../components/Loading";
+import { NoItem } from "../components/NoItem";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Scrollbar } from "swiper";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 export function PaymentPage() {
   const [page, setPage] = useState(1);
   const role = useSelector((state: RootState) => state.auth.role);
   const [items, setItems] = useState<PaymentListOutput[]>([]);
   const itemsPerPage = 3;
-  const { data, isFetching, isLoading, error } = useGetPaymentQuery({
-    page,
-    itemsPerPage,
-  });
+  const {
+    data,
+    isFetching,
+    isLoading,
+    error: fetchError,
+    isError,
+  } = useGetPaymentQuery({});
+
+  const error = fetchError || data?.error;
 
   useEffect(() => {
     let KEY = "payments";
@@ -74,7 +87,7 @@ export function PaymentPage() {
     (e.target as HTMLIonInfiniteScrollElement).complete();
   };
   const [patchPayment] = usePatchPaymentMutation();
-  const resolveOnClick = actionOnClick("resolve");
+  const confirmOnClick = actionOnClick("confirm");
   const rejectOnClick = actionOnClick("reject");
   const cancelOnClick = actionOnClick("cancel");
   function actionOnClick(action: string) {
@@ -85,7 +98,7 @@ export function PaymentPage() {
           payment.nativeEvent.target as HTMLElement
         ).parentElement?.querySelector("ion-textarea")!.value!;
         try {
-          await patchPayment({ action: { type: action, comment: "" }, id });
+          // await patchPayment({ action: { type: action, comment: "" }, id });
         } catch (error) {
           console.log(error);
         }
@@ -96,100 +109,70 @@ export function PaymentPage() {
 
   return (
     <IonPage>
-      <CommonHeader title="Payment list" hideHeader={true} />
-      <IonContent fullscreen>
-        {error && items.length === 0 ? (
-          <>{JSON.stringify(error)}</>
+      <CommonHeader
+        title="Payment List"
+        backUrl={routes.home}
+        hideHeader={true}
+      />
+      <IonContent fullscreen={true}>
+        {isError ? (
+          <>error: {String(error)}</>
         ) : isLoading ? (
           <Loading />
-        ) : items.length === 0 ? (
-          <></>
-        ) : (
-          <>
-            <IonAccordionGroup ref={accordionGroup} multiple={true}>
-              {items.map((payment: PaymentListOutput) => (
-                <IonCard
-                  key={payment.id}
-                  routerLink={routes.payment + "/" + payment.id}
-                >
-                  <IonCardHeader>
-                    <IonCardTitle>{payment.event_title}</IonCardTitle>
-                    <IonCardTitle color="medium">
-                      {payment.property_title}
-                    </IonCardTitle>
-                    <IonCardSubtitle>{payment.type}</IonCardSubtitle>
-                  </IonCardHeader>
+        ) : isFetching ? (
+          <Loading />
+        ) : !data ? (
+          <>no data??</>
+        ) : data.length == 0 ? (
+          <NoItem name="property" />
+        ) : data.length > 0 ? (
+          data.map((payment: PaymentListOutput) => (
+            <IonCard key={payment.id}>
+              <IonCardHeader>
+                <IonRow>
+                  <IonCol className="paymentListTitle">
+                    Tenant:{" "}
+                    {/* {payment.first_name && payment.last_name
+                      ? payment.first_name + " " + payment.last_name
+                      : " No tenant yet"} */}
+                    {/* {payment.status && payment.status
+                      ? payment.status + " " + payment.status
+                      : " No tenant yet"} */}
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonLabel>Title: {payment.status}</IonLabel>
+                  </IonCol>
+                  <IonCol>
+                    <IonLabel>Monthly rent: {payment.status}</IonLabel>
+                  </IonCol>
+                </IonRow>
+              </IonCardHeader>
 
-                  <IonCardContent></IonCardContent>
-                  <IonAccordion value={payment.id.toString()}>
-                    <IonItem slot="header" color="light">
-                      <IonLabel>Description</IonLabel>
-                    </IonItem>
-                    <div className="ion-padding" slot="content">
-                      {typeof payment.description == "string" &&
-                      payment.description.length > 0
-                        ? payment.description
-                        : "No description."}
-                    </div>
-                  </IonAccordion>
-                  {/* <IonAccordion value={payment.id.toString() + "comment"}>
-                    <IonItem slot="header" color="light">
-                      <IonLabel>Comment</IonLabel>
-                    </IonItem>
-                    <IonTextarea
-                      id="test"
-                      className="ion-padding"
-                      slot="content"
-                    >
-                      {typeof payment.comment == "string" &&
-                      payment.comment.length > 0
-                        ? payment.comment
-                        : "Please input your comment below:"}
-                    </IonTextarea>
-                  </IonAccordion> */}
-                  {role == userRole.landlord && payment.status == "pending" ? (
-                    <>
-                      <IonButton
-                        data-id={payment.id}
-                        fill="clear"
-                        onClick={resolveOnClick}
-                      >
-                        Resolve
-                      </IonButton>
-                      <IonButton
-                        data-id={payment.id}
-                        fill="clear"
-                        onClick={rejectOnClick}
-                      >
-                        Reject
-                      </IonButton>
-                    </>
-                  ) : role == userRole.tenant && payment.status == "pending" ? (
-                    <>
-                      <IonButton
-                        fill="clear"
-                        data-id={payment.id}
-                        onClick={cancelOnClick}
-                      >
-                        Cancel
-                      </IonButton>
-                    </>
-                  ) : (
-                    <IonItem color="medium">Closed</IonItem>
-                  )}
-                </IonCard>
-              ))}
-            </IonAccordionGroup>
-            <IonInfiniteScroll
-              onIonInfinite={searchNext}
-              disabled={data ? data.result.length >= data.totalItem : false}
-            >
-              <IonInfiniteScrollContent
-                loadingText="Please wait..."
-                loadingSpinner="bubbles"
-              ></IonInfiniteScrollContent>
-            </IonInfiniteScroll>
-          </>
+              <IonCardContent>
+                <Swiper
+                  modules={[Pagination]}
+                  // scrollbar={{ draggable: true }}
+                  pagination={true}
+                >
+                  {payment.attachments.map((image, idx) => (
+                    <SwiperSlide key={idx + 1}>
+                      <img src={serverURL + "/" + image} alt="" />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </IonCardContent>
+              <IonButton
+                fill="clear"
+                routerLink={routes.payments + "/" + payment.id}
+              >
+                View more Info
+              </IonButton>
+            </IonCard>
+          ))
+        ) : (
+          <>Invalid Data: {JSON.stringify(data)}</>
         )}
       </IonContent>
     </IonPage>
@@ -197,3 +180,34 @@ export function PaymentPage() {
 }
 
 export default PaymentPage;
+
+// {role == userRole.landlord && payment.status == "pending" ? (
+//   <>
+//     <IonButton
+//       data-id={payment.id}
+//       fill="clear"
+//       onClick={confirmOnClick}
+//     >
+//       Confirm
+//     </IonButton>
+//     <IonButton
+//       data-id={payment.id}
+//       fill="clear"
+//       onClick={rejectOnClick}
+//     >
+//       Reject
+//     </IonButton>
+//   </>
+// ) : role == userRole.tenant && payment.status == "pending" ? (
+//   <>
+//     <IonButton
+//       fill="clear"
+//       data-id={payment.id}
+//       onClick={cancelOnClick}
+//     >
+//       Cancel
+//     </IonButton>
+//   </>
+// ) : (
+//   <IonItem color="medium">Closed</IonItem>
+// )}

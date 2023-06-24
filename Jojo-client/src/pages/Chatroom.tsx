@@ -14,7 +14,7 @@ import {
   IonButton,
   IonLabel,
 } from "@ionic/react";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { routes } from "../routes";
 import { addOutline, send } from "ionicons/icons";
 import "./Chatroom.css";
@@ -33,6 +33,7 @@ type Message = {
   content: string;
   sender_id: number;
   created_at: string;
+  sender_first_name: string;
 };
 
 export function ChatroomPage() {
@@ -40,6 +41,8 @@ export function ChatroomPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selfId, setSelfId] = useState<number | null>(null);
   // const [chatRecords, setchatRecords] = useState<chatRecords[]>([]);
+
+  const roomNames = useRef<{ self: string; other: string }>();
   const token = useSelector((state: RootState) => state.auth.token);
   const handleNewMessage = useCallback((event: Message) => {
     console.log("new message from ws:", event);
@@ -71,10 +74,18 @@ export function ChatroomPage() {
     });
 
     const result = await res.json();
+    if (result.error) {
+      return;
+    }
     console.log("message list:", result);
+    const { userID, roomMemberName, message } = result;
 
-    setMessages(result.message);
-    setSelfId(result.id);
+    setMessages(message);
+    setSelfId(userID);
+    roomNames.current = {
+      self: roomMemberName[0].first_name,
+      other: roomMemberName[1].first_name,
+    };
   }
 
   useEffect(() => {
@@ -96,7 +107,7 @@ export function ChatroomPage() {
           messages.map((message) => (
             <IonItem key={message.id}>
               <IonLabel slot={message.sender_id !== selfId ? "start" : "end"}>
-                {message.sender_id} : {message.content}
+                {message.sender_first_name} : {message.content}
                 <IonLabel>
                   {" "}
                   {format_long_short_time(
@@ -111,13 +122,14 @@ export function ChatroomPage() {
 
       <Footer
         newID={messages.length !== 0 ? messages[messages.length - 1].id + 1 : 0}
+        senderName={roomNames.current?.self || ""}
       />
     </IonPage>
   );
 }
 
-function Footer(props: { newID: number }) {
-  const { newID } = props;
+function Footer(props: { newID: number; senderName: string }) {
+  const { newID, senderName } = props;
   const params = useParams<{ id: string }>();
   const room_id = params.id;
   const input = useValue("");
@@ -138,7 +150,7 @@ function Footer(props: { newID: number }) {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: newID, message: input.value }),
+      body: JSON.stringify({ id: newID, message: input.value, senderName }),
     });
 
     input.clear();
