@@ -46,7 +46,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import "./theme/variables.css";
+import "./theme/variables.scss";
 import Tab1 from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { prefix, routes } from "./routes";

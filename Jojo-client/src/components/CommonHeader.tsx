@@ -61,14 +61,7 @@ export let CommonHeader: FC<{
     dispatch(jojoAPI.util.resetApiState());
   }, [dispatch, logout, jojoAPI]);
   const toggleDarkModeHandler = useCallback(() => {
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      document.body.classList.toggle("dark");
-    } else {
-      document.body.classList.toggle("dark");
-    }
+    document.body.parentElement?.classList.toggle("dark");
   }, []);
   const { ref } = useIonHeaderCollapse({} as UseIonHeaderCollapse);
   const logicalRef = props.hideHeader ? ref : null;

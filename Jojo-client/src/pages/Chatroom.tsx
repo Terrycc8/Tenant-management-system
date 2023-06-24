@@ -16,8 +16,8 @@ import {
 } from "@ionic/react";
 import { useCallback, useState, useEffect, useRef } from "react";
 import { routes } from "../routes";
-import { addOutline, send } from "ionicons/icons";
-import "./Chatroom.css";
+import { addOutline, send, closeOutline } from "ionicons/icons";
+import "./Chatroom.scss";
 import { useSocket } from "../useHook/use-socket";
 import { useValue } from "../useHook/use-value";
 import { useParams } from "react-router";
@@ -27,6 +27,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
 // import { Message } from "../../../Jojo-server/dist/src/proxy";
 import { showResponseMessageSignUp } from "../helper";
+// import EmojiPicker from "rn-emoji-keyboard";
 import { format_long_short_time } from "@beenotung/tslib/format";
 type Message = {
   id: number;
@@ -93,7 +94,7 @@ export function ChatroomPage() {
   }, [token]);
 
   return (
-    <IonPage>
+    <IonPage className="Chatroom">
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -135,7 +136,18 @@ function Footer(props: { newID: number; senderName: string }) {
   const input = useValue("");
   const token = useSelector((state: RootState) => state.auth.token);
 
-  function addAttachment() {}
+  // function addAttachment() {}
+  // function App() {
+  //   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  //   return (
+  //     <EmojiPicker
+  //       onEmojiSelected={handlePick}
+  //       open={isOpen}
+  //       onClose={() => setIsOpen(false)}
+  //     />
+  //   );
+  // }
 
   function submitNewMessage() {
     if (input.value === "") {
@@ -157,18 +169,21 @@ function Footer(props: { newID: number; senderName: string }) {
   }
 
   return (
-    <IonFooter className="chat-footer" id="chat-footer">
+    <IonFooter className="chat-footer">
       <IonItem>
-        <IonButtons slot="start">
-          <IonButton onClick={addAttachment}>
+        {/* <IonButtons slot="start">
+          <IonButton onClick={}>
             <IonIcon icon={addOutline}> </IonIcon>
           </IonButton>
-        </IonButtons>
-        <IonTextarea
-          value={input.value}
-          placeholder="New message..."
-          onIonInput={input.onIonChange}
-        />
+        </IonButtons> */}
+        <div className="chat-input-container">
+          <IonTextarea
+            value={input.value}
+            placeholder="New message..."
+            onIonInput={input.onIonChange}
+          />
+        </div>
+
         <IonButtons slot="end">
           <IonButton onClick={submitNewMessage}>
             <IonIcon icon={send}> </IonIcon>
@@ -178,116 +193,3 @@ function Footer(props: { newID: number; senderName: string }) {
     </IonFooter>
   );
 }
-
-/* export function ChatroomPage() {
-  const { id } = useParams<{ id: string }>();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const token = useSelector((state: RootState) => state.auth.token);
-
-  const handleNewMessage = useCallback(
-    (event: { id: number; message: string }) => {
-      console.log("new message from ws:", event);
-      setMessages((msg) => {
-        console.log("msg", msg);
-        console.log("e", event);
-        return [...msg, event];
-        // setMessages([]);
-      });
-    },
-    []
-  );
-
-  useSocket((socket) => {
-    socket.on("new-message", handleNewMessage);
-    return () => {
-      socket.off("new-message", handleNewMessage);
-    };
-  });
-
-  async function getMessageList() {
-    console.log({ id });
-
-    const res = await fetch(`${serverURL}/messages/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const result = await res.json();
-    console.log("message list:", { result });
-
-    // setMessages(result);
-  }
-
-  useEffect(() => {
-    token && getMessageList();
-  }, [token]);
-
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref={routes.chatlist} />
-          </IonButtons>
-          <IonTitle>Chat</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent id="main-chat-content">
-        {messages.length > 0 &&
-          messages.map((message) => (
-            <IonCard key={message.id}>{message.message}</IonCard>
-          ))}
-      </IonContent>
-
-      <Footer />
-    </IonPage>
-  );
-}
-
-function Footer() {
-  const params = useParams<{ id: string }>();
-  const room_id = params.id;
-  const input = useValue("");
-  const token = useSelector((state: RootState) => state.auth.token);
-
-  function addAttachment() {}
-
-  function submitNewMessage() {
-    // chatService.sendMessage(room_id, input.value);
-    // if (message !== "") {
-    // }
-    fetch(`${serverURL}/chat/rooms/${room_id}/message`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message: input.value }),
-    });
-
-    input.clear();
-  }
-
-  return (
-    <IonFooter className="chat-footer" id="chat-footer">
-      <IonItem>
-        <IonButtons slot="start">
-          <IonButton onClick={addAttachment}>
-            <IonIcon icon={addOutline}> </IonIcon>
-          </IonButton>
-        </IonButtons>
-        <IonTextarea
-          value={input.value}
-          placeholder="New message..."
-          onIonInput={input.onIonChange}
-        />
-        <IonButtons slot="end">
-          <IonButton onClick={submitNewMessage}>
-            <IonIcon icon={send}> </IonIcon>
-          </IonButton>
-        </IonButtons>
-      </IonItem>
-    </IonFooter>
-  );
-} */

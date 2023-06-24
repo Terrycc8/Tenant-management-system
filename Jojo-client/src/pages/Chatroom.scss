@@ -1,0 +1,27 @@
+.Chatroom {
+  .chat-input-container {
+    width: 100%;
+    /* margin-right: 0.75rem; */
+  }
+
+  .chat-footer {
+    /* background-color: rgb(22, 22, 22); */
+    border-top: 1px solid var(--ion-color-dark-tint);
+    /* padding-top: 0.2rem;
+    padding-bottom: 1rem; */
+  }
+
+  .chat-footer ion-textarea {
+    /* background-color: rgb(31, 31, 31); */
+    border: 1px solid var(--ion-color-dark-tint);
+    /* color: white; */
+    border-radius: 25px;
+    padding-left: 0.5rem;
+    caret-color: var(--ion-color-primary);
+  }
+
+  .chat-footer ion-icon {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+  }
+}
