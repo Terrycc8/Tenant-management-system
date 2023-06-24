@@ -10,16 +10,18 @@ import {
   IonCard,
   IonCardTitle,
   IonCardHeader,
+  IonAvatar,
 } from "@ionic/react";
 import { useCallback, useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../RTKstore";
-import { closeOutline } from "ionicons/icons";
+import { closeOutline, personCircle } from "ionicons/icons";
 import { UserListOutput } from "../types";
 import { routes } from "../routes";
 import serverURL from "../ServerDomain";
 // import { Room } from "../../../Jojo-server/dist/src/proxy";
 import { useHistory } from "react-router-dom";
+import style from "../theme/menu.module.scss";
 
 export function ContactModal(props: { trigger: string }) {
   const contactModal = useRef<HTMLIonModalElement>(null);
@@ -94,7 +96,31 @@ export function ContactModal(props: { trigger: string }) {
             >
               <IonCardHeader>
                 <IonCardTitle>
-                  {user.avatar + user.first_name + " " + user.last_name}
+                  <div>
+                    {user &&
+                    typeof user.avatar == "string" &&
+                    user.avatar.length > 0 ? (
+                      <IonAvatar className={style.profilePicEdit}>
+                        <img
+                          className={style.test11}
+                          src={serverURL + "/" + user.avatar}
+                          alt=""
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src =
+                              serverURL + "/defaultProfilePic.Png";
+                          }}
+                        />
+                      </IonAvatar>
+                    ) : (
+                      <IonIcon
+                        className={style.profilePicEdit}
+                        slot="icon-only"
+                        icon={personCircle}
+                      ></IonIcon>
+                    )}
+                  </div>
+                  {user.first_name + " " + user.last_name}
                 </IonCardTitle>
               </IonCardHeader>
             </IonCard>

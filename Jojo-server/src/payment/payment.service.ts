@@ -9,69 +9,72 @@ import { JWTPayload, userRole } from 'src/types';
 @Injectable()
 export class PaymentService {
   constructor(@InjectModel() private readonly knex: Knex) {}
-  async paymentDetail(payload: JWTPayload, payment_id: number) {
-    let thisPayment = await this.knex('payment')
-      .select('landlord_id', 'tenant_id')
-      .where({ id: payment_id })
-      .first();
-    if (!thisPayment) {
-      throw new BadRequestException(
-        'Invalid request, this payment does not exist',
-      );
-    }
-    if (
-      thisPayment.landlord_id !== payload.id &&
-      thisPayment.tenant_id !== payload.id
-    ) {
-      throw new BadRequestException(
-        'Invalid request, you are not authorized to access information of this payment',
-      );
-    }
+  //   async paymentDetail(payload: JWTPayload, payment_id: number) {
+  //     let thisPayment = await this.knex('payment')
+  //       .select('landlord_id', 'tenant_id')
+  //       .where({ id: payment_id })
+  //       .first();
+  //     if (!thisPayment) {
+  //       throw new BadRequestException(
+  //         'Invalid request, this payment does not exist',
+  //       );
+  //     }
+  //     if (
+  //       thisPayment.landlord_id !== payload.id &&
+  //       thisPayment.tenant_id !== payload.id
+  //     ) {
+  //       throw new BadRequestException(
+  //         'Invalid request, you are not authorized to access information of this payment',
+  //       );
+  //     }
 
-    let result = await this.knex('payment')
-      .select(
-        'payment.id as id',
+  //     let result = await this.knex('payment')
+  //       .select(
+  //         'payment.id as id',
 
-        this.knex.raw('ARRAY_AGG(attachments) as attachments'),
-      )
-      .innerJoin(
-        'propertyAttachments',
-        'property.id',
-        'propertyAttachments.property_id',
-      )
-      .groupBy(
-        'property.id',
-        'title',
-        'area',
-        'district',
-        'location',
-        'street',
-        'building',
-        'block',
-        'floor',
-        'room',
-        'rent',
-        'tenant_id',
-        'rental_start_at',
-        'rental_end_at',
-        'property.edited_at',
-      )
-      .where({ 'payment.id': payment_id })
-      .first();
+  //         this.knex.raw('ARRAY_AGG(attachments) as attachments'),
+  //       )
+  //       .innerJoin(
+  //         'propertyAttachments',
+  //         'property.id',
+  //         'propertyAttachments.property_id',
+  //       )
+  //       .groupBy(
+  //         'property.id',
+  //         'title',
+  //         'area',
+  //         'district',
+  //         'location',
+  //         'street',
+  //         'building',
+  //         'block',
+  //         'floor',
+  //         'room',
+  //         'rent',
+  //         'tenant_id',
+  //         'rental_start_at',
+  //         'rental_end_at',
+  //         'property.edited_at',
+  //       )
+  //       .where({ 'payment.id': payment_id })
+  //       .first();
 
-    return result;
-  }
+  //     return result;
+  //   }
 
   async paymentList(payload: JWTPayload) {
-    let query = this.knex('payment')
+    let query = await this.knex('payment')
       .select(
         'payment.id as id',
-        'title',
-        'rent',
+        'payer_id',
+        'payment.status',
+        // 'title',
+        // 'rent',
         'billing_period_from',
         'billing_period_to',
-        'first_name',
-        'last_name',
+        // 'first_name',
+        // 'last_name',
+        // 'property.title as property_title',
         this.knex.raw('ARRAY_AGG(attachments) as attachments'),
       )
       .innerJoin(
@@ -79,25 +82,35 @@ export class PaymentService {
         'payment.id',
         'paymentAttachments.payment_id',
       )
-      .leftJoin('user', 'tenant_id', 'user.id')
+      //   .innerJoin('property', 'payment.property_id', 'property.title')
+      //   .innerJoin('property', 'payment.property_id', 'property.id')
+      .innerJoin('user', 'confirmed_by_id', 'user.id')
+      //   .leftJoin('user', 'tenant_id', 'user.id')
       .groupBy(
         'payment.id',
-        'title',
-        'rent',
+        'payer_id',
+        'payment.status',
+        // 'title',
+        // 'rent',
         'billing_period_from',
         'billing_period_to',
-        'first_name',
-        'last_name',
-      );
-    if (payload.role == userRole.landlord) {
-      query = query.where({ landlord_id: payload.id });
-    } else if (payload.role == userRole.tenant) {
-      query = query.where({ tenant_id: payload.id });
-    } else {
-      throw new BadRequestException('Unknown user type');
-    }
+        // 'first_name',
+        // 'last_name',
+      )
+      .where({ created_by_id: payload.id })
+      .orWhere({ confirmed_by_id: payload.id })
+      .orderBy('payment.created_at');
 
-    return await query;
+    // if (payload.role == userRole.landlord) {
+    //   query = query.where({ landlord_id: payload.id });
+    // } else if (payload.role == userRole.tenant) {
+    //   query = query.where({ tenant_id: payload.id });
+    // } else {
+    //   throw new BadRequestException('Unknown user type');
+    // }
+    // console.log(query);
+    return { result: query || 0 };
+    console.log(query);
   }
 
   async newPayment(
@@ -106,11 +119,11 @@ export class PaymentService {
     //@ts-ignore
     images: Express.Multer.File[],
   ) {
-    // if (paymentInput.billing_period_from > paymentInput.billing_period_to) {
-    //   throw new BadRequestException(
-    //     'Invalid billing period, billing start date must be earlier than the end date',
-    //   );
-    // }
+    if (paymentInput.billing_period_from > paymentInput.billing_period_to) {
+      throw new BadRequestException(
+        'Invalid billing period, billing start date must be earlier than the end date',
+      );
+    }
     if (payload.role !== userRole.tenant) {
       throw new BadRequestException(
         'Invalid request, only tenant can create a new payment application',

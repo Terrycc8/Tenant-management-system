@@ -73,7 +73,7 @@ property_id  fk>0- property.id
 billing_period_from timestamp  not null
 billing_period_to timestamp not null
 payer_id  fk>0- user.id 
-status enum('confirmed','pending') not null
+status enum('confirmed','pending','rejected','cancelled') not null
 created_by_id  fk>0- user.id 
 created_at timestamp  not null
 confirmed_by_id null fk>0- user.id 

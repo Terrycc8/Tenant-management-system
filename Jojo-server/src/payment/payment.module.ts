@@ -5,6 +5,6 @@ import { JwtService } from 'src/jwt/jwt.service';
 
 @Module({
   controllers: [PaymentController],
-  providers: [PaymentService],
+  providers: [PaymentService, JwtService],
 })
 export class PaymentModule {}

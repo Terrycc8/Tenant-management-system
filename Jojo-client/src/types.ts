@@ -237,17 +237,17 @@ export type ClientPayload = {
 };
 
 export type PaymentListOutput = {
-  id: string;
-  property_id: string;
+  id: number;
+  property_title: string | null;
   payer_id: number;
-  status: "confirmed" | "pending";
-  amount: number;
+  status: "confirmed" | "pending" | "rejected" | "cancelled";
+  amount: number | null;
   billing_period_from: Date;
   billing_period_to: Date;
   attachments: string[];
-  confirmed_at: string;
-  first_name: string;
-  last_name: string;
+  confirmed_at: Date | null;
+  first_name: string | null;
+  last_name: string | null;
 };
 
 export type ChatRecord = {

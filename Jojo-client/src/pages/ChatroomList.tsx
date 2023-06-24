@@ -25,6 +25,7 @@ import {
   IonCardSubtitle,
   IonCardContent,
 } from "@ionic/react";
+import "./ChatroomList.css";
 // import { createNewRoom, getRoomList, GetRoomListOutput } from "../sdk";
 // import ExploreContainer from "../components/ExploreContainer";
 import { routes } from "../routes";
@@ -151,7 +152,9 @@ export function ChatroomList() {
             <ContactModal trigger={modalTrigger} />
           </IonButton>
         </IonToolbar>
-        <IonSearchbar onIonChange={(e) => search(e, data)} />
+        <IonToolbar>
+          <IonSearchbar onIonChange={(e) => search(e, data)} />
+        </IonToolbar>
       </IonHeader>
       {/* <IonContent>{result}</IonContent> */}
       <IonContent>
@@ -179,9 +182,7 @@ export function ChatroomList() {
                 <IonCardTitle>{record.otherUser}</IonCardTitle>
                 {/* IonItem */}
                 {/* <IonCardSubtitle>{chatroom.rent}</IonCardSubtitle> */}
-                <IonCardContent>
-                  {record.senderName + " : " + record.content}
-                </IonCardContent>
+                <IonCardContent>{record.content}</IonCardContent>
               </IonCardHeader>
               {/* <IonCardContent>{chatroom.last_message}</IonCardContent> */}
             </IonCard>
