@@ -24,4 +24,42 @@
     font-size: 1.5rem;
     margin-top: 0.2rem;
   }
+
+  .chat-bubble-green {
+    border-radius: 5px;
+    // margin-left: 1rem;
+    // margin-right: 1rem;
+    margin-top: 0.4rem;
+    color: var(--ion-color-primary-contrast);
+    padding: 1rem;
+    // max-width: 80%;
+    clear: both;
+    background-color: #609f46;
+    border-radius: 10px;
+    // padding: 10px;
+    max-width: 500px;
+
+    // display: flex;
+    flex-direction: row;
+    transition: 0.2s all linear;
+  }
+
+  .chat-bubble-grey {
+    border-radius: 5px;
+    // margin-left: 1rem;
+    // margin-right: 1rem;
+    margin-top: 0.4rem;
+    color: var(--ion-color-primary-contrast);
+    padding: 1rem;
+    // max-width: 80%;
+    clear: both;
+    background-color: #a59c9c;
+    border-radius: 10px;
+    // padding: 10px;
+    max-width: 500px;
+
+    // display: flex;
+    flex-direction: row;
+    transition: 0.2s all linear;
+  }
 }

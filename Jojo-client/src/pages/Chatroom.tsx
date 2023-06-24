@@ -29,6 +29,7 @@ import { RootState } from "../RTKstore";
 import { showResponseMessageSignUp } from "../helper";
 // import EmojiPicker from "rn-emoji-keyboard";
 import { format_long_short_time } from "@beenotung/tslib/format";
+import { IonRow } from "@ionic/react";
 type Message = {
   id: number;
   content: string;
@@ -106,8 +107,15 @@ export function ChatroomPage() {
       <IonContent id="main-chat-content">
         {messages.length > 0 &&
           messages.map((message) => (
-            <IonItem key={message.id}>
-              <IonLabel slot={message.sender_id !== selfId ? "start" : "end"}>
+            <IonItem lines="none" key={message.id}>
+              <div
+                className={
+                  message.sender_id !== selfId
+                    ? "chat-bubble-grey"
+                    : "chat-bubble-green"
+                }
+                slot={message.sender_id !== selfId ? "start" : "end"}
+              >
                 {message.sender_first_name} : {message.content}
                 <IonLabel>
                   {" "}
@@ -116,7 +124,7 @@ export function ChatroomPage() {
                     { format_duration_digit: 0 }
                   )}
                 </IonLabel>
-              </IonLabel>
+              </div>
             </IonItem>
           ))}
       </IonContent>
