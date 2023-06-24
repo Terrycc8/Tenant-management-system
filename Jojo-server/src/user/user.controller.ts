@@ -81,7 +81,7 @@ export class UserController {
       let token = this.jwtService.encode(jwtPayload);
 
       res.redirect(
-        `${env.CLIENT_DOMAIN}/tab/home?token=${token}&role=${jwtPayload}`,
+        `${env.CLIENT_DOMAIN}/tab/home?token=${token}&role=${jwtPayload.role}`,
       );
     } catch (error) {
       res.json({ error });

@@ -18,4 +18,9 @@ export const env = {
   EMAIL_TEMPLATE_PATH: 'mail/templates/',
 };
 
+if (env.NODE_ENV == 'production') {
+  env.SERVER_DOMAIN = 'https://jojo.terry-chan.com';
+  env.CLIENT_DOMAIN = 'https://app.terry-chan.com';
+}
+
 populateEnv(env, { mode: 'halt' });
