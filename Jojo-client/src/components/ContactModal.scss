@@ -1,4 +1,18 @@
-.contactAvatar {
-  height: 100%;
-  width: 1rem;
+.contactModalAvatar {
+  height: 85%;
+  width: 50%;
+}
+
+.contactModalContainer {
+  display: flex !important;
+  flex-direction: row;
+  /* height: 20%; */
+  justify-content: stretch;
+}
+
+.contactModalContainer1 {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: stretch;
 }

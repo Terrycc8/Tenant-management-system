@@ -50,7 +50,7 @@ export class EventService {
         }));
       } else
         imagesData = {
-          attachments: 'eventDefault.jpeg',
+          attachments: 'eventDefault.jpg',
           event_id,
         };
       await txn('eventAttachments').insert(imagesData);
