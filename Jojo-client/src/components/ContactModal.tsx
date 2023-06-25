@@ -94,13 +94,13 @@ export function ContactModal(props: { trigger: string }) {
               // routerLink={routes.chatroom(user.id)}
               onClick={() => getChatroom(user.id)}
             >
-              <IonCardHeader>
-                <IonCardTitle>
+              <IonCardHeader className="contactModalContainer">
+                <IonCardTitle className="contactModalContainer1">
                   <div>
                     {user &&
                     typeof user.avatar == "string" &&
                     user.avatar.length > 0 ? (
-                      <IonAvatar className="contactAvatar">
+                      <IonAvatar className="contactModalAvatar">
                         <img
                           className={style.test11}
                           src={serverURL + "/" + user.avatar}
