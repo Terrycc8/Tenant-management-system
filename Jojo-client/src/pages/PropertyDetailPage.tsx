@@ -240,7 +240,7 @@ export function PropertyDetailPage() {
                         label="tenant"
                         labelPlacement="stacked"
                         fill="solid"
-                        readonly={editable}
+                        readonly
                         value={data.tenant_id}
                         name="tenant_id"
                       ></IonInput>

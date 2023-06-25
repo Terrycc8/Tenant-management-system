@@ -217,7 +217,7 @@ export function ProfileModal(pros: { setModalEmpty: () => void }) {
                         onError={({ currentTarget }) => {
                           currentTarget.onerror = null; // prevents looping
                           currentTarget.src =
-                            serverURL + "/defaultProfilePic.Png";
+                            serverURL + "/defaultProfilePic.png";
                         }}
                       />
                     </IonAvatar>
