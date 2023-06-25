@@ -88,7 +88,7 @@ export let CommonHeader: FC<{
                     alt=""
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null; // prevents looping
-                      currentTarget.src = serverURL + "/defaultProfilePic.Png";
+                      currentTarget.src = serverURL + "/defaultProfilePic.png";
                     }}
                   />
                 </IonAvatar>
@@ -124,7 +124,7 @@ export let CommonHeader: FC<{
               alt=""
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping
-                currentTarget.src = serverURL + "/defaultProfilePic.Png";
+                currentTarget.src = serverURL + "/defaultProfilePic.png";
               }}
             />
           </IonAvatar>

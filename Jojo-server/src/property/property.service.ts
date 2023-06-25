@@ -147,7 +147,7 @@ export class PropertyService {
         }));
       } else
         imagesData = {
-          attachments: 'propertyDefault.jpeg',
+          attachments: 'propertyDefault.jpg',
           property_id,
         };
 

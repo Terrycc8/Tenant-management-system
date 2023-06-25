@@ -90,6 +90,7 @@ export function ContactModal(props: { trigger: string }) {
         ) : (
           data.map((user: UserListOutput) => (
             <IonCard
+              className="contactModalContainer"
               key={user.id}
               // routerLink={routes.chatroom(user.id)}
               onClick={() => getChatroom(user.id)}
@@ -102,13 +103,13 @@ export function ContactModal(props: { trigger: string }) {
                     user.avatar.length > 0 ? (
                       <IonAvatar className="contactModalAvatar">
                         <img
-                          className={style.test11}
+                          className="contactModalAvatar"
                           src={serverURL + "/" + user.avatar}
                           alt=""
                           onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src =
-                              serverURL + "/defaultProfilePic.Png";
+                              serverURL + "/defaultProfilePic.png";
                           }}
                         />
                       </IonAvatar>
