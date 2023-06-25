@@ -99,7 +99,14 @@ export function HomePage() {
                 routerLink={routes.tenants}
                 className="top-right-card top-card"
               >
-                <IonCardContent>Total Tenant</IonCardContent>
+                <IonCardContent>
+                  Total{" "}
+                  {role == userRole.landlord
+                    ? "Tenant"
+                    : role == userRole.tenant
+                    ? "Landlord"
+                    : null}
+                </IonCardContent>
               </IonCard>
             </IonCol>
           </IonRow>

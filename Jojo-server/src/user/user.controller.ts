@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   DefaultValuePipe,
@@ -26,7 +27,7 @@ import {
 } from 'src/dto/post-login.dto';
 import { SignUpInputWithPasswordDto } from 'src/dto/post-signup.dto';
 import { JwtService } from 'src/jwt/jwt.service';
-import { JWTPayload, uploadDir } from 'src/types';
+import { JWTPayload, uploadDir, userRole } from 'src/types';
 import { filesInterceptorConfig } from 'src/helper';
 import { IDParamDto } from 'src/dto/IDParams';
 import { PropertyInputDto } from 'src/dto/post-property.dto';
@@ -109,8 +110,21 @@ export class UserController {
     @Request() req,
   ) {
     const jwtPayLoad = this.jwtService.decode(req);
-
-    return await this.userService.getTenants(jwtPayLoad, offset, page);
+    if (jwtPayLoad.role == userRole.landlord) {
+      return await this.userService.getTenantsForLandLord(
+        jwtPayLoad,
+        offset,
+        page,
+      );
+    } else if (jwtPayLoad.role == userRole.tenant) {
+      return await this.userService.getLandlordsForTenant(
+        jwtPayLoad,
+        offset,
+        page,
+      );
+    } else {
+      throw new BadRequestException('unknown user type');
+    }
   }
   @Patch('tenants')
   async addTenant(

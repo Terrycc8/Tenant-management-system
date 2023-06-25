@@ -22,7 +22,7 @@ import serverURL from "../ServerDomain";
 // import { Room } from "../../../Jojo-server/dist/src/proxy";
 import { useHistory } from "react-router-dom";
 import style from "../theme/menu.module.scss";
-
+import "./ContactModal.scss";
 export function ContactModal(props: { trigger: string }) {
   const contactModal = useRef<HTMLIonModalElement>(null);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -100,7 +100,7 @@ export function ContactModal(props: { trigger: string }) {
                     {user &&
                     typeof user.avatar == "string" &&
                     user.avatar.length > 0 ? (
-                      <IonAvatar className={style.profilePicEdit}>
+                      <IonAvatar className="contactAvatar">
                         <img
                           className={style.test11}
                           src={serverURL + "/" + user.avatar}

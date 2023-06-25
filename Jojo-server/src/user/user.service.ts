@@ -50,6 +50,7 @@ export class UserService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Incorrect password');
     }
+
     if (!result.verified) {
       throw new UnauthorizedException('You have not activated your account');
     }
@@ -252,14 +253,15 @@ export class UserService {
 
     return {};
   }
-  async getTenants(jwtPayLoad: JWTPayload, offset: number, page: number) {
+  async getTenantsForLandLord(
+    jwtPayLoad: JWTPayload,
+    offset: number,
+    page: number,
+  ) {
     if (!jwtPayLoad.verified) {
       throw new UnauthorizedException(
         'Your account is not activated, please check registered email',
       );
-    }
-    if (jwtPayLoad.role == userRole.tenant) {
-      throw new UnauthorizedException('This api is only for landlord');
     }
 
     const tenants = await this.knex('property')
@@ -278,6 +280,34 @@ export class UserService {
       .offset(offset * (page - 1));
 
     return { result: tenants, totalItem: +tenants.length || 0 };
+  }
+  async getLandlordsForTenant(
+    jwtPayLoad: JWTPayload,
+    offset: number,
+    page: number,
+  ) {
+    if (!jwtPayLoad.verified) {
+      throw new UnauthorizedException(
+        'Your account is not activated, please check registered email',
+      );
+    }
+
+    const landlords = await this.knex('property')
+      .select(
+        'landlord_id',
+        'first_name',
+        'last_name',
+        'email',
+        'avatar',
+        'title',
+      )
+      .innerJoin('user', 'property.landlord_id', 'user.id')
+      .where({ tenant_id: jwtPayLoad.id })
+      .orderBy('first_name')
+      .limit(offset)
+      .offset(offset * (page - 1));
+
+    return { result: landlords, totalItem: +landlords.length || 0 };
   }
   async getAllTenants(jwtPayLoad: JWTPayload, searchText: string) {
     if (!jwtPayLoad.verified) {
