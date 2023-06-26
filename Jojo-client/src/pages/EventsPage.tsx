@@ -203,7 +203,7 @@ export function EventsPage() {
             </IonAccordionGroup>
             <IonInfiniteScroll
               onIonInfinite={searchNext}
-              disabled={data ? items.length >= data.totalItem : false}
+              // disabled={data ? data.result.length >= data.totalItem : false}
             >
               <IonInfiniteScrollContent
                 loadingText="Please wait..."
