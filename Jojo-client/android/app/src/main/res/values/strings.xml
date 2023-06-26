@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Jojo1</string>
-    <string name="title_activity_main">Jojo1</string>
-    <string name="package_name">com.terrychan1.app</string>
-    <string name="custom_url_scheme">com.terrychan1.app</string>
+    <string name="app_name">HouseLink</string>
+    <string name="title_activity_main">HouseLink</string>
+    <string name="package_name">com.terrychan.jojo.houselink</string>
+    <string name="custom_url_scheme">com.terrychan.jojo.houselink</string>
 </resources>
