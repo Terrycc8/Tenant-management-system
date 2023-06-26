@@ -49,6 +49,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
   }, [propertyModal]);
   const [newProperty] = usePostPropertyMutation();
   const pickImages = useCallback(async () => {
+    console.log(123);
     let files = await selectImage({ multiple: true });
 
     for (let file of files) {
@@ -60,7 +61,7 @@ export function PropertyModal(props: { createModalHandler: () => void }) {
       );
       file = dataURItoFile(dataUrl, file);
     }
-
+    console.log("12");
     setImages(files);
   }, [
     selectImage,

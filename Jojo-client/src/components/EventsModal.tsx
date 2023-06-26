@@ -28,7 +28,9 @@ import { resizeBase64WithRatio, dataURItoFile } from "@beenotung/tslib/image";
 import { fileToBase64String, selectImage } from "@beenotung/tslib/file";
 
 export function EventsModal(props: { createModalHandler: () => void }) {
+  const [images, setImages] = useState<File[]>([]);
   const { data } = useGetPropertyQuery({});
+
   const [presentAlert] = useIonAlert();
   const eventsModal = useRef<HTMLIonModalElement>(null);
   const dismissEvents = useCallback(() => {
@@ -39,27 +41,8 @@ export function EventsModal(props: { createModalHandler: () => void }) {
     props.createModalHandler();
   }, [props, eventsModal]);
 
+  console.log("try");
   const [newEvent] = usePostEventMutation();
-  const OnSubmit = useCallback(
-    async (event: FormEvent) => {
-      event.preventDefault();
-      const form = event.target as HTMLFormElement;
-
-      const formData = new FormData(form);
-      for (let image of images) {
-        formData.append("image", image);
-      }
-      let json;
-      try {
-        json = await newEvent(formData);
-      } catch (error) {
-        console.log(error);
-      }
-      showResponseMessage(json, presentAlert, dismissAll);
-    },
-    [presentAlert, dismissAll, showResponseMessage, newEvent]
-  );
-  const [images, setImages] = useState<File[]>([]);
   const pickImages = useCallback(async () => {
     let files = await selectImage({ multiple: true });
 
@@ -70,11 +53,42 @@ export function EventsModal(props: { createModalHandler: () => void }) {
         { width: 460, height: 900 },
         "with_in"
       );
+
       file = dataURItoFile(dataUrl, file);
     }
-
+    console.log("files", files);
     setImages(files);
-  }, [selectImage]);
+  }, [
+    selectImage,
+    fileToBase64String,
+    resizeBase64WithRatio,
+    dataURItoFile,
+    setImages,
+  ]);
+
+  const onSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault();
+      const form = event.target as HTMLFormElement;
+
+      let formData = new FormData(form);
+      console.log(images);
+      for (let image of images) {
+        console.log("test");
+        formData.append("image", image);
+      }
+
+      let json;
+      try {
+        json = await newEvent(formData);
+      } catch (error) {
+        console.log(error);
+      }
+      showResponseMessage(json, presentAlert, dismissAll);
+    },
+    [presentAlert, dismissAll, showResponseMessage, newEvent, images]
+  );
+
   return (
     <IonModal
       ref={eventsModal}
@@ -87,7 +101,7 @@ export function EventsModal(props: { createModalHandler: () => void }) {
         name="Event"
       ></CommonModalHeader>
       <IonContent>
-        <form onSubmit={OnSubmit}>
+        <form onSubmit={onSubmit}>
           <IonList>
             <IonGrid>
               <CustomIonColInput>
@@ -125,7 +139,7 @@ export function EventsModal(props: { createModalHandler: () => void }) {
               <CustomIonColInput>
                 <IonButtons>
                   <IonButton onClick={pickImages}>
-                    Upload Property Pictures
+                    Upload Event Pictures
                   </IonButton>
                   <IonLabel>Total files selected:{images.length}/5</IonLabel>
                 </IonButtons>
