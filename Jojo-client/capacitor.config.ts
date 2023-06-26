@@ -1,7 +1,7 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.terrychan2.app",
+  appId: "com.terrychan.jojo.houselink",
   appName: "HouseLink",
   webDir: "dist",
   server: {
